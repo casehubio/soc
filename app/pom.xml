@@ -49,6 +49,10 @@
     </dependency>
     <dependency>
       <groupId>io.quarkus</groupId>
+      <artifactId>quarkus-jdbc-postgresql</artifactId>
+    </dependency>
+    <dependency>
+      <groupId>io.quarkus</groupId>
       <artifactId>quarkus-scheduler</artifactId>
     </dependency>
 
@@ -86,25 +90,10 @@
       <version>${casehub.version}</version>
     </dependency>
 
-    <!-- Adaptive case engine -->
+    <!-- Adaptive case engine (engine-api, engine-common, engine-schema are transitive) -->
     <dependency>
       <groupId>io.casehub</groupId>
       <artifactId>casehub-engine</artifactId>
-      <version>${casehub.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-engine-api</artifactId>
-      <version>${casehub.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-engine-common</artifactId>
-      <version>${casehub.version}</version>
-    </dependency>
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-engine-schema</artifactId>
       <version>${casehub.version}</version>
     </dependency>
     <dependency>
@@ -136,49 +125,25 @@
       <scope>compile</scope>
     </dependency>
 
-    <!-- Tamper-evident ledger -->
+    <!-- Tamper-evident ledger (ledger-api transitive; deployment auto-discovered) -->
     <dependency>
       <groupId>io.casehub</groupId>
       <artifactId>casehub-ledger</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-ledger-api</artifactId>
-    </dependency>
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-ledger-deployment</artifactId>
-    </dependency>
 
-    <!-- Human task lifecycle -->
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-work-api</artifactId>
-    </dependency>
+    <!-- Human task lifecycle (work-api transitive; deployment auto-discovered) -->
     <dependency>
       <groupId>io.casehub</groupId>
       <artifactId>casehub-work</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-work-deployment</artifactId>
-    </dependency>
 
-    <!-- Typed agent communication -->
+    <!-- Typed agent communication (deployment auto-discovered) -->
     <dependency>
       <groupId>io.casehub</groupId>
       <artifactId>casehub-qhorus</artifactId>
     </dependency>
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-qhorus-deployment</artifactId>
-    </dependency>
 
-    <!-- Worker primitives -->
-    <dependency>
-      <groupId>io.casehub</groupId>
-      <artifactId>casehub-worker-api</artifactId>
-    </dependency>
+    <!-- Worker primitives (worker-api transitive) -->
     <dependency>
       <groupId>io.casehub</groupId>
       <artifactId>casehub-worker</artifactId>
