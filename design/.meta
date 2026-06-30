@@ -1,0 +1,9 @@
+branch: issue-1-infra-chores
+project-sha: b6d319d237bb9dad6a4f0065ac3bfd2fbbe33bbc
+date: 2026-06-30
+issue: 1
+issue-repo: casehubio/soc
+covers: 1,2,3,4,5
+flyway-next-v: none
+design-repo: project
+design-section-hashes: 
