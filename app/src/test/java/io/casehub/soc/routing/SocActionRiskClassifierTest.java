@@ -1,7 +1,7 @@
 package io.casehub.soc.routing;
 
-import io.casehub.blocks.oversight.ClassificationContext;
-import io.casehub.blocks.oversight.RiskDecision;
+import io.casehub.api.spi.ClassificationContext;
+import io.casehub.api.spi.RiskDecision;
 import io.casehub.soc.domain.SocActionType;
 import io.casehub.soc.domain.SocGroups;
 import io.casehub.worker.api.PlannedAction;
