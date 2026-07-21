@@ -69,7 +69,7 @@ class SocActionRiskClassifierTest {
     void wipeEndpoint_alwaysGatesWithCiso() {
         final RiskDecision result = classify(SocActionType.WIPE_ENDPOINT, Map.of());
         final RiskDecision.GateRequired gate = assertInstanceOf(RiskDecision.GateRequired.class, result);
-        assertTrue(gate.candidateGroups().contains(SocGroups.CISO),
+        assertTrue(((io.casehub.api.spi.routing.StaticSetStrategy) gate.candidateGroups()).values().contains(SocGroups.CISO),
             "WIPE_ENDPOINT must require CISO approval");
     }
 
@@ -228,7 +228,7 @@ class SocActionRiskClassifierTest {
 
     private void assertGateRequired(final RiskDecision result, final String expectedGroup, final boolean expectedReversible) {
         final RiskDecision.GateRequired gate = assertInstanceOf(RiskDecision.GateRequired.class, result);
-        assertTrue(gate.candidateGroups().contains(expectedGroup),
+        assertTrue(((io.casehub.api.spi.routing.StaticSetStrategy) gate.candidateGroups()).values().contains(expectedGroup),
             "Expected group " + expectedGroup + " in " + gate.candidateGroups());
         assertEquals(expectedReversible, gate.reversible());
         assertNotNull(gate.reason());

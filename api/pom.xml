@@ -23,6 +23,12 @@
       <artifactId>casehub-platform-api</artifactId>
     </dependency>
 
+    <!-- CaseHub engine API — routing SPIs (CandidateSetStrategy, StaticSetStrategy) -->
+    <dependency>
+      <groupId>io.casehub</groupId>
+      <artifactId>casehub-engine-api</artifactId>
+    </dependency>
+
     <!-- RAS situation detection SPIs — Ganglion base classes -->
     <dependency>
       <groupId>io.casehub</groupId>

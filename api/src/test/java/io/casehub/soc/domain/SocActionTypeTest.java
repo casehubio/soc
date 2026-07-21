@@ -1,8 +1,7 @@
 package io.casehub.soc.domain;
 
+import io.casehub.api.spi.routing.StaticSetStrategy;
 import org.junit.jupiter.api.Test;
-
-import java.util.Arrays;
 
 import static org.junit.jupiter.api.Assertions.*;
 
@@ -47,7 +46,8 @@ class SocActionTypeTest {
     void alwaysGateActionsRequireApprovers() {
         for (SocActionType action : SocActionType.values()) {
             if (action.gatePolicy() == SocActionType.GatePolicy.ALWAYS) {
-                assertFalse(action.candidateGroups().isEmpty(),
+                var strategy = (StaticSetStrategy) action.candidateGroups();
+                assertFalse(strategy.values().isEmpty(),
                         action + " has ALWAYS gate but no candidate groups");
             }
         }
@@ -73,7 +73,8 @@ class SocActionTypeTest {
     @Test
     void candidateGroupsAreImmutable() {
         var action = SocActionType.ISOLATE_HOST;
+        var strategy = (StaticSetStrategy) action.candidateGroups();
         assertThrows(UnsupportedOperationException.class,
-                () -> action.candidateGroups().add("hacker"));
+                () -> strategy.values().add("hacker"));
     }
 }

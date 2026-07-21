@@ -57,12 +57,12 @@ public class SocActionRiskClassifier implements ActionRiskClassifier {
     private RiskDecision.GateRequired gate(final SocActionType type) {
         return new RiskDecision.GateRequired(
             type.reason(), type.reversible(), type.candidateGroups(),
-            null, type.scope());
+            null, type.scope(), null);
     }
 
     private RiskDecision.GateRequired missingContext(final SocActionType type) {
         return new RiskDecision.GateRequired(
             "Risk assessment unavailable — human review required",
-            type.reversible(), type.candidateGroups(), null, type.scope());
+            type.reversible(), type.candidateGroups(), null, type.scope(), null);
     }
 }
