@@ -10,18 +10,18 @@ spec:
   capabilities:
     - name: ioc-enrichment
       description: "Extract IOCs from alert data and enrich with threat intelligence"
-      inputSchema: "{ alert: .alert }"
-      outputSchema: "{ iocEnrichment: . }"
+      inputProjection: "{ alert: .alert }"
+      outputProjection: "{ iocEnrichment: . }"
 
     - name: attck-mapping
       description: "Map indicators and enrichment to MITRE ATT&CK techniques and tactics"
-      inputSchema: "{ alert: .alert, iocEnrichment: .iocEnrichment }"
-      outputSchema: "{ attckMapping: . }"
+      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment }"
+      outputProjection: "{ attckMapping: . }"
 
     - name: containment-recommendation
       description: "Recommend containment actions based on threat analysis"
-      inputSchema: "{ alert: .alert, iocEnrichment: .iocEnrichment, attckMapping: .attckMapping }"
-      outputSchema: "{ containmentRecommendation: . }"
+      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, attckMapping: .attckMapping }"
+      outputProjection: "{ containmentRecommendation: . }"
 
   ## ─── Goals ──────────────────────────────────────────────────────────────────
   goals:

@@ -7,6 +7,7 @@ import io.casehub.api.spi.RiskDecision;
 import io.casehub.soc.domain.SocActionType;
 import io.casehub.worker.api.PlannedAction;
 import jakarta.enterprise.context.ApplicationScoped;
+
 import java.util.Map;
 import java.util.Optional;
 
@@ -34,7 +35,7 @@ public class SocActionRiskClassifier implements ActionRiskClassifier {
 
     private RiskDecision classifyByRiskScore(final SocActionType type, final Map<String, Object> params) {
         final Object raw = params != null ? params.get("riskScore") : null;
-        if (raw == null) return missingContext(type);
+        if (raw == null) {return missingContext(type);}
         try {
             final double score = Double.parseDouble(raw.toString());
             return score >= RISK_SCORE_GATE_THRESHOLD ? gate(type) : new RiskDecision.Autonomous();
@@ -45,7 +46,7 @@ public class SocActionRiskClassifier implements ActionRiskClassifier {
 
     private RiskDecision classifyByConfidence(final SocActionType type, final Map<String, Object> params) {
         final Object raw = params != null ? params.get("confidenceScore") : null;
-        if (raw == null) return missingContext(type);
+        if (raw == null) {return missingContext(type);}
         try {
             final double score = Double.parseDouble(raw.toString());
             return score < CONFIDENCE_GATE_THRESHOLD ? gate(type) : new RiskDecision.Autonomous();
@@ -56,13 +57,13 @@ public class SocActionRiskClassifier implements ActionRiskClassifier {
 
     private RiskDecision.GateRequired gate(final SocActionType type) {
         return new RiskDecision.GateRequired(
-            type.reason(), type.reversible(), type.candidateGroups(),
-            null, type.scope(), null, null);
+                type.reason(), type.reversible(), type.candidateGroups(),
+                null, type.scope(), null, null);
     }
 
     private RiskDecision.GateRequired missingContext(final SocActionType type) {
         return new RiskDecision.GateRequired(
-            "Risk assessment unavailable — human review required",
-            type.reversible(), type.candidateGroups(), null, type.scope(), null, null);
+                "Risk assessment unavailable — human review required",
+                type.reversible(), type.candidateGroups(), null, type.scope(), null, null);
     }
 }

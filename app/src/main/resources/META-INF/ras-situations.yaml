@@ -18,29 +18,13 @@ situations:
       ganglia:
         - siem-alert-classifier
       minConfidence: 0.8
-    triggerConfig:
+    triggerAction:
+      type: create-case
       caseNamespace: io.casehub.soc
       caseName: incident-investigation
-      caseVersion: "1.0"
+      caseVersion: "1.0.0"
       baseCaseData:
         priority: HIGH
         source: siem-alert
 
-  # Brute-force detection — repeated auth failures within a short window.
-  # Count chain mode: fires after 10 detections from brute-force-detector
-  # within the 5-minute correlation window.
-  - situationId: soc-brute-force
-    eventTypes:
-      - soc.auth.failure
-    correlationWindow: PT5M
-    chainMode:
-      type: count
-      ganglionId: brute-force-detector
-      requiredCount: 10
-    triggerConfig:
-      caseNamespace: io.casehub.soc
-      caseName: incident-investigation
-      caseVersion: "1.0"
-      baseCaseData:
-        priority: MEDIUM
-        source: brute-force
+  # soc-brute-force — deferred to Slice 2 (requires BruteForceDetectorGanglion)

@@ -107,7 +107,7 @@ class SiemAlertGanglionTest {
     @Test
     void missingSeverity_producesNoise() {
         CloudEvent event = alertEvent(null);
-        DetectionResult result = ganglion.detect(event, context()).await().indefinitely();
+        DetectionResult result = ganglion.detect(event, context());
         assertEquals(DetectionSignal.NOISE, result.signal());
     }
 
@@ -128,7 +128,7 @@ class SiemAlertGanglionTest {
     @Test
     void evidence_includesSourceAndRule() {
         CloudEvent event = alertEvent("soc.alert.edr.sentinelone", "CRITICAL", "SentinelOne", "Ransomware Detection");
-        DetectionResult result = ganglion.detect(event, context()).await().indefinitely();
+        DetectionResult result = ganglion.detect(event, context());
         assertEquals("SentinelOne", result.evidence().get("alertSource"));
         assertEquals("Ransomware Detection", result.evidence().get("alertRule"));
     }
@@ -152,6 +152,6 @@ class SiemAlertGanglionTest {
 
     private DetectionResult evaluate(String severity) {
         CloudEvent event = alertEvent(severity);
-        return ganglion.detect(event, context()).await().indefinitely();
+        return ganglion.detect(event, context());
     }
 }
