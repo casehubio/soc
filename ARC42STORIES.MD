@@ -387,7 +387,7 @@ Full tenant isolation for managed SOC providers:
 
 | Gap | Issue | Impact | Status |
 |-----|-------|--------|--------|
-| RAS SituationStore | parent#398 | Verify — InMemory + JPA impls exist in ras repo | May be resolved |
+| ~~RAS SituationStore~~ | ~~parent#398~~ | ~~Closed — InMemory + JPA impls exist in ras repo~~ | **Resolved** |
 | Multi-approver OversightGate | engine#810 | Layer 3 workaround (single-approver) | Filed |
 | Drools CEP | engine#809 | Blocks Slice 3 | Filed |
 | Durable EventStore | pages#256 | Production deployment | Filed |
@@ -465,7 +465,7 @@ The following issues from the original Epic 2 breakdown are superseded by the ve
 Slice 0 ✅ Domain Vocabulary (AlertSeverity, ATT&CK, IOC, SocActionType, Ganglion, Case YAML)
     │
     └── Slice 1: SIEM Critical Alert
-        ├── Layer 1: Alert Ingestion & Case Creation ──── (verify parent#398 — impls may exist)
+        ├── Layer 1: Alert Ingestion & Case Creation ──── (not blocked — SituationStore available)
         ├── Layer 2: Triage Workers (Rule + LLM) ──────── (after Layer 1)
         ├── Layer 3: Analyst Review & SLA ─────────────── (after Layer 2)
         ├── Layer 4a: Trust & Routing ─────────────────── (after Layer 3)
