@@ -14,14 +14,15 @@ Domain types (AlertSeverity, ATT&CK, IOC, SocActionType), SiemAlertGanglion, cas
 - RAS pipeline wired end-to-end: CloudEvent → SiemAlertGanglion → SituationEvaluator → CaseTrigger → CaseInstance
 - `SocGanglionProducer` — CDI producer for SiemAlertGanglion (api/ is pure Java)
 - `SocCaseInputContributor` — converts RAS detections to serializable alert context
-- `ras-situations.yaml` — fixed to current RAS API (`triggerAction`, correct `caseVersion`)
-- Integration tests prove pipeline and case context seeding (33 tests green)
 
-### Platform Issues Fixed Along the Way
-- `SiemAlertGanglionTest` — removed stale `Uni<>.await().indefinitely()` calls (virtual threads migration)
-- `SocActionRiskClassifier` — updated for `GateRequired` QuorumConfig parameter
-- `json-schema-validator` version convergence between casehub-work and casehub-worker
-- `soc-brute-force` situation deferred to Slice 2 (ganglion not yet implemented)
+### Slice 1, Layer 2: Triage Workers — Complete
+- 6 workers (2 per capability): rule-based + LLM for IOC enrichment, ATT&CK mapping, containment recommendation
+- Wired via `SocCaseHub.augment()` with `SocInvestigationCaseDescriptor` (plain POJO)
+- Shared capability output contracts in api/ (`IocEnrichmentOutput`, `AttckMappingOutput`, `ContainmentRecommendationOutput`)
+- Rule-based workers: `IocExtractor` (regex), `AttckLookupTable`, `ContainmentDecisionMatrix` (with `PlannedAction`)
+- LLM workers: `AgentWorkerFunction` (IOC/ATT&CK), `WorkerFunction.Sync` (containment — engine#829 workaround)
+- LLM workers register with `noFunction()` when `langchain4j-anthropic` unavailable
+- Bootstrap routing selects rule-based by convention (insertion order). 89 tests green.
 
 ---
 
@@ -29,19 +30,16 @@ Domain types (AlertSeverity, ATT&CK, IOC, SocActionType), SiemAlertGanglion, cas
 
 | Layer | Description | Scale | Complexity | Status |
 |-------|-------------|-------|------------|--------|
-| **Layer 2** | Triage workers (rule + LLM) | L | High | Next |
-| Layer 3 | Analyst review & SLA | M | Med | After Layer 2 |
-| Layer 4a | Trust & routing | M | Med | After Layer 3 |
+| **Layer 3** | Analyst review & SLA + failure binding | M | Med | Next |
+| Layer 4a | Trust & routing + agent descriptors | M | Med | After Layer 3 |
 | Layer 4b | CBR & incident lifecycle | M | High | After Layer 4a |
 | Layer 5 | Compliance & audit | L | High | After Layer 4b |
 
-### Layer 2 Key Tasks
-- 6 named Worker beans (rule + LLM for each of 3 capabilities)
-- Case YAML dual-bindings per capability for routing
-- Blocking `AgentProvider` adapter for LLM workers
-- `SocAgentRegistrar` for agent fleet in `AgentRegistry`
-
-See `ARC42STORIES.MD` for full layer details and the workspace spec at `specs/slice-1-siem-critical-alert/2026-07-29-slice-1-design.md` for implementation design.
+### Layer 3 Key Tasks
+- Investigation failure binding via CDI observer on `CaseStatusChanged` (soc#19 — FAULTED cases can't use contextChange bindings)
+- Analyst review WorkItem with SLA enforcement (`SocSlaBreachPolicy`)
+- Containment approval gate via `SocActionRiskClassifier` + `OversightGateService`
+- `SocAgentRegistrar` for agent descriptors in `AgentRegistry` (soc#20 — enables trust routing in Layer 4a)
 
 ---
 
@@ -49,7 +47,9 @@ See `ARC42STORIES.MD` for full layer details and the workspace spec at `specs/sl
 
 | Gap | Issue | Impact |
 |-----|-------|--------|
+| Agent.plannedActionExtractor | engine#829 | Enables uniform AgentWorkerFunction for containment LLM worker |
+| Worker reroute on failure | — | Engine infra exists but exclusion list writer missing |
 | Drools CEP | engine#809 | Blocks Slice 3 |
 | Multi-approver OversightGate | engine#810 | Layer 3 single-approver workaround |
 | Durable EventStore | pages#256 | Production deployment |
-| Engine ObjectMapper lacks JSR310 | — | Worked around with SocCaseInputContributor |
+| langchain4j-anthropic runtime | — | LLM workers register with noFunction() until added |
