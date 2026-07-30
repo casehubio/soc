@@ -42,7 +42,7 @@ Build a Security Operations Center application on the CaseHub agentic harness th
 | Slice | Scenario | Layers | Status |
 |-------|----------|--------|--------|
 | 0 | Domain Vocabulary & Platform Integration | — | **Done** (Epic 1) |
-| 1 | SIEM Critical Alert — full investigation | 5 layers | Next |
+| 1 | SIEM Critical Alert — full investigation | 5 layers | Layer 1 done, Layer 2 next |
 | 2 | Brute Force Detection | Extends Slice 1 infrastructure | After Slice 1 |
 | 3 | Real-Time Event Correlation | Drools CEP integration | Future (engine#809) |
 | 4 | Multi-Tenant SOC-as-a-Service | Tenant isolation | Future |
@@ -96,7 +96,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 - Integration test: send CloudEvent with CRITICAL severity → Ganglion returns DETECTED/0.95 → situation threshold met → CaseInstance created with priority=HIGH
 - Application shell renders incident list with live updates
 
-**Note:** `SituationStore` interface, `InMemorySituationStore`, and `JpaSituationStore` all exist in casehub-ras. parent#398 may be stale — verify before treating Layer 1 as blocked.
+**Note:** Layer 1 complete — RAS pipeline wired end-to-end (issue #17).
 
 ---
 
