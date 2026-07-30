@@ -235,7 +235,7 @@ For each module:
 **Wiring checklist:**
 1. Define `CaseDefinition.yaml` per playbook (phishing, ransomware, insider threat, etc.)
 2. Implement `WorkerProvisioner` — delegates to `AgentProvider` for LLM agents
-3. Add `casehub-engine-work-adapter` + `casehub-engine-blackboard` for human tasks
+3. Add `casehub-engine-work-adapter` + `casehub-engine-planning` for human tasks
 4. Add `casehub-engine-ledger` for trust-weighted routing
 5. Implement `@RiskClassifier` for containment action gating
 
@@ -565,7 +565,7 @@ severity_outcome, investigation_duration, containment_success
 <!-- Foundation -->
 casehub-engine
 casehub-engine-work-adapter
-casehub-engine-blackboard
+casehub-engine-planning
 casehub-engine-ledger          <!-- trust-weighted routing -->
 casehub-ledger
 casehub-ledger-memory          <!-- test scope -->
