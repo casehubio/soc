@@ -1,0 +1,10 @@
+{
+  "recommendedAction": "REVOKE_CREDENTIALS",
+  "riskScore": 0.65,
+  "confidenceScore": 0.88,
+  "rationale": "The credential harvesting attack has compromised user credentials. Immediate revocation prevents further unauthorized access while the investigation continues.",
+  "actionParameters": {
+    "targetScope": "all-active-sessions",
+    "forcePasswordReset": true
+  }
+}

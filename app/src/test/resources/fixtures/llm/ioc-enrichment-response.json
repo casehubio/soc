@@ -1,0 +1,8 @@
+{
+  "iocs": [
+    {"type": "IP_ADDRESS", "value": "203.0.113.50", "source": "llm-analysis"},
+    {"type": "DOMAIN", "value": "malware-c2.evil.com", "source": "llm-analysis"},
+    {"type": "FILE_HASH_SHA256", "value": "a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2c3d4e5f6a1b2", "source": "llm-analysis"}
+  ],
+  "summary": "3 IOCs identified: command-and-control IP, malicious domain, and malware hash"
+}

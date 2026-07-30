@@ -1,0 +1,9 @@
+{
+  "techniques": [
+    {"technique": "T1566", "confidence": 0.92, "evidence": "Phishing email with malicious attachment"},
+    {"technique": "T1204", "confidence": 0.78, "evidence": "User executed the malicious payload"}
+  ],
+  "primaryTactic": "INITIAL_ACCESS",
+  "confidence": 0.92,
+  "narrative": "The attack chain begins with a spear-phishing email (T1566) targeting the finance department. The attached document contains a macro that, when executed by the user (T1204), establishes a reverse shell to the C2 server."
+}
