@@ -1,6 +1,6 @@
 # Next Steps — casehub-soc
 
-**Updated:** 2026-07-30
+**Updated:** 2026-08-03
 **Delivery plan:** `ARC42STORIES.MD` (vertical slices with layers)
 
 ---
@@ -36,7 +36,7 @@ Domain types (AlertSeverity, ATT&CK, IOC, SocActionType), SiemAlertGanglion, cas
 | Layer 5 | Compliance & audit | L | High | After Layer 4b |
 
 ### Layer 3 Key Tasks
-- Investigation failure binding via CDI observer on `CaseStatusChanged` (soc#19 — FAULTED cases can't use contextChange bindings)
+- ~~Investigation failure binding via `CaseOutcomeObserver` SPI (soc#19)~~ **Done** — `SocFaultedCaseReviewCreator` creates failure-review WorkItem when case FAULTs. Blocked by engine#846 (now fixed).
 - Analyst review WorkItem with SLA enforcement (`SocSlaBreachPolicy`)
 - Containment approval gate via `SocActionRiskClassifier` + `OversightGateService`
 - `SocAgentRegistrar` for agent descriptors in `AgentRegistry` (soc#20 — enables trust routing in Layer 4a)
@@ -50,6 +50,6 @@ Domain types (AlertSeverity, ATT&CK, IOC, SocActionType), SiemAlertGanglion, cas
 | Agent.plannedActionExtractor | engine#829 | Enables uniform AgentWorkerFunction for containment LLM worker |
 | Worker reroute on failure | — | Engine infra exists but exclusion list writer missing |
 | Drools CEP | engine#809 | Blocks Slice 3 |
-| Multi-approver OversightGate | engine#810 | Layer 3 single-approver workaround |
+| ~~Multi-approver OversightGate~~ | ~~engine#810~~ | ~~Resolved — multi-approver landed~~ |
 | Durable EventStore | pages#256 | Production deployment |
 | langchain4j-anthropic runtime | — | LLM workers register with noFunction() until added |

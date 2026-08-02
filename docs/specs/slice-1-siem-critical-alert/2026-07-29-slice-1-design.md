@@ -52,13 +52,13 @@ CaseInstance created
 Application shell receives SSE push → incident list updates
 ```
 
-### SituationStore — Available (Not Blocked)
+### SituationStore Status
 
 `SituationStore` interface exists in `casehub-ras-api` with 9 methods (find, save, remove, removeExpired, tryClaimTrigger, findActive, etc.). Implementations exist:
 - `InMemorySituationStore` in `ras/persistence-memory/` (`@Alternative @Priority(100)`)
 - `JpaSituationStore` in `ras/persistence-jpa/`
 
-parent#398 closed — this was never a real blocker. Add `casehub-ras` + `casehub-ras-persistence-memory` as dependencies.
+parent#398 may be stale — verify before treating Layer 1 as blocked. Layer 1 can use `InMemorySituationStore` for development and tests regardless.
 
 ### Case Context Seed
 
