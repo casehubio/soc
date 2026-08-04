@@ -35,6 +35,12 @@
       <artifactId>casehub-ras-api</artifactId>
     </dependency>
 
+    <!-- Eidos agent descriptor API — AgentDescriptor, AgentCapability, AgentDisposition -->
+    <dependency>
+      <groupId>io.casehub</groupId>
+      <artifactId>casehub-eidos-api</artifactId>
+    </dependency>
+
     <!-- Mutiny — provided by Quarkus at runtime; needed at compile time for Ganglion SPI -->
     <dependency>
       <groupId>io.smallrye.reactive</groupId>
