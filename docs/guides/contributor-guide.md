@@ -19,11 +19,11 @@ This rule was formalised in ADR-001: no custom SecurityAlert or Incident entitie
 | Module | Artifact | Type | Purpose |
 |---|---|---|---|
 | `api/` | `casehub-soc-api` | Pure-Java SPI (no Quarkus, no JPA) | Domain model, SPI interfaces, capability tags, worker output contracts, `SiemAlertGanglion` |
-| `app/` | `casehub-soc-app` | Quarkus application | Workers (6), case engine wiring, risk classifier, CDI producers, failure-review WorkItem creator |
+| `app/` | `casehub-soc-app` | Quarkus application | Workers (6), case engine wiring, risk classifier, CDI producers, failure-review WorkItem creator, agent descriptor registrar |
 
 Follows the standard CaseHub module tier structure: pure-Java SPI in api/, JPA + Quarkus in app/.
 
-**api/ compile dependencies:** `casehub-platform-api`, `casehub-engine-api` (routing SPIs: `CandidateSetStrategy`, `StaticSetStrategy`), `casehub-ras-api` (Ganglion base classes), Mutiny (provided scope).
+**api/ compile dependencies:** `casehub-platform-api`, `casehub-engine-api` (routing SPIs: `CandidateSetStrategy`, `StaticSetStrategy`), `casehub-ras-api` (Ganglion base classes), `casehub-eidos-api` (AgentDescriptor, AgentCapability, AgentDisposition), Mutiny (provided scope).
 
 **app/ compile dependencies:** Full foundation stack -- see consumer guide Dependencies section.
 
@@ -47,6 +47,7 @@ io.casehub.soc
  |    +-- SocCapabilities           -- constants: soc:alert-classification, soc:ioc-correlation, etc.
  |    +-- SocCaseTypes              -- constants: incident-investigation
  |    +-- SocGroups                 -- constants: soc-tier1-analyst, soc-manager, soc-ciso, etc.
+ |    +-- SocAgentDescriptors      -- static factory; AgentDescriptor per worker with MITRE ATT&CK epistemic domains
  +-- worker/contract/
       +-- IocEnrichmentOutput       -- record: iocs (list of IocEntry), summary
       +-- AttckMappingOutput        -- record: techniques (list of TechniqueEntry), primaryTactic, confidence, narrative
@@ -58,11 +59,12 @@ io.casehub.soc
 ```
 io.casehub.soc
  +-- engine/
- |    +-- SocCaseHub                -- YamlCaseHub subclass; loads incident-investigation.yaml, augments with workers
+ |    +-- SocCaseHub                -- YamlCaseHub subclass; loads incident-investigation.yaml, augments with workers and agent descriptors
  |    +-- SocCaseInputContributor   -- CaseInputContributor; converts RAS detections to serialisable alert context
  |    +-- SocFaultedCaseReviewCreator -- CaseOutcomeObserver; creates failure-review WorkItems for FAULTED cases
  |    +-- SocGanglionProducer       -- CDI producer for SiemAlertGanglion (api/ is pure Java, no CDI)
  |    +-- SocInvestigationCaseDescriptor -- POJO; assembles the 6 workers for incident-investigation cases
+ |    +-- SocAgentRegistrar         -- AgentDescriptorRegistrar SPI; registers descriptors with eidos AgentRegistry at startup
  +-- routing/
  |    +-- SocActionRiskClassifier   -- ActionRiskClassifier with @RiskClassifier qualifier
  +-- worker/
@@ -297,9 +299,11 @@ Tests cover all implemented layers:
 - `AttackTaxonomyTest` -- AttackTactic MITRE IDs, AttackTechnique validation, subtechnique parsing
 - `IocTest` -- record validation, equality by (type, value), confidence bounds
 - `SocActionTypeTest` -- action type string conversion, gate policy, round-trip fromActionType
+- `SocAgentDescriptorsTest` -- descriptor factory: 6 descriptors, unique agent IDs, capability names match YAML, epistemic domains, disposition
 
 ### app/ tests
-- `SocCaseHubTest` -- YAML loading, worker augmentation
+- `SocCaseHubTest` -- YAML loading, worker augmentation, agent descriptor wiring
+- `SocAgentRegistrarTest` -- CDI discovery, descriptor count, agent ID format
 - `SocInvestigationCaseDescriptorTest` -- worker count, capability names, null ChatModel handling
 - `SocFaultedCaseReviewCreatorTest` -- outcome filtering, priority derivation, idempotency, title generation
 - `AlertToCaseIntegrationTest` -- end-to-end: CloudEvent -> Ganglion -> SituationEvaluator -> CaseInstance
@@ -328,8 +332,8 @@ The project follows a **vertical slice** approach. Each slice delivers one incid
 | Slice 0 | Domain vocabulary + platform integration | **Complete** |
 | Slice 1, Layer 1 | Alert ingestion and case creation (RAS pipeline) | **Complete** |
 | Slice 1, Layer 2 | Triage workers (rule-based + LLM, 6 workers) | **Complete** |
-| Slice 1, Layer 3 | Analyst review, SLA enforcement, failure binding | **In Progress** (soc#19 done, soc#20 next) |
-| Slice 1, Layer 4a | Trust scoring, agent routing, agent descriptors | Planned |
+| Slice 1, Layer 3 | Analyst review, SLA enforcement, failure binding | **In Progress** (soc#19 done) |
+| Slice 1, Layer 4a | Trust scoring, agent routing, agent descriptors | **In Progress** (soc#20 done) |
 | Slice 1, Layer 4b | CBR retain/retrieve, incident lifecycle | Planned |
 | Slice 1, Layer 5 | Compliance audit trail, LedgerEntry subclasses | Planned |
 | Slice 2 | Brute force detection (extends Slice 1 infrastructure) | Future |

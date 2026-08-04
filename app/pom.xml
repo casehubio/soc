@@ -175,6 +175,18 @@
       <version>${casehub.version}</version>
     </dependency>
 
+    <!-- Eidos agent registry — AgentDescriptorBootstrap, DefaultCapabilityHealth -->
+    <dependency>
+      <groupId>io.casehub</groupId>
+      <artifactId>casehub-eidos</artifactId>
+      <version>${casehub.version}</version>
+    </dependency>
+    <dependency>
+      <groupId>io.casehub</groupId>
+      <artifactId>casehub-eidos-memory</artifactId>
+      <version>${casehub.version}</version>
+    </dependency>
+
     <!-- ================================================================ -->
     <!-- Test                                                              -->
     <!-- ================================================================ -->

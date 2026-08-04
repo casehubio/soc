@@ -6,8 +6,11 @@ import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
+import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
 class SocCaseHubTest {
@@ -58,5 +61,38 @@ class SocCaseHubTest {
         assertTrue(resolved.getCondition() instanceof JQExpressionEvaluator jq
                 && jq.expression().contains("analystDecision"),
             "Goal condition should check analystDecision");
+    }
+
+    @Test
+    void agentDescriptorsWiredForAllWorkers() {
+        var def = caseHub.getDefinition();
+        var workerNames = def.getWorkers().stream()
+                             .map(w -> w.name()).toList();
+        for (var name : workerNames) {
+            assertTrue(def.agentDescriptorFor(name).isPresent(),
+                       "Missing descriptor for worker: " + name);
+        }
+    }
+
+    @Test
+    void agentDescriptorAbsentForUnknownWorker() {
+        var def = caseHub.getDefinition();
+        assertTrue(def.agentDescriptorFor("nonexistent").isEmpty());
+    }
+
+    @Test
+    void descriptorCapabilityNamesMatchDefinitionCapabilities() {
+        var def = caseHub.getDefinition();
+        var capNames = def.getCapabilities().stream()
+                          .map(c -> c.name()).collect(Collectors.toSet());
+        for (var worker : def.getWorkers()) {
+            var descriptor = def.agentDescriptorFor(worker.name());
+            if (descriptor.isPresent()) {
+                var descCap = descriptor.get().capabilities().getFirst().name();
+                assertTrue(capNames.contains(descCap),
+                           "Descriptor capability '" + descCap + "' for worker '" + worker.name()
+                           + "' not in case definition capabilities: " + capNames);
+            }
+        }
     }
 }
