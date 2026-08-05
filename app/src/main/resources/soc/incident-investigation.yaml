@@ -71,7 +71,7 @@ spec:
       capability: containment-recommendation
 
     ## Human review — fires after containment recommendation is ready.
-    ## Tier-2 analyst reviews findings, approves/rejects containment,
+    ## Tier-1 analyst reviews findings, approves/rejects containment,
     ## and sets analystDecision to resolve the case.
     - name: analyst-review
       on: { contextChange: {} }
@@ -79,5 +79,43 @@ spec:
       humanTask:
         title: "Review incident findings and containment recommendation"
         candidateGroups:
-          - soc-tier2-analyst
-        expiresIn: PT4H
+          - soc-tier1-analyst
+        outcomes:
+          - CONFIRM_SEVERITY
+          - DOWNGRADE
+          - ESCALATE
+          - FALSE_POSITIVE
+        scopeExpression: >-
+          "casehubio/soc/triage-review/" + (
+            if .alert.severity == "CRITICAL" then "p1"
+            elif .alert.severity == "HIGH" then "p2"
+            else "p3"
+            end
+          )
+        expiresInExpression: >-
+          if .alert.severity == "CRITICAL" then "PT15M"
+          elif .alert.severity == "HIGH" then "PT1H"
+          elif .alert.severity == "MEDIUM" then "PT24H"
+          else "PT24H"
+          end
+        inputMapping: >-
+          {
+            incidentId: .caseId,
+            priority: .alert.severity,
+            alert: .alert,
+            iocEnrichment: .iocEnrichment,
+            attckMapping: .attckMapping,
+            containmentRecommendation: .containmentRecommendation
+          }
+        outputMapping: >-
+          {
+            analystDecision: (
+              if .outcome == "CONFIRM_SEVERITY" or .outcome == "DOWNGRADE"
+              then "resolved"
+              elif .outcome == "ESCALATE" then "escalated"
+              elif .outcome == "FALSE_POSITIVE" then "false-positive"
+              elif .outcome == null then "escalated"
+              else .outcome
+              end
+            )
+          }

@@ -1,6 +1,7 @@
 wksp
 .DS_Store
 target/
+.build/
 *.class
 .idea/
 .claude
