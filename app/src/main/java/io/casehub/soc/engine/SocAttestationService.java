@@ -9,9 +9,8 @@ import io.casehub.ledger.model.WorkerDecisionEntry;
 import io.casehub.ledger.repository.CaseLedgerEntryRepository;
 import io.casehub.platform.api.identity.ActorType;
 import io.casehub.soc.domain.SocCaseCapabilities;
-import io.casehub.soc.domain.SocCaseTypes;
 import io.casehub.soc.domain.SocTrustDimensions;
-import io.quarkus.narayana.jta.QuarkusTransaction;
+import io.casehub.soc.engine.cbr.SocCaseOutcomeFilter;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -19,7 +18,7 @@ import org.jboss.logging.Logger;
 import java.time.Clock;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
+
 import java.util.UUID;
 
 @ApplicationScoped
@@ -27,8 +26,6 @@ public class SocAttestationService implements CaseOutcomeObserver {
 
     private static final Logger LOG = Logger.getLogger(SocAttestationService.class);
     private static final String SYSTEM_ATTESTOR = "system:soc-attestation";
-    private static final Set<String> SUCCESS_OUTCOMES = Set.of("resolved", "escalated", "false-positive");
-
     private final CaseLedgerEntryRepository caseLedgerRepo;
     private final LedgerEntryRepository ledgerRepo;
     private final Clock clock;
@@ -43,10 +40,8 @@ public class SocAttestationService implements CaseOutcomeObserver {
 
     @Override
     public void onOutcome(CaseOutcomeEvent event) {
-        if (!SocCaseTypes.INCIDENT_INVESTIGATION.equals(event.caseType())) return;
-        if (!SUCCESS_OUTCOMES.contains(event.outcomeLabel())) return;
-        processOutcome(event);
-    }
+        if (!SocCaseOutcomeFilter.isSuccessfulIncidentInvestigation(event)) {return;}
+        processOutcome(event);}
 
     void processOutcome(CaseOutcomeEvent event) {
         Map<String, Object> snapshot = event.caseFileSnapshot();
