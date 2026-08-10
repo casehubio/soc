@@ -117,5 +117,7 @@ spec:
               elif .outcome == null then "escalated"
               else .outcome
               end
-            )
+            ),
+            analystOutcome: .outcome,
+            analystId: .completedBy
           }
