@@ -11,3 +11,4 @@ proj
 .mvn/slot-settings.xml
 .build
 specs/
+plans/
