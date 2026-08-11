@@ -36,6 +36,11 @@ public class SocIncidentLedgerObserver {
         if (statusText.equals(previous)) return;
         lastStatusByCase.put(event.caseId(), statusText);
 
+        try {
+            SocIncidentStatus s = SocIncidentStatus.valueOf(statusText);
+            if (s.isTerminal()) lastStatusByCase.remove(event.caseId());
+        } catch (IllegalArgumentException ignored) {}
+
         SocStepType stepType = mapStatusToStepType(statusText);
         if (stepType == null) return;
 
