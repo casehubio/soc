@@ -41,12 +41,20 @@ io.casehub.soc
  |    +-- AlertSeverity             -- enum: CRITICAL, HIGH, MEDIUM, LOW, INFORMATIONAL
  |    +-- AttackTactic              -- enum: 14 MITRE ATT&CK Enterprise tactics (TA0001-TA0043)
  |    +-- AttackTechnique           -- record: techniqueId (T####[.###]), name, tactic, subtechniqueOf
+ |    +-- DoraResponseTimeReport    -- record: DORA metrics with per-priority PriorityStats
  |    +-- Ioc                       -- record: type, value, confidence, firstSeen, source, tags
  |    +-- IocType                   -- enum: 12 IOC types (IP_ADDRESS, FILE_HASH_*, DOMAIN, URL, etc.)
+ |    +-- PriorityStats             -- record: count, avg triage/containment/resolution times, SLA compliance %
  |    +-- SocActionType             -- enum: 9 containment actions with GatePolicy, reversibility, candidateGroups
  |    +-- SocCapabilities           -- constants: soc:alert-classification, soc:ioc-correlation, etc.
+ |    +-- SocCaseCapabilities       -- constants: case-YAML capability names (ioc-enrichment, attck-mapping, etc.)
  |    +-- SocCaseTypes              -- constants: incident-investigation
  |    +-- SocGroups                 -- constants: soc-tier1-analyst, soc-manager, soc-ciso, etc.
+ |    +-- SocIncidentStatus         -- enum: TRIAGING, INVESTIGATING, CONTAINING, RESOLVED, ESCALATED, FALSE_POSITIVE
+ |    +-- SocIncidentStatusChangedEvent -- record: CDI event for incident status transitions
+ |    +-- SocPreferences            -- PreferenceKey constants: SLA response windows (P1-P4)
+ |    +-- SocStepType               -- enum: 6 investigation step types for ledger entries
+ |    +-- SocTrustDimensions        -- constants: triage-accuracy, containment-appropriateness
  |    +-- SocAgentDescriptors      -- static factory; AgentDescriptor per worker with MITRE ATT&CK epistemic domains
  +-- worker/contract/
       +-- IocEnrichmentOutput       -- record: iocs (list of IocEntry), summary
@@ -65,6 +73,25 @@ io.casehub.soc
  |    +-- SocGanglionProducer       -- CDI producer for SiemAlertGanglion (api/ is pure Java, no CDI)
  |    +-- SocInvestigationCaseDescriptor -- POJO; assembles the 6 workers for incident-investigation cases
  |    +-- SocAgentRegistrar         -- AgentDescriptorRegistrar SPI; registers descriptors with eidos AgentRegistry at startup
+ |    +-- SocAttestationService     -- CaseOutcomeObserver; creates trust attestations on case resolution
+ |    +-- SocIncidentStatusObserver -- CDI observer; tracks incident status transitions from CaseLifecycleEvent
+ |    +-- cbr/
+ |    |    +-- SocCbrRetainService   -- CaseOutcomeObserver; stores resolved incidents in CBR memory
+ |    |    +-- SocCbrRetrieveService -- retrieves similar past incidents for triage enrichment
+ |    |    +-- SocCbrCaseTypeRegistration -- CbrCaseTypeRegistration SPI; registers SOC case type
+ |    |    +-- SocCbrSchemaRegistrar -- registers CBR schema attributes for SOC incidents
+ |    |    +-- SocIncidentCbrCase   -- CbrCase record for SOC incidents
+ |    |    +-- SocCaseOutcomeFilter -- shared predicate: successful SOC incident investigation
+ |    +-- compliance/
+ |    |    +-- SocLedgerEntry        -- JpaLedgerEntry subclass; incidentId + stepType (JOINED inheritance)
+ |    |    +-- SocLedgerEntryWriter  -- shared write helper; validates metadata, manages sequence numbers
+ |    |    +-- SocLedgerEntryRepository -- typed queries (by incident, time range, step type)
+ |    |    +-- SocResolutionLedgerObserver -- CaseOutcomeObserver; writes INCIDENT_RESOLVED entries
+ |    |    +-- SocIncidentLedgerObserver -- CDI observer; writes ALERT_TRIAGE, INCIDENT_PROMOTED entries
+ |    |    +-- SocComplianceService -- DORA report aggregation, PII-sanitised timeline, inclusion proofs
+ |    |    +-- SocPiiSanitiser      -- regex PII redaction (IPv4, IPv6, email); fail-closed
+ +-- rest/
+ |    +-- SocComplianceResource     -- JAX-RS: /api/soc/compliance/{proof,timeline,dora}; @RolesAllowed
  +-- routing/
  |    +-- SocActionRiskClassifier   -- ActionRiskClassifier with @RiskClassifier qualifier
  +-- worker/
@@ -83,9 +110,10 @@ io.casehub.soc
 ### app/src/main/resources
 
 ```
-application.properties                -- H2 dev defaults, Flyway, in-memory engine SPIs
+application.properties                -- H2 dev defaults, Flyway (work + qhorus + soc), in-memory engine SPIs
 META-INF/ras-situations.yaml          -- RAS situation definitions (soc-siem-alert-critical)
 soc/incident-investigation.yaml       -- case definition YAML (3 capabilities, 4 bindings, 3 goals)
+db/soc/migration/V5000__*.sql         -- SOC-specific Flyway migrations (V5000+ range, qhorus datasource)
 ```
 
 ---
