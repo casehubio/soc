@@ -8,20 +8,25 @@ spec:
 
   ## ─── Capabilities ───────────────────────────────────────────────────────────
   capabilities:
+    - name: cbr-retrieval
+      description: "Retrieve similar past incidents from CBR memory"
+      inputProjection: "{ alert: .alert }"
+      outputProjection: "{ retrievedIncidents: ., incidentStatus: \"TRIAGING\" }"
+
     - name: ioc-enrichment
       description: "Extract IOCs from alert data and enrich with threat intelligence"
-      inputProjection: "{ alert: .alert }"
-      outputProjection: "{ iocEnrichment: . }"
+      inputProjection: "{ alert: .alert, retrievedIncidents: .retrievedIncidents }"
+      outputProjection: "{ iocEnrichment: ., incidentStatus: \"TRIAGING\" }"
 
     - name: attck-mapping
       description: "Map indicators and enrichment to MITRE ATT&CK techniques and tactics"
-      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment }"
-      outputProjection: "{ attckMapping: . }"
+      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, retrievedIncidents: .retrievedIncidents }"
+      outputProjection: "{ attckMapping: ., incidentStatus: \"INVESTIGATING\" }"
 
     - name: containment-recommendation
       description: "Recommend containment actions based on threat analysis"
-      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, attckMapping: .attckMapping }"
-      outputProjection: "{ containmentRecommendation: . }"
+      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, attckMapping: .attckMapping, retrievedIncidents: .retrievedIncidents }"
+      outputProjection: "{ containmentRecommendation: ., incidentStatus: \"CONTAINING\" }"
 
   ## ─── Goals ──────────────────────────────────────────────────────────────────
   goals:
@@ -48,8 +53,15 @@ spec:
   ## ─── Bindings ────────────────────────────────────────────────────────────────
   bindings:
 
-    ## Fires first — IOC enrichment has no prior-context prerequisite.
-    ## Extracts IOCs from the alert and queries threat intelligence feeds.
+    ## Fires first — retrieves similar past incidents from CBR memory
+    ## to enrich triage context for all downstream bindings.
+    - name: cbr-retrieval
+      on: { contextChange: {} }
+      when: ".alert != null and .retrievedIncidents == null"
+      capability: cbr-retrieval
+
+    ## Fires after CBR retrieval. Extracts IOCs from the alert and
+    ## queries threat intelligence feeds.
     - name: ioc-enrichment
       on: { contextChange: {} }
       when: ".alert != null and .iocEnrichment == null"
@@ -105,7 +117,8 @@ spec:
             alert: .alert,
             iocEnrichment: .iocEnrichment,
             attckMapping: .attckMapping,
-            containmentRecommendation: .containmentRecommendation
+            containmentRecommendation: .containmentRecommendation,
+            retrievedIncidents: .retrievedIncidents
           }
         outputMapping: >-
           {
@@ -119,5 +132,11 @@ spec:
               end
             ),
             analystOutcome: .outcome,
-            analystId: .completedBy
+            analystId: .completedBy,
+            incidentStatus: (
+              if .outcome == "FALSE_POSITIVE" then "FALSE_POSITIVE"
+              elif .outcome == "ESCALATE" then "ESCALATED"
+              else "RESOLVED"
+              end
+            )
           }

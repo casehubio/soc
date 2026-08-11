@@ -30,18 +30,18 @@ class SocCaseHubTest {
     void hasThreeCapabilities() {
         var names = caseHub.getDefinition().getCapabilities()
             .stream().map(c -> c.name()).toList();
-        assertEquals(3, names.size());
+        assertEquals(4, names.size());
         assertTrue(names.containsAll(List.of(
-            "ioc-enrichment", "attck-mapping", "containment-recommendation")));
+            "cbr-retrieval", "ioc-enrichment", "attck-mapping", "containment-recommendation")));
     }
 
     @Test
     void hasFourBindings() {
         var names = caseHub.getDefinition().getBindings()
             .stream().map(b -> b.getName()).toList();
-        assertEquals(4, names.size());
+        assertEquals(5, names.size());
         assertTrue(names.containsAll(List.of(
-            "ioc-enrichment", "attck-mapping", "containment-recommendation", "analyst-review")));
+            "cbr-retrieval", "ioc-enrichment", "attck-mapping", "containment-recommendation", "analyst-review")));
     }
 
     @Test
