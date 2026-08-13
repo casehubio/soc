@@ -1,5 +1,6 @@
 package io.casehub.soc.engine;
 
+import io.casehub.soc.detection.BruteForceDetectorGanglion;
 import io.casehub.soc.detection.SiemAlertGanglion;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
@@ -11,5 +12,11 @@ public class SocGanglionProducer {
     @ApplicationScoped
     SiemAlertGanglion siemAlertGanglion() {
         return new SiemAlertGanglion();
+    }
+
+    @Produces
+    @ApplicationScoped
+    BruteForceDetectorGanglion bruteForceDetectorGanglion() {
+        return new BruteForceDetectorGanglion();
     }
 }

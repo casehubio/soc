@@ -27,4 +27,46 @@ situations:
         priority: HIGH
         source: siem-alert
 
-  # soc-brute-force — deferred to Slice 2 (requires BruteForceDetectorGanglion)
+  - situationId: soc-brute-force-by-source
+    eventTypes:
+      - soc.alert.auth.failed-login
+      - soc.alert.auth.failed-mfa
+      - soc.alert.auth.account-lockout
+      - soc.alert.auth.password-spray
+    correlationWindow: PT5M
+    eventBufferDelay: PT10S
+    correlationKeyExpression: ".extensions.sourceip"
+    chainMode:
+      type: count
+      ganglionId: brute-force-detector
+      requiredCount: 5
+    triggerAction:
+      type: create-case
+      caseNamespace: io.casehub.soc
+      caseName: incident-investigation
+      caseVersion: "1.0.0"
+      baseCaseData:
+        priority: HIGH
+        source: auth-brute-force
+
+  - situationId: soc-credential-stuffing-by-target
+    eventTypes:
+      - soc.alert.auth.failed-login
+      - soc.alert.auth.failed-mfa
+      - soc.alert.auth.account-lockout
+      - soc.alert.auth.password-spray
+    correlationWindow: PT1H
+    eventBufferDelay: PT30S
+    correlationKeyExpression: ".extensions.targetaccount"
+    chainMode:
+      type: count
+      ganglionId: brute-force-detector
+      requiredCount: 3
+    triggerAction:
+      type: create-case
+      caseNamespace: io.casehub.soc
+      caseName: incident-investigation
+      caseVersion: "1.0.0"
+      baseCaseData:
+        priority: HIGH
+        source: auth-credential-stuffing
