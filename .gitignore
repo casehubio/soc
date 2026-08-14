@@ -10,5 +10,5 @@ proj
 .mvn/maven.config
 .mvn/slot-settings.xml
 .build
-specs/
-plans/
+/specs/
+/plans/
