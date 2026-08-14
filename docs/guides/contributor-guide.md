@@ -36,7 +36,9 @@ Follows the standard CaseHub module tier structure: pure-Java SPI in api/, JPA +
 ```
 io.casehub.soc
  +-- detection/
- |    +-- SiemAlertGanglion         -- JavaSwitchGanglion; classifies 6 CloudEvent types by severity
+ |    +-- SiemAlertGanglion         -- JavaSwitchGanglion; classifies 6 SIEM/EDR CloudEvent types by severity
+ |    +-- BruteForceDetectorGanglion -- JavaSwitchGanglion; classifies 4 auth failure CloudEvent types
+ |    +-- BruteForceScorer          -- SPI interface; pluggable confidence scoring (default 0.9)
  +-- domain/
  |    +-- AlertSeverity             -- enum: CRITICAL, HIGH, MEDIUM, LOW, INFORMATIONAL
  |    +-- AttackTactic              -- enum: 14 MITRE ATT&CK Enterprise tactics (TA0001-TA0043)
@@ -84,7 +86,7 @@ io.casehub.soc
 
 ```
 application.properties                -- H2 dev defaults, Flyway, in-memory engine SPIs
-META-INF/ras-situations.yaml          -- RAS situation definitions (soc-siem-alert-critical)
+META-INF/ras-situations.yaml          -- RAS situation definitions (3: siem-alert-critical, brute-force-by-source, credential-stuffing-by-target)
 soc/incident-investigation.yaml       -- case definition YAML (3 capabilities, 4 bindings, 3 goals)
 ```
 
@@ -254,6 +256,57 @@ The `actionType` string must match `SocActionType.actionType()` format (lowercas
 
 ---
 
+## Case Context Key Vocabulary
+
+Canonical context keys used by all SOC workers, bindings, and observers. These keys are the shared contract between components — workers write them, bindings guard on them, and observers read them.
+
+### Alert and Detection (set at case creation)
+
+| Key | Type | Set by | Description |
+|---|---|---|---|
+| `alert` | Map | `SocCaseInputContributor` | Alert data from the CloudEvent: eventType, severity, confidence, timestamp, source, rule |
+| `priority` | String | baseCaseData in situation YAML | Case priority from the trigger (e.g. `HIGH`) |
+| `source` | String | baseCaseData in situation YAML | Alert source category (e.g. `siem-alert`, `auth-brute-force`) |
+| `situationId` | String | RAS runtime | Situation definition ID that triggered the case |
+| `correlationKey` | String | RAS runtime | Entity the event concerns (e.g. host ID, source IP) |
+| `detections` | List&lt;Map&gt; | `SocCaseInputContributor` | All detections from the situation: ganglionId, signal, confidence, eventTime, evidence |
+
+### Investigation Pipeline (set by capability bindings)
+
+| Key | Type | Set by | Description |
+|---|---|---|---|
+| `iocEnrichment` | Map | ioc-enrichment capability | IOCs extracted from alert: `iocs` (list), `summary` (string) |
+| `attckMapping` | Map | attck-mapping capability | ATT&CK mapping: `techniques` (list), `primaryTactic`, `confidence`, `narrative` |
+| `containmentRecommendation` | Map | containment-recommendation capability | Recommended action: `recommendedAction`, `riskScore`, `confidenceScore`, `rationale`, `actionParameters` |
+| `retrievedIncidents` | List | cbr-retrieval capability | Similar past incidents from CBR (Layer 4b) |
+
+### Incident Lifecycle (set by `SocIncidentStatusObserver`)
+
+| Key | Type | Set by | Description |
+|---|---|---|---|
+| `incidentStatus` | String | Output projections + observer | Current lifecycle state: `TRIAGING`, `INVESTIGATING`, `CONTAINING`, `RESOLVED`, `ESCALATED`, `FALSE_POSITIVE` |
+
+State transitions are forward-only (enforced by ordinal comparison in `SocIncidentStatusObserver`). `SocIncidentStatusChangedEvent` CDI event fires on each transition with caseId, tenancyId, previousStatus, newStatus, occurredAt.
+
+### Analyst Decision (set by analyst-review humanTask outputMapping)
+
+| Key | Type | Set by | Description |
+|---|---|---|---|
+| `analystDecision` | String | analyst-review outputMapping | Terminal decision: `resolved`, `escalated`, `false-positive`. Mapped from WorkItem outcome (CONFIRM_SEVERITY/DOWNGRADE → resolved, ESCALATE → escalated, FALSE_POSITIVE → false-positive, null → escalated). |
+
+### Binding Guard Chain
+
+The investigation pipeline is sequenced by `when` guards on each binding. Each guard checks that the prior stage's output exists and the current stage's output does not:
+
+```
+alert != null ──→ ioc-enrichment
+iocEnrichment != null ──→ attck-mapping
+attckMapping != null ──→ containment-recommendation
+containmentRecommendation != null ──→ analyst-review
+```
+
+---
+
 ## Case Definition YAML Details
 
 File: `app/src/main/resources/soc/incident-investigation.yaml`
@@ -286,7 +339,11 @@ File: `app/src/main/resources/META-INF/ras-situations.yaml`
 - Trigger action: create `incident-investigation` case (namespace `io.casehub.soc`, version 1.0.0)
 - Base case data: `priority: HIGH`, `source: siem-alert`
 
-**soc-brute-force** -- deferred to Slice 2 (requires `BruteForceDetectorGanglion`).
+**soc-brute-force-by-source:** Count mode (5 events in 5min), correlates by source IP. Triggers `incident-investigation` case with `source: auth-brute-force`.
+
+**soc-credential-stuffing-by-target:** Count mode (3 events in 1hr), correlates by target account. Triggers `incident-investigation` case with `source: auth-credential-stuffing`.
+
+Both use `BruteForceDetectorGanglion` (handles 4 auth event types) with pluggable `BruteForceScorer` SPI (default confidence 0.9).
 
 ---
 
@@ -332,11 +389,11 @@ The project follows a **vertical slice** approach. Each slice delivers one incid
 | Slice 0 | Domain vocabulary + platform integration | **Complete** |
 | Slice 1, Layer 1 | Alert ingestion and case creation (RAS pipeline) | **Complete** |
 | Slice 1, Layer 2 | Triage workers (rule-based + LLM, 6 workers) | **Complete** |
-| Slice 1, Layer 3 | Analyst review, SLA enforcement, failure binding | **In Progress** (soc#19 done) |
-| Slice 1, Layer 4a | Trust scoring, agent routing, agent descriptors | **In Progress** (soc#20 done) |
-| Slice 1, Layer 4b | CBR retain/retrieve, incident lifecycle | Planned |
-| Slice 1, Layer 5 | Compliance audit trail, LedgerEntry subclasses | Planned |
-| Slice 2 | Brute force detection (extends Slice 1 infrastructure) | Future |
+| Slice 1, Layer 3 | Analyst review, SLA enforcement, failure binding | **Complete** (#11, #12, #19) |
+| Slice 1, Layer 4a | Trust scoring, agent routing, agent descriptors | **Complete** (#20, #22) |
+| Slice 1, Layer 4b | CBR retain/retrieve, incident lifecycle | **Complete** (#23) |
+| Slice 1, Layer 5 | Compliance audit trail, LedgerEntry subclasses | **Complete** (#24) |
+| Slice 2 | Brute force + credential stuffing detection | **Complete** (#25) |
 | Slice 3 | Real-time event correlation (Drools CEP -- engine#809) | Future |
 | Slice 4 | Multi-tenant SOC-as-a-Service | Future |
 
@@ -344,17 +401,10 @@ The project follows a **vertical slice** approach. Each slice delivers one incid
 
 ## Open Issues
 
-| # | Title | Layer |
+| # | Title | Notes |
 |---|---|---|
-| 19 | Layer 3: investigation failure binding for pipeline stall mitigation | 3 (done) |
-| 20 | Layer 4a: SocAgentRegistrar for agent descriptor registration | 4a |
-| 16 | Rewrite ARC42STORIES for vertical slice approach | Design |
-| 13 | Incident lifecycle state management | 4b |
-| 12 | SLA breach policy -- SOC escalation chain | 3 |
-| 11 | Analyst WorkItem for triage review | 3 |
-| 10 | Rule-based triage agent (WorkerFunction) | Superseded by Layer 2 |
-| 9 | Alert-to-case promotion via RAS situations | Superseded by Layer 1 |
-| 8 | Epic 2: Incident Triage & Case Lifecycle | Superseded by Slice 1 |
+| 16 | Rewrite ARC42STORIES for vertical slice approach | Docs task |
+| 13 | Incident lifecycle state management | Covered by #23 — pending close |
 
 ---
 
