@@ -1,28 +1,24 @@
 # HANDOFF — casehub-soc
 
-**Date:** 2026-06-30
-**Branch:** main (issue-1-infra-chores closed and stamped)
-**Issues:** #1, #2, #3, #4, #5 all closed
+**Date:** 2026-08-11
+**Branch:** `issue-21-trust-cbr-compliance` (slot 106)
+**Epic:** #21 — Trust, CBR & Compliance (Layers 4-5)
 
 ---
 
-## What happened
+## Last session
 
-Closed the `issue-1-infra-chores` branch. Delivered: CI workflow (publish.yml matching ledger/work pattern), commit-msg hook enforcing issue refs, ARC42STORIES.MD moved to project root, CLAUDE.md routing fix, and casehubio.github.io website entries for SOC. Issue #2 (BOM) was already done. Filed upstream issues for remaining cross-repo items.
+**Issue #23 (Layer 4b: CBR integration & incident lifecycle) — implementation complete, not yet closed**
+
+Delivered 8 commits: `SocIncidentCbrCase` record implementing `CbrCase` with `fromSnapshot()` and `extractRetrievalFeatures()`. CBR registration (`SocCbrCaseTypeRegistration` + `SocCbrSchemaRegistrar`). `SocCbrRetainService` (second `CaseOutcomeObserver`, stores resolved incidents). `SocCbrRetrieveService` (standalone hybrid query). YAML updated: `cbr-retrieval` capability+binding, `incidentStatus` in all output projections, `retrievedIncidents` in all input projections. `SocIncidentStatusObserver` fires `SocIncidentStatusChangedEvent` on forward lifecycle transitions with terminal eviction.
+
+Design spec passed decision review (light) + spec review (light). Key review findings incorporated: retry-loop prevention on retrieve failure, `containmentOutcome` categorical replacing booleans, `SocCaseOutcomeFilter` shared predicate, status observer memory leak fix.
 
 ---
 
-## What's next
+## Immediate Next Step
 
-**Cross-repo (filed, pending):**
-- casehubio/engine#613 — add `soc` to downstream CI dispatch list
-- casehubio/parent#334 — README badge + docs/index.html APP_REPOS entry
-- casehubio/fsitrading#9, #10, #11 — equivalent infra setup for fsitrading
-- casehubio/engine#623 — add `fsitrading` to downstream CI dispatch list
-
-**SOC feature work:**
-- **Epic 2: Incident Triage & Case Lifecycle** — next feature epic per ARC42STORIES.MD
-- **Platform gap:** `SituationStore` implementation needed in casehub-ras before full integration testing
+Run `/work` to continue on this branch with #24 (Layer 5: Compliance & audit evidence). #23 needs `work-end` code review and GitHub issue closure when the branch closes.
 
 ---
 
@@ -30,8 +26,9 @@ Closed the `issue-1-infra-chores` branch. Delivered: CI workflow (publish.yml ma
 
 | Item | Status |
 |------|--------|
-| main | up to date with origin/main |
-| issue-1-infra-chores | closed, stamped, pushed |
-| Working tree | clean (untracked: .claude/) |
-| Build | passing (mvn install -DskipTests) |
-| casehubio.github.io | SOC entries committed, not pushed |
+| Branch | `issue-21-trust-cbr-compliance` — 11 commits ahead of main |
+| #22 | Closed |
+| #23 | Implementation complete, issue open |
+| #24 | Open — not started |
+| Build | passing |
+| Slot 106 | Active — 1 issue remaining |

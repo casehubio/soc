@@ -1,0 +1,10 @@
+package io.casehub.soc.domain;
+
+public enum SocStepType {
+    ALERT_TRIAGE,
+    INCIDENT_PROMOTED,
+    INVESTIGATION_STEP,
+    CONTAINMENT_DECISION,
+    CONTAINMENT_EXECUTED,
+    INCIDENT_RESOLVED
+}

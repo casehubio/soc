@@ -7,3 +7,8 @@ target/
 .claude
 package-lock.json
 proj
+.mvn/maven.config
+.mvn/slot-settings.xml
+.build
+specs/
+plans/
