@@ -12,3 +12,6 @@ proj
 .build
 /specs/
 /plans/
+node_modules/
+dist/
+.quinoa/
