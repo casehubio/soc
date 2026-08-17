@@ -43,6 +43,37 @@ This is an **application layer**, not a framework. The foundation provides coord
 | Slice 1, Layer 2: Triage Workers | Complete | 6 workers (rule-based + LLM for IOC enrichment, ATT&CK mapping, containment recommendation) |
 | Slice 1, Layer 3: Failure Review | Partial | SocFaultedCaseReviewCreator creates WorkItems for FAULTED investigations; analyst review and SLA next |
 | Slice 1, Layers 4-5 | Planned | Trust routing, CBR, compliance audit trail |
+| Web Application Phase 0 | Complete | Quinoa skeleton with sidebar navigation (Incidents, Workbench, Trust, Compliance) |
+| Web Application Phase 1 | Complete | Incidents view — case-explorer, timeline, KPIs, ATT&CK matrix, IOC panel, alert heatmap, SSE push |
+
+---
+
+## Web Application
+
+The SOC web application is hosted via Quarkus Quinoa. TypeScript sources in `app/src/main/webui/`, compiled by esbuild, served from classpath. Single `mvn quarkus:dev` hot-reloads Java and TypeScript.
+
+### REST Endpoints
+
+| Endpoint | Method | Returns |
+|---|---|---|
+| `/api/soc/incidents` | GET | Incident list (`{ entities: [...], totalCount: N }`) |
+| `/api/soc/incidents/{id}` | GET | Incident detail |
+| `/api/soc/incidents/{id}/timeline` | GET | Investigation steps |
+| `/api/soc/incidents/{id}/channels` | GET | Channel messages (stub) |
+| `/api/soc/incidents/{id}/iocs` | GET | Extracted IOCs |
+| `/api/soc/incidents/{id}/attck` | GET | ATT&CK technique mapping |
+| `/api/soc/kpis` | GET | SOC operational KPIs |
+| `/api/soc/alerts/heatmap` | GET | Alert volume by source/severity/time |
+| `/api/soc/compliance/proof/{entryId}` | GET | Merkle inclusion proof |
+| `/api/soc/compliance/timeline/{incidentId}` | GET | Ledger entry chain |
+| `/api/soc/compliance/dora` | GET | DORA response time report |
+
+### SSE Push Topics
+
+| Topic | Events |
+|---|---|
+| `soc:incidents` | append (new), replace (status change) |
+| `soc:kpis` | snapshot (refresh on state change) |
 
 ---
 

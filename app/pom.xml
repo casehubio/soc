@@ -153,6 +153,13 @@
       <artifactId>casehub-work</artifactId>
     </dependency>
 
+    <!-- Pages push — EventBroadcaster for SSE push events -->
+    <dependency>
+      <groupId>io.casehub</groupId>
+      <artifactId>casehub-pages-push-runtime</artifactId>
+      <version>${casehub.version}</version>
+    </dependency>
+
     <!-- Typed agent communication (deployment auto-discovered) -->
     <dependency>
       <groupId>io.casehub</groupId>

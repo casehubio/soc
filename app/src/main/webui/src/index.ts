@@ -1,5 +1,7 @@
 import { loadSite } from "@casehubio/pages-runtime";
 import { page, sidebar, html } from "@casehubio/pages-ui";
+import { incidentsView, wireIncidentSelection } from "./incidents/incidents-view.js";
+import { initSelectionFromUrl } from "./incidents/incident-selection.js";
 
 const placeholder = (name: string, phase: string) =>
   html(`<div style="padding: 2rem; color: #666;">
@@ -9,14 +11,25 @@ const placeholder = (name: string, phase: string) =>
 
 const app = page("SOC — Incident Response",
   sidebar(
-    ["Incidents", placeholder("Incidents", "Phase 1")],
+    ["Incidents", incidentsView()],
     ["Workbench", placeholder("Workbench", "Phase 2")],
     ["Trust", placeholder("Trust", "Phase 3")],
     ["Compliance", placeholder("Compliance", "Phase 4")],
   )
 );
 
-const container = document.getElementById("app");
-if (container) {
-  loadSite(container, app).catch(console.error);
+async function boot() {
+  const container = document.getElementById("app");
+  if (!container) return;
+
+  const site = await loadSite(container, app);
+
+  if (!location.hash) {
+    site.navigate("Incidents");
+  }
+
+  wireIncidentSelection();
+  initSelectionFromUrl();
 }
+
+boot().catch(console.error);
