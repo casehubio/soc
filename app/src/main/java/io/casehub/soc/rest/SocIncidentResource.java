@@ -13,7 +13,6 @@ import jakarta.ws.rs.Path;
 import jakarta.ws.rs.PathParam;
 import jakarta.ws.rs.QueryParam;
 
-import java.time.Instant;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
@@ -100,7 +99,7 @@ public class SocIncidentResource {
                 ctx != null ? stringOrDefault(ctx, "alertSeverity", "UNKNOWN") : "UNKNOWN",
                 ctx != null ? stringOrDefault(ctx, "alertSource", "unknown") : "unknown",
                 ctx != null ? stringOrDefault(ctx, "incidentTitle", "Untitled Incident") : "Untitled Incident",
-                Instant.now());
+                ci.getCreatedAt());
     }
 
     static String stringOrDefault(io.casehub.api.context.CaseContext ctx, String key, String defaultValue) {
