@@ -2,6 +2,9 @@ import { loadSite } from "@casehubio/pages-runtime";
 import { page, sidebar, html } from "@casehubio/pages-ui";
 import { incidentsView, wireIncidentSelection } from "./incidents/incidents-view.js";
 import { initSelectionFromUrl } from "./incidents/incident-selection.js";
+import { workbenchView, wireWorkbenchSelection } from "./workbench/workbench-view.js";
+import { initWorkbenchFromUrl } from "./workbench/workbench-selection.js";
+import "@casehubio/blocks-ui-notification-inbox";
 
 const placeholder = (name: string, phase: string) =>
   html(`<div style="padding: 2rem; color: #666;">
@@ -12,7 +15,7 @@ const placeholder = (name: string, phase: string) =>
 const app = page("SOC — Incident Response",
   sidebar(
     ["Incidents", incidentsView()],
-    ["Workbench", placeholder("Workbench", "Phase 2")],
+    ["Workbench", workbenchView()],
     ["Trust", placeholder("Trust", "Phase 3")],
     ["Compliance", placeholder("Compliance", "Phase 4")],
   )
@@ -30,6 +33,16 @@ async function boot() {
 
   wireIncidentSelection();
   initSelectionFromUrl();
+  wireWorkbenchSelection();
+  initWorkbenchFromUrl();
+
+  const bell = document.createElement("blocks-notification-bell");
+  bell.setAttribute("endpoint", "/notifications");
+  bell.style.position = "fixed";
+  bell.style.top = "1rem";
+  bell.style.right = "1rem";
+  bell.style.zIndex = "1000";
+  container.appendChild(bell);
 }
 
 boot().catch(console.error);

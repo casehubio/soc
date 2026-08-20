@@ -160,6 +160,19 @@
       <version>${casehub.version}</version>
     </dependency>
 
+    <!-- Work REST — inbox, claim, complete, notes, SSE endpoints for blocks-ui work components -->
+    <dependency>
+      <groupId>io.casehub</groupId>
+      <artifactId>casehub-work-rest</artifactId>
+    </dependency>
+
+    <!-- Notification REST + SSE — notification inbox, preferences, subscriptions -->
+    <dependency>
+      <groupId>io.casehub</groupId>
+      <artifactId>casehub-platform-notifications</artifactId>
+      <version>${casehub.version}</version>
+    </dependency>
+
     <!-- Typed agent communication (deployment auto-discovered) -->
     <dependency>
       <groupId>io.casehub</groupId>

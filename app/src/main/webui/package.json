@@ -15,6 +15,14 @@
     "@casehubio/blocks-ui-blocks-timeline": "file:../../../../../blocks-ui/components/blocks-timeline",
     "@casehubio/blocks-ui-kpi-metric-row": "file:../../../../../blocks-ui/components/kpi-metric-row",
     "@casehubio/blocks-ui-channel-activity": "file:../../../../../blocks-ui/components/channel-activity",
+    "@casehubio/blocks-ui-work-item-workbench": "file:../../../../../blocks-ui/components/work-item-workbench",
+    "@casehubio/blocks-ui-work-item-inbox": "file:../../../../../blocks-ui/components/work-item-inbox",
+    "@casehubio/blocks-ui-work-item-detail": "file:../../../../../blocks-ui/components/work-item-detail",
+    "@casehubio/blocks-ui-work-item-row": "file:../../../../../blocks-ui/components/work-item-row",
+    "@casehubio/blocks-ui-split-workbench": "file:../../../../../blocks-ui/components/split-workbench",
+    "@casehubio/blocks-ui-sla-indicator": "file:../../../../../blocks-ui/components/sla-indicator",
+    "@casehubio/blocks-ui-approval-gate": "file:../../../../../blocks-ui/components/approval-gate",
+    "@casehubio/blocks-ui-notification-inbox": "file:../../../../../blocks-ui/components/notification-inbox",
     "lit": "^3.3.3"
   },
   "devDependencies": {
