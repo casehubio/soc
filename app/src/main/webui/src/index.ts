@@ -4,6 +4,7 @@ import { incidentsView, wireIncidentSelection } from "./incidents/incidents-view
 import { initSelectionFromUrl } from "./incidents/incident-selection.js";
 import { workbenchView, wireWorkbenchSelection } from "./workbench/workbench-view.js";
 import { initWorkbenchFromUrl } from "./workbench/workbench-selection.js";
+import { trustView, wireTrustCaseSelection, initTrustFromUrl } from "./trust/trust-view.js";
 import "@casehubio/blocks-ui-notification-inbox";
 
 const placeholder = (name: string, phase: string) =>
@@ -16,7 +17,7 @@ const app = page("SOC — Incident Response",
   sidebar(
     ["Incidents", incidentsView()],
     ["Workbench", workbenchView()],
-    ["Trust", placeholder("Trust", "Phase 3")],
+    ["Trust", trustView()],
     ["Compliance", placeholder("Compliance", "Phase 4")],
   )
 );
@@ -35,6 +36,8 @@ async function boot() {
   initSelectionFromUrl();
   wireWorkbenchSelection();
   initWorkbenchFromUrl();
+  wireTrustCaseSelection();
+  initTrustFromUrl();
 
   const bell = document.createElement("blocks-notification-bell");
   bell.setAttribute("endpoint", "/notifications");

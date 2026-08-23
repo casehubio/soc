@@ -45,6 +45,8 @@ This is an **application layer**, not a framework. The foundation provides coord
 | Slice 1, Layers 4-5 | Planned | Trust routing, CBR, compliance audit trail |
 | Web Application Phase 0 | Complete | Quinoa skeleton with sidebar navigation (Incidents, Workbench, Trust, Compliance) |
 | Web Application Phase 1 | Complete | Incidents view — case-explorer, timeline, KPIs, ATT&CK matrix, IOC panel, alert heatmap, SSE push |
+| Web Application Phase 2 | Complete | Analyst Workbench — work-item-inbox, SLA indicator, approval gate, case notes, IOC submission |
+| Web Application Phase 3 | Complete | Trust & Routing — fleet trust overview (6 agent cards), routing rationale (per-case), CBR similarity panel, SSE push |
 
 ---
 
@@ -64,6 +66,10 @@ The SOC web application is hosted via Quarkus Quinoa. TypeScript sources in `app
 | `/api/soc/incidents/{id}/attck` | GET | ATT&CK technique mapping |
 | `/api/soc/kpis` | GET | SOC operational KPIs |
 | `/api/soc/alerts/heatmap` | GET | Alert volume by source/severity/time |
+| `/api/soc/trust/{agentId}` | GET | Agent trust scores (global + dimensions) |
+| `/api/soc/trust/fleet-kpis` | GET | Fleet aggregate metrics (mean trust, observations, size) |
+| `/api/soc/trust/routing/{caseId}` | GET | Routing rationale per capability (from WorkerDecisionEntry) |
+| `/api/soc/cbr/similar/{caseId}` | GET | Similar past incidents with outcome summary |
 | `/api/soc/compliance/proof/{entryId}` | GET | Merkle inclusion proof |
 | `/api/soc/compliance/timeline/{incidentId}` | GET | Ledger entry chain |
 | `/api/soc/compliance/dora` | GET | DORA response time report |
@@ -74,6 +80,7 @@ The SOC web application is hosted via Quarkus Quinoa. TypeScript sources in `app
 |---|---|
 | `soc:incidents` | append (new), replace (status change) |
 | `soc:kpis` | snapshot (refresh on state change) |
+| `soc:trust` | snapshot (on TrustScoreActorUpdatedEvent) |
 
 ---
 

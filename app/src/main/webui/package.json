@@ -23,6 +23,9 @@
     "@casehubio/blocks-ui-sla-indicator": "file:../../../../../blocks-ui/components/sla-indicator",
     "@casehubio/blocks-ui-approval-gate": "file:../../../../../blocks-ui/components/approval-gate",
     "@casehubio/blocks-ui-notification-inbox": "file:../../../../../blocks-ui/components/notification-inbox",
+    "@casehubio/blocks-ui-trust-score-panel": "file:../../../../../blocks-ui/components/trust-score-panel",
+    "@casehubio/blocks-ui-routing-rationale": "file:../../../../../blocks-ui/components/routing-rationale",
+    "@casehubio/blocks-ui-similarity-panel": "file:../../../../../blocks-ui/components/similarity-panel",
     "lit": "^3.3.3"
   },
   "devDependencies": {
