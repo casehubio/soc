@@ -5,6 +5,7 @@ import { initSelectionFromUrl } from "./incidents/incident-selection.js";
 import { workbenchView, wireWorkbenchSelection } from "./workbench/workbench-view.js";
 import { initWorkbenchFromUrl } from "./workbench/workbench-selection.js";
 import { trustView, wireTrustCaseSelection, initTrustFromUrl } from "./trust/trust-view.js";
+import { complianceView } from "./compliance/compliance-view.js";
 import "@casehubio/blocks-ui-notification-inbox";
 
 const placeholder = (name: string, phase: string) =>
@@ -18,7 +19,7 @@ const app = page("SOC — Incident Response",
     ["Incidents", incidentsView()],
     ["Workbench", workbenchView()],
     ["Trust", trustView()],
-    ["Compliance", placeholder("Compliance", "Phase 4")],
+    ["Compliance", complianceView()],
   )
 );
 

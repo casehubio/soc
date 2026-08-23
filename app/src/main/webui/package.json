@@ -26,6 +26,10 @@
     "@casehubio/blocks-ui-trust-score-panel": "file:../../../../../blocks-ui/components/trust-score-panel",
     "@casehubio/blocks-ui-routing-rationale": "file:../../../../../blocks-ui/components/routing-rationale",
     "@casehubio/blocks-ui-similarity-panel": "file:../../../../../blocks-ui/components/similarity-panel",
+    "@casehubio/blocks-ui-compliance-summary": "file:../../../../../blocks-ui/components/compliance-summary",
+    "@casehubio/blocks-ui-gdpr-erasure-action": "file:../../../../../blocks-ui/components/gdpr-erasure-action",
+    "@casehubio/pages-table": "file:../../../../../pages/packages/pages-table",
+    "@casehubio/pages-ui-components": "file:../../../../../pages/packages/pages-ui-components",
     "lit": "^3.3.3"
   },
   "devDependencies": {
