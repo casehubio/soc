@@ -20,7 +20,7 @@ class LlmContainmentRecWorkerTest {
     @Test
     void workerMetadata() {
         assertThat(worker.name()).isEqualTo("llm-containment-rec");
-        assertThat(worker.capabilityNames()).containsExactly("containment-recommendation");
+        assertThat(worker.capabilities()).containsExactly("containment-recommendation");
         assertThat(worker.function()).isInstanceOf(WorkerFunction.Sync.class);
     }
 

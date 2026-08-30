@@ -28,9 +28,10 @@ class SocIncidentCbrCaseTest {
     @Test
     void withOutcome_returnsNewInstance() {
         var original = minimalCase();
-        var updated = (SocIncidentCbrCase) original.withOutcome("COMPLETED", 0.95);
+        var conf = io.casehub.neocortex.cognitive.Confidence.unknown(0.95);
+        var updated = (SocIncidentCbrCase) original.withOutcome("COMPLETED", conf);
         assertThat(updated.outcome()).isEqualTo("COMPLETED");
-        assertThat(updated.confidence()).isEqualTo(0.95);
+        assertThat(updated.confidence()).isEqualTo(conf);
         assertThat(updated.alertType()).isEqualTo(original.alertType());
     }
 

@@ -17,7 +17,7 @@ class RuleAttckMappingWorkerTest {
     @Test
     void workerMetadata() {
         assertThat(worker.name()).isEqualTo("rule-attck-mapping");
-        assertThat(worker.capabilityNames()).containsExactly("attck-mapping");
+        assertThat(worker.capabilities()).containsExactly("attck-mapping");
     }
 
     @Test

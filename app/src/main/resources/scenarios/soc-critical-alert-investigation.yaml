@@ -1,0 +1,37 @@
+scenario: soc-critical-alert-investigation
+description: "Inject a critical CrowdStrike alert and navigate through all SOC tabs"
+steps:
+  - name: inject-alert
+    delivery: rest
+    method: POST
+    url: /api/soc/demo/inject-alert
+    body:
+      eventType: soc.alert.siem.crowdstrike
+      severity: CRITICAL
+      source: "10.0.1.42"
+      rule: credential-harvesting
+      correlationKey: "demo-host-1"
+
+  - navigate: /
+  - click:
+      role: tab
+      name: "Incidents"
+  - wait:
+      role: row
+      name: "CRITICAL"
+      timeout: 10000
+
+  - click:
+      role: tab
+      name: "Workbench"
+  - wait:
+      role: listitem
+      timeout: 10000
+
+  - click:
+      role: tab
+      name: "Trust"
+
+  - click:
+      role: tab
+      name: "Compliance"

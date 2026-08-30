@@ -30,7 +30,7 @@ class SocInvestigationCaseDescriptorTest {
     void threeCapabilitiesWithTwoWorkersEach() {
         var byCapability = descriptor.workers().stream()
                 .collect(Collectors.groupingBy(
-                        w -> w.capabilityNames().iterator().next()));
+                        w -> w.capabilities().iterator().next()));
         assertThat(byCapability).hasSize(3);
         assertThat(byCapability.get("ioc-enrichment")).hasSize(2);
         assertThat(byCapability.get("attck-mapping")).hasSize(2);

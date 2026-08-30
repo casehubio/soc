@@ -18,7 +18,7 @@ class LlmIocEnrichmentWorkerTest {
     @Test
     void workerMetadata() {
         assertThat(worker.name()).isEqualTo("llm-ioc-enrichment");
-        assertThat(worker.capabilityNames()).containsExactly("ioc-enrichment");
+        assertThat(worker.capabilities()).containsExactly("ioc-enrichment");
         assertThat(worker.function()).isInstanceOf(AgentWorkerFunction.class);
     }
 

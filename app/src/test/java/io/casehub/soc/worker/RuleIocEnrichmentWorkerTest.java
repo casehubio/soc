@@ -17,7 +17,7 @@ class RuleIocEnrichmentWorkerTest {
     @Test
     void workerMetadata() {
         assertThat(worker.name()).isEqualTo("rule-ioc-enrichment");
-        assertThat(worker.capabilityNames()).containsExactly("ioc-enrichment");
+        assertThat(worker.capabilities()).containsExactly("ioc-enrichment");
     }
 
     @Test

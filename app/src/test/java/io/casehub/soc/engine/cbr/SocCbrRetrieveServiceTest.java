@@ -22,7 +22,7 @@ class SocCbrRetrieveServiceTest {
     @Test
     void retrieve_withAlertData_returnsResults() {
         store.addCase(new SocIncidentCbrCase(
-            "malware from siem-1", "CONFIRM_SEVERITY", "COMPLETED", 0.9,
+            "malware from siem-1", "CONFIRM_SEVERITY", "COMPLETED", io.casehub.neocortex.cognitive.Confidence.unknown(0.9),
             Map.of(), null, null,
             "malware", "siem-1", List.of("T1486"), List.of("hash"),
             "CONFIRM_SEVERITY", "CONFIRM_SEVERITY", "isolate-host", 45));

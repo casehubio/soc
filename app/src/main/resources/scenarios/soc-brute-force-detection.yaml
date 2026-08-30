@@ -1,0 +1,65 @@
+scenario: soc-brute-force-detection
+description: "Inject 5 failed login events from the same source to trigger brute force correlation"
+steps:
+  - name: login-1
+    delivery: rest
+    method: POST
+    url: /api/soc/demo/inject-alert
+    body:
+      eventType: soc.alert.auth.failed-login
+      severity: MEDIUM
+      source: "192.168.1.100"
+      rule: failed-login-attempt
+      correlationKey: "192.168.1.100"
+
+  - name: login-2
+    delivery: rest
+    method: POST
+    url: /api/soc/demo/inject-alert
+    body:
+      eventType: soc.alert.auth.failed-login
+      severity: MEDIUM
+      source: "192.168.1.100"
+      rule: failed-login-attempt
+      correlationKey: "192.168.1.100"
+
+  - name: login-3
+    delivery: rest
+    method: POST
+    url: /api/soc/demo/inject-alert
+    body:
+      eventType: soc.alert.auth.failed-login
+      severity: MEDIUM
+      source: "192.168.1.100"
+      rule: failed-login-attempt
+      correlationKey: "192.168.1.100"
+
+  - name: login-4
+    delivery: rest
+    method: POST
+    url: /api/soc/demo/inject-alert
+    body:
+      eventType: soc.alert.auth.failed-login
+      severity: MEDIUM
+      source: "192.168.1.100"
+      rule: failed-login-attempt
+      correlationKey: "192.168.1.100"
+
+  - name: login-5
+    delivery: rest
+    method: POST
+    url: /api/soc/demo/inject-alert
+    body:
+      eventType: soc.alert.auth.failed-login
+      severity: MEDIUM
+      source: "192.168.1.100"
+      rule: failed-login-attempt
+      correlationKey: "192.168.1.100"
+
+  - navigate: /
+  - click:
+      role: tab
+      name: "Incidents"
+  - wait:
+      role: row
+      timeout: 15000

@@ -18,7 +18,7 @@ class RuleContainmentRecWorkerTest {
     @Test
     void workerMetadata() {
         assertThat(worker.name()).isEqualTo("rule-containment-rec");
-        assertThat(worker.capabilityNames()).containsExactly("containment-recommendation");
+        assertThat(worker.capabilities()).containsExactly("containment-recommendation");
     }
 
     @Test
