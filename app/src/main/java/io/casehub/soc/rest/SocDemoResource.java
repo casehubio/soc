@@ -9,9 +9,12 @@ import io.cloudevents.core.builder.CloudEventBuilder;
 import jakarta.annotation.security.RolesAllowed;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import jakarta.ws.rs.BadRequestException;
+import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
+import jakarta.ws.rs.Produces;
+import jakarta.ws.rs.core.MediaType;
+import jakarta.ws.rs.core.Response;
 import java.net.URI;
 import java.util.List;
 import java.util.Map;
@@ -20,53 +23,62 @@ import java.util.UUID;
 @Path("/api/soc/demo")
 @ApplicationScoped
 @RolesAllowed("soc-demo-admin")
+@Consumes(MediaType.APPLICATION_JSON)
+@Produces(MediaType.APPLICATION_JSON)
 public class SocDemoResource {
 
-    @Inject SituationEvaluator evaluator;
-    @Inject SituationDefinitionRegistry registry;
-    @Inject CurrentPrincipal currentPrincipal;
+    @Inject
+    SituationEvaluator          evaluator;
+    @Inject
+    SituationDefinitionRegistry registry;
+    @Inject
+    CurrentPrincipal            currentPrincipal;
 
     @POST
     @Path("/inject-alert")
-    public Map<String, Object> injectAlert(Map<String, String> body) {
+    public Response injectAlert(Map<String, String> body) {
         String eventType = body.get("eventType");
         if (eventType == null || eventType.isBlank()) {
-            throw new BadRequestException("eventType is required");
+            return Response.status(400)
+                           .entity(Map.of("error", "eventType is required"))
+                           .build();
         }
 
         String severity = body.getOrDefault("severity", "HIGH");
-        String source = body.getOrDefault("source", "demo-source");
-        String rule = body.getOrDefault("rule", "demo-rule");
+        String source   = body.getOrDefault("source", "demo-source");
+        String rule     = body.getOrDefault("rule", "demo-rule");
         String correlationKey = body.getOrDefault("correlationKey",
-            UUID.randomUUID().toString());
+                                                  UUID.randomUUID().toString());
 
         List<SituationRegistration> registrations =
-            registry.findByEventType(eventType);
+                registry.findByEventType(eventType);
         if (registrations.isEmpty()) {
-            throw new BadRequestException(
-                "No situation registered for event type: " + eventType);
+            return Response.status(400)
+                           .entity(Map.of("error",
+                                          "No situation registered for event type: " + eventType))
+                           .build();
         }
 
         String eventId = UUID.randomUUID().toString();
         CloudEvent event = CloudEventBuilder.v1()
-            .withId(eventId)
-            .withSource(URI.create("soc://demo"))
-            .withType(eventType)
-            .withExtension("alertseverity", severity)
-            .withExtension("alertsource", source)
-            .withExtension("alertrule", rule)
-            .withExtension("tenancyid", currentPrincipal.tenancyId())
-            .build();
+                                            .withId(eventId)
+                                            .withSource(URI.create("soc://demo"))
+                                            .withType(eventType)
+                                            .withExtension("alertseverity", severity)
+                                            .withExtension("alertsource", source)
+                                            .withExtension("alertrule", rule)
+                                            .withExtension("tenancyid", currentPrincipal.tenancyId())
+                                            .build();
 
         SituationRegistration reg = registrations.getFirst();
         evaluator.evaluate(event, reg.definition(),
-            correlationKey, currentPrincipal.tenancyId());
+                           correlationKey, currentPrincipal.tenancyId());
 
-        return Map.of(
-            "situationId", reg.definition().situationId(),
-            "eventId", eventId,
-            "correlationKey", correlationKey,
-            "evaluated", true
-        );
+        return Response.ok(Map.of(
+                "situationId", reg.definition().situationId(),
+                "eventId", eventId,
+                "correlationKey", correlationKey,
+                "evaluated", true
+                                 )).build();
     }
 }

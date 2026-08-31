@@ -2,23 +2,21 @@ package io.casehub.soc.integration;
 
 import io.casehub.api.model.Binding;
 import io.casehub.api.model.CaseDefinition;
-import io.casehub.api.model.HumanTaskTarget;
+import io.casehub.api.model.HumanRoutingConfig;
+import io.casehub.api.model.JudgmentTarget;
 import io.casehub.platform.api.routing.StrategyResolver;
 import io.casehub.soc.engine.SocCaseHub;
 import io.casehub.soc.work.SocSlaBreachPolicy;
 import io.casehub.work.api.spi.SlaBreachPolicy;
-import org.junit.jupiter.api.Disabled;
 import io.quarkus.test.junit.QuarkusTest;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
 import java.util.Optional;
-import java.util.Set;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusTest
-@Disabled("Upstream API break: BindingTarget sealed hierarchy no longer includes HumanTaskTarget — see #34")
 class AnalystWorkItemIntegrationTest {
 
     @Inject
@@ -29,7 +27,7 @@ class AnalystWorkItemIntegrationTest {
 
     @Test
     void analystReviewBinding_hasCorrectOutcomes() {
-        HumanTaskTarget target = analystReviewTarget();
+        JudgmentTarget target = analystReviewTarget();
 
         assertThat(target.outcomes()).containsExactlyInAnyOrder(
                 "CONFIRM_SEVERITY", "DOWNGRADE", "ESCALATE", "FALSE_POSITIVE");
@@ -37,21 +35,23 @@ class AnalystWorkItemIntegrationTest {
 
     @Test
     void analystReviewBinding_hasTier1CandidateGroups() {
-        HumanTaskTarget target = analystReviewTarget();
+        JudgmentTarget     target  = analystReviewTarget();
+        HumanRoutingConfig routing = (HumanRoutingConfig) target.routingConfig();
 
-        assertThat(target.candidateGroups()).isNotNull();
+        assertThat(routing).isNotNull();
+        assertThat(routing.candidateGroups()).isNotNull();
     }
 
     @Test
     void analystReviewBinding_hasScopeExpression() {
-        HumanTaskTarget target = analystReviewTarget();
+        JudgmentTarget target = analystReviewTarget();
 
         assertThat(target.scopeExpression()).isNotNull();
     }
 
     @Test
     void analystReviewBinding_hasExpiresInExpression() {
-        HumanTaskTarget target = analystReviewTarget();
+        JudgmentTarget target = analystReviewTarget();
 
         assertThat(target.expiresInExpression()).isNotNull();
         assertThat(target.expiresIn()).as("static expiresIn must be null when expression is used").isNull();
@@ -59,14 +59,14 @@ class AnalystWorkItemIntegrationTest {
 
     @Test
     void analystReviewBinding_hasInputMapping() {
-        HumanTaskTarget target = analystReviewTarget();
+        JudgmentTarget target = analystReviewTarget();
 
         assertThat(target.inputMapping()).isNotNull();
     }
 
     @Test
     void analystReviewBinding_hasOutputMapping() {
-        HumanTaskTarget target = analystReviewTarget();
+        JudgmentTarget target = analystReviewTarget();
 
         assertThat(target.outputMapping()).isNotNull();
     }
@@ -80,16 +80,16 @@ class AnalystWorkItemIntegrationTest {
         assertThat(policy.id()).isEqualTo("soc-escalation");
     }
 
-    private HumanTaskTarget analystReviewTarget() {
+    private JudgmentTarget analystReviewTarget() {
         CaseDefinition definition = caseHub.getDefinition();
         Optional<Binding> binding = definition.getBindings().stream()
-                .filter(b -> "analyst-review".equals(b.getName()))
-                .findFirst();
+                                              .filter(b -> "analyst-review".equals(b.getName()))
+                                              .findFirst();
 
         assertThat(binding).as("analyst-review binding must exist").isPresent();
         assertThat(binding.get().target()).as("analyst-review must have a target").isNotNull();
-        assertThat(binding.get().target()).as("analyst-review target type changed — see #34").isNotNull();
+        assertThat(binding.get().target()).isInstanceOf(JudgmentTarget.class);
 
-        return null; // TODO(#34): upstream API break — HumanTaskTarget no longer extends BindingTarget
+        return (JudgmentTarget) binding.get().target();
     }
 }
