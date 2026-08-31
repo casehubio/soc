@@ -7,7 +7,7 @@ import io.casehub.platform.api.path.Path;
 
 import java.util.List;
 
-class StubCbrCaseMemoryStore implements CbrCaseMemoryStore {
+public class StubCbrCaseMemoryStore implements CbrCaseMemoryStore {
     @Override public void registerSchema(CbrFeatureSchema schema) {}
     @Override public String store(CbrCase c, String t, String e, MemoryDomain d, String tid, String cid, Path s) { return cid; }
     @Override public <C extends CbrCase> List<ScoredCbrCase<C>> retrieveSimilar(CbrQuery q, Class<C> t) { return List.of(); }

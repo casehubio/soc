@@ -11,11 +11,16 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SocInvestigationCaseDescriptorTest {
 
     private final SocInvestigationCaseDescriptor descriptor =
-            new SocInvestigationCaseDescriptor(new io.casehub.soc.worker.MockChatModel("{}"));
+            new SocInvestigationCaseDescriptor(new io.casehub.soc.worker.MockChatModel("{}"), stubRetrieveService());
+
+    private static io.casehub.soc.engine.cbr.SocCbrRetrieveService stubRetrieveService() {
+        return new io.casehub.soc.engine.cbr.SocCbrRetrieveService(
+                new io.casehub.soc.engine.cbr.StubCbrCaseMemoryStore());
+    }
 
     @Test
-    void produces6Workers() {
-        assertThat(descriptor.workers()).hasSize(6);
+    void produces7Workers() {
+        assertThat(descriptor.workers()).hasSize(7);
     }
 
     @Test
@@ -27,20 +32,22 @@ class SocInvestigationCaseDescriptorTest {
     }
 
     @Test
-    void threeCapabilitiesWithTwoWorkersEach() {
+    void fourCapabilities() {
         var byCapability = descriptor.workers().stream()
-                .collect(Collectors.groupingBy(
-                        w -> w.capabilities().iterator().next()));
-        assertThat(byCapability).hasSize(3);
+                                     .collect(Collectors.groupingBy(
+                                             w -> w.capabilities().iterator().next()));
+        assertThat(byCapability).hasSize(4);
+        assertThat(byCapability.get("cbr-retrieval")).hasSize(1);
         assertThat(byCapability.get("ioc-enrichment")).hasSize(2);
         assertThat(byCapability.get("attck-mapping")).hasSize(2);
         assertThat(byCapability.get("containment-recommendation")).hasSize(2);
     }
 
     @Test
-    void ruleBasedWorkersListedFirst() {
+    void cbrWorkerFirstThenRuleLlmPairs() {
         var workers = descriptor.workers();
-        for (int i = 0; i < workers.size(); i += 2) {
+        assertThat(workers.get(0).name()).isEqualTo("rule-cbr-retrieval");
+        for (int i = 1; i < workers.size(); i += 2) {
             assertThat(workers.get(i).name()).startsWith("rule-");
             assertThat(workers.get(i + 1).name()).startsWith("llm-");
         }
@@ -49,9 +56,10 @@ class SocInvestigationCaseDescriptorTest {
     @Test
     void expectedWorkerNames() {
         Set<String> names = descriptor.workers().stream()
-                .map(Worker::name)
-                .collect(Collectors.toSet());
+                                      .map(Worker::name)
+                                      .collect(Collectors.toSet());
         assertThat(names).containsExactlyInAnyOrder(
+                "rule-cbr-retrieval",
                 "rule-ioc-enrichment", "llm-ioc-enrichment",
                 "rule-attck-mapping", "llm-attck-mapping",
                 "rule-containment-rec", "llm-containment-rec");

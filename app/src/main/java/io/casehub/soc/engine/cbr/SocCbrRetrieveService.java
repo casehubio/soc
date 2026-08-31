@@ -26,7 +26,7 @@ public class SocCbrRetrieveService {
     private final CbrCaseMemoryStore cbrStore;
 
     @Inject
-    SocCbrRetrieveService(CbrCaseMemoryStore cbrStore) {
+    public SocCbrRetrieveService(CbrCaseMemoryStore cbrStore) {
         this.cbrStore = cbrStore;
     }
 

@@ -10,14 +10,18 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertDoesNotThrow;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 class SocAgentDescriptorsTest {
 
     @Test
-    void allReturnsSixDescriptors() {
+    void allReturnsSevenDescriptors() {
         List<AgentDescriptor> all = SocAgentDescriptors.all();
-        assertEquals(6, all.size());
+        assertEquals(7, all.size());
     }
 
     @Test
@@ -29,14 +33,15 @@ class SocAgentDescriptorsTest {
     }
 
     @Test
-    void descriptorsByWorkerNameHasSixEntries() {
+    void descriptorsByWorkerNameHasSevenEntries() {
         Map<String, AgentDescriptor> map = SocAgentDescriptors.descriptorsByWorkerName();
-        assertEquals(6, map.size());
+        assertEquals(7, map.size());
     }
 
     @Test
     void workerNamesMatchExpected() {
         var map = SocAgentDescriptors.descriptorsByWorkerName();
+        assertTrue(map.containsKey("rule-cbr-retrieval"));
         assertTrue(map.containsKey("rule-ioc-enrichment"));
         assertTrue(map.containsKey("llm-ioc-enrichment"));
         assertTrue(map.containsKey("rule-attck-mapping"));
@@ -48,18 +53,20 @@ class SocAgentDescriptorsTest {
     @Test
     void capabilityNamesMatchCaseYaml() {
         var map = SocAgentDescriptors.descriptorsByWorkerName();
+        assertEquals("cbr-retrieval",
+                     map.get("rule-cbr-retrieval").capabilities().getFirst().name());
         assertEquals("ioc-enrichment",
-            map.get("rule-ioc-enrichment").capabilities().getFirst().name());
+                     map.get("rule-ioc-enrichment").capabilities().getFirst().name());
         assertEquals("ioc-enrichment",
-            map.get("llm-ioc-enrichment").capabilities().getFirst().name());
+                     map.get("llm-ioc-enrichment").capabilities().getFirst().name());
         assertEquals("attck-mapping",
-            map.get("rule-attck-mapping").capabilities().getFirst().name());
+                     map.get("rule-attck-mapping").capabilities().getFirst().name());
         assertEquals("attck-mapping",
-            map.get("llm-attck-mapping").capabilities().getFirst().name());
+                     map.get("llm-attck-mapping").capabilities().getFirst().name());
         assertEquals("containment-recommendation",
-            map.get("rule-containment-rec").capabilities().getFirst().name());
+                     map.get("rule-containment-rec").capabilities().getFirst().name());
         assertEquals("containment-recommendation",
-            map.get("llm-containment-rec").capabilities().getFirst().name());
+                     map.get("llm-containment-rec").capabilities().getFirst().name());
     }
 
     @Test

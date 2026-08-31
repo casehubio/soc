@@ -23,6 +23,13 @@ public final class SocAgentDescriptors {
 
     private SocAgentDescriptors() {}
 
+
+    public static AgentDescriptor ruleCbrRetrieval() {
+        return ruleDescriptor("rule-cbr-retrieval", "Rule-Based CBR Retrieval",
+                              "cbr-retrieval", 0.95,
+                              Map.of());
+    }
+
     public static AgentDescriptor ruleIocEnrichment() {
         return ruleDescriptor("rule-ioc-enrichment", "Rule-Based IOC Enrichment",
             "ioc-enrichment", 0.95,
@@ -68,13 +75,15 @@ public final class SocAgentDescriptors {
 
     public static List<AgentDescriptor> all() {
         return List.of(
-            ruleIocEnrichment(), llmIocEnrichment(),
-            ruleAttckMapping(), llmAttckMapping(),
-            ruleContainmentRecommendation(), llmContainmentRecommendation());
+                ruleCbrRetrieval(),
+                ruleIocEnrichment(), llmIocEnrichment(),
+                ruleAttckMapping(), llmAttckMapping(),
+                ruleContainmentRecommendation(), llmContainmentRecommendation());
     }
 
     public static Map<String, AgentDescriptor> descriptorsByWorkerName() {
         var map = new LinkedHashMap<String, AgentDescriptor>();
+        map.put("rule-cbr-retrieval", ruleCbrRetrieval());
         map.put("rule-ioc-enrichment", ruleIocEnrichment());
         map.put("llm-ioc-enrichment", llmIocEnrichment());
         map.put("rule-attck-mapping", ruleAttckMapping());

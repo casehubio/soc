@@ -6,7 +6,9 @@ import jakarta.enterprise.inject.Instance;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 @QuarkusTest
 class SocAgentRegistrarTest {
@@ -23,12 +25,12 @@ class SocAgentRegistrarTest {
     }
 
     @Test
-    void descriptorsReturnsSix() {
+    void descriptorsReturnsSeven() {
         var registrar = registrars.stream()
-            .filter(r -> r instanceof SocAgentRegistrar)
-            .findFirst().orElseThrow();
+                                  .filter(r -> r instanceof SocAgentRegistrar)
+                                  .findFirst().orElseThrow();
         var descriptors = registrar.descriptors();
-        assertEquals(6, descriptors.size());
+        assertEquals(7, descriptors.size());
     }
 
     @Test
