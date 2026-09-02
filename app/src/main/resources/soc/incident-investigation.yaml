@@ -28,19 +28,24 @@ spec:
       inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, attckMapping: .attckMapping, retrievedIncidents: .retrievedIncidents }"
       outputProjection: "{ containmentRecommendation: ., incidentStatus: \"CONTAINING\" }"
 
+    - name: containment-execution
+      description: "Execute approved containment actions via ContainmentExecutor SPI"
+      inputProjection: "{ alert: .alert, containmentRecommendation: .containmentRecommendation, actionGateApproved: .actionGateApproved, actionGateRejected: .actionGateRejected }"
+      outputProjection: "{ containmentExecution: . }"
+
   ## ─── Goals ──────────────────────────────────────────────────────────────────
   goals:
     - name: resolved
       kind: success
-      condition: ".analystDecision == \"resolved\""
+      condition: ".analystDecision == \"resolved\" and .containmentExecution != null"
 
     - name: escalated
       kind: success
-      condition: ".analystDecision == \"escalated\""
+      condition: ".analystDecision == \"escalated\" and .containmentExecution != null"
 
     - name: false-positive
       kind: success
-      condition: ".analystDecision == \"false-positive\""
+      condition: ".analystDecision == \"false-positive\" and .containmentExecution != null"
 
   ## ─── Completion ─────────────────────────────────────────────────────────────
   completion:
@@ -140,3 +145,11 @@ spec:
               end
             )
           }
+
+    ## Containment execution — fires after analyst confirms the incident.
+    ## Executes the containment action if approved or autonomous,
+    ## skips if rejected or no containment was recommended.
+    - name: containment-execution
+      on: { contextChange: {} }
+      when: ".analystDecision != null and .containmentExecution == null"
+      capability: containment-execution

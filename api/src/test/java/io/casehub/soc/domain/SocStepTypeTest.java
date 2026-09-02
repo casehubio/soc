@@ -13,6 +13,9 @@ class SocStepTypeTest {
                         SocStepType.INCIDENT_PROMOTED,
                         SocStepType.INVESTIGATION_STEP,
                         SocStepType.CONTAINMENT_DECISION,
+                        SocStepType.CONTAINMENT_GATE_DECISION,
+                        SocStepType.CONTAINMENT_APPROVAL,
+                        SocStepType.CONTAINMENT_REJECTION,
                         SocStepType.CONTAINMENT_EXECUTED,
                         SocStepType.INCIDENT_RESOLVED
                 },

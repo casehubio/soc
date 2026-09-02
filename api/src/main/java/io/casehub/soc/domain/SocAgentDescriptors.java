@@ -73,12 +73,19 @@ public final class SocAgentDescriptors {
             "containment-recommendation", 0.85);
     }
 
+    public static AgentDescriptor ruleContainmentExecution() {
+        return ruleDescriptor("rule-containment-exec", "Rule-Based Containment Execution",
+            "containment-execution", 0.95,
+            Map.of());
+    }
+
     public static List<AgentDescriptor> all() {
         return List.of(
                 ruleCbrRetrieval(),
                 ruleIocEnrichment(), llmIocEnrichment(),
                 ruleAttckMapping(), llmAttckMapping(),
-                ruleContainmentRecommendation(), llmContainmentRecommendation());
+                ruleContainmentRecommendation(), llmContainmentRecommendation(),
+                ruleContainmentExecution());
     }
 
     public static Map<String, AgentDescriptor> descriptorsByWorkerName() {
@@ -90,6 +97,7 @@ public final class SocAgentDescriptors {
         map.put("llm-attck-mapping", llmAttckMapping());
         map.put("rule-containment-rec", ruleContainmentRecommendation());
         map.put("llm-containment-rec", llmContainmentRecommendation());
+        map.put("rule-containment-exec", ruleContainmentExecution());
         return Map.copyOf(map);
     }
 

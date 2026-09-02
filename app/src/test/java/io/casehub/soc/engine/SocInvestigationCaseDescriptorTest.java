@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SocInvestigationCaseDescriptorTest {
 
     private final SocInvestigationCaseDescriptor descriptor =
-            new SocInvestigationCaseDescriptor(new io.casehub.soc.worker.MockChatModel("{}"), stubRetrieveService());
+            new SocInvestigationCaseDescriptor(new io.casehub.soc.worker.MockChatModel("{}"), stubRetrieveService(), null);
 
     private static io.casehub.soc.engine.cbr.SocCbrRetrieveService stubRetrieveService() {
         return new io.casehub.soc.engine.cbr.SocCbrRetrieveService(
@@ -19,8 +19,8 @@ class SocInvestigationCaseDescriptorTest {
     }
 
     @Test
-    void produces7Workers() {
-        assertThat(descriptor.workers()).hasSize(7);
+    void produces8Workers() {
+        assertThat(descriptor.workers()).hasSize(8);
     }
 
     @Test
@@ -32,25 +32,27 @@ class SocInvestigationCaseDescriptorTest {
     }
 
     @Test
-    void fourCapabilities() {
+    void fiveCapabilities() {
         var byCapability = descriptor.workers().stream()
                                      .collect(Collectors.groupingBy(
                                              w -> w.capabilities().iterator().next()));
-        assertThat(byCapability).hasSize(4);
+        assertThat(byCapability).hasSize(5);
         assertThat(byCapability.get("cbr-retrieval")).hasSize(1);
         assertThat(byCapability.get("ioc-enrichment")).hasSize(2);
         assertThat(byCapability.get("attck-mapping")).hasSize(2);
         assertThat(byCapability.get("containment-recommendation")).hasSize(2);
+        assertThat(byCapability.get("containment-execution")).hasSize(1);
     }
 
     @Test
-    void cbrWorkerFirstThenRuleLlmPairs() {
+    void cbrWorkerFirstThenRuleLlmPairsThenExecution() {
         var workers = descriptor.workers();
         assertThat(workers.get(0).name()).isEqualTo("rule-cbr-retrieval");
-        for (int i = 1; i < workers.size(); i += 2) {
+        for (int i = 1; i <= 6; i += 2) {
             assertThat(workers.get(i).name()).startsWith("rule-");
             assertThat(workers.get(i + 1).name()).startsWith("llm-");
         }
+        assertThat(workers.get(7).name()).isEqualTo("rule-containment-exec");
     }
 
     @Test
@@ -62,6 +64,7 @@ class SocInvestigationCaseDescriptorTest {
                 "rule-cbr-retrieval",
                 "rule-ioc-enrichment", "llm-ioc-enrichment",
                 "rule-attck-mapping", "llm-attck-mapping",
-                "rule-containment-rec", "llm-containment-rec");
+                "rule-containment-rec", "llm-containment-rec",
+                "rule-containment-exec");
     }
 }

@@ -19,9 +19,9 @@ import static org.junit.jupiter.api.Assertions.assertTrue;
 class SocAgentDescriptorsTest {
 
     @Test
-    void allReturnsSevenDescriptors() {
+    void allReturnsEightDescriptors() {
         List<AgentDescriptor> all = SocAgentDescriptors.all();
-        assertEquals(7, all.size());
+        assertEquals(8, all.size());
     }
 
     @Test
@@ -33,9 +33,9 @@ class SocAgentDescriptorsTest {
     }
 
     @Test
-    void descriptorsByWorkerNameHasSevenEntries() {
+    void descriptorsByWorkerNameHasEightEntries() {
         Map<String, AgentDescriptor> map = SocAgentDescriptors.descriptorsByWorkerName();
-        assertEquals(7, map.size());
+        assertEquals(8, map.size());
     }
 
     @Test
@@ -48,6 +48,7 @@ class SocAgentDescriptorsTest {
         assertTrue(map.containsKey("llm-attck-mapping"));
         assertTrue(map.containsKey("rule-containment-rec"));
         assertTrue(map.containsKey("llm-containment-rec"));
+        assertTrue(map.containsKey("rule-containment-exec"));
     }
 
     @Test
