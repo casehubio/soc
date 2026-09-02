@@ -49,6 +49,7 @@ public final class RuleContainmentRecommendationWorker {
                             "Containment: " + decision.recommendedAction(),
                             actionType,
                             Map.of("riskScore", decision.riskScore(),
+                                    "confidenceScore", decision.confidenceScore(),
                                     "severity", severity,
                                     "tactic", primaryTactic));
                     return WorkerResult.of(output, action);
