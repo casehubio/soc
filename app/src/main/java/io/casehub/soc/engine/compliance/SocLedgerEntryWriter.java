@@ -17,13 +17,16 @@ public class SocLedgerEntryWriter {
 
     private static final Logger LOG = Logger.getLogger(SocLedgerEntryWriter.class);
 
-    private static final Map<SocStepType, Set<String>> REQUIRED_METADATA = Map.of(
-        SocStepType.ALERT_TRIAGE, Set.of("alertSeverity", "assignedSeverity", "triageAgentId"),
-        SocStepType.INCIDENT_PROMOTED, Set.of("promotionReason"),
-        SocStepType.INVESTIGATION_STEP, Set.of("capabilityTag", "investigationType"),
-        SocStepType.CONTAINMENT_DECISION, Set.of("approverId", "riskClassification", "containmentAction"),
-        SocStepType.CONTAINMENT_EXECUTED, Set.of("executionResult", "containmentAction"),
-        SocStepType.INCIDENT_RESOLVED, Set.of("resolutionOutcome")
+    private static final Map<SocStepType, Set<String>> REQUIRED_METADATA = Map.ofEntries(
+        Map.entry(SocStepType.ALERT_TRIAGE, Set.of("alertSeverity", "assignedSeverity", "triageAgentId")),
+        Map.entry(SocStepType.INCIDENT_PROMOTED, Set.of("promotionReason")),
+        Map.entry(SocStepType.INVESTIGATION_STEP, Set.of("capabilityTag", "investigationType")),
+        Map.entry(SocStepType.CONTAINMENT_DECISION, Set.of("approverId", "riskClassification", "containmentAction")),
+        Map.entry(SocStepType.CONTAINMENT_GATE_DECISION, Set.of("actionType", "riskScore", "gateDecision")),
+        Map.entry(SocStepType.CONTAINMENT_APPROVAL, Set.of("actionType", "approverId")),
+        Map.entry(SocStepType.CONTAINMENT_REJECTION, Set.of("actionType", "rejectorId", "rejectionReason")),
+        Map.entry(SocStepType.CONTAINMENT_EXECUTED, Set.of("executionResult", "containmentAction")),
+        Map.entry(SocStepType.INCIDENT_RESOLVED, Set.of("resolutionOutcome"))
     );
 
     private final LedgerEntryRepository ledgerRepo;
