@@ -1,4 +1,4 @@
-import { onPagesEvent, emitPagesEvent } from "@casehubio/blocks-ui-core";
+import { onPagesEvent, emitPagesEvent } from "../types/pages-events";
 import type { RoutingRationaleData } from "@casehubio/blocks-ui-routing-rationale";
 import "@casehubio/blocks-ui-routing-rationale";
 
