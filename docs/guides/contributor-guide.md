@@ -84,6 +84,9 @@ io.casehub.soc
  |    |    +-- SocCbrSchemaRegistrar -- registers CBR schema attributes for SOC incidents
  |    |    +-- SocIncidentCbrCase   -- CbrCase record for SOC incidents
  |    |    +-- SocCaseOutcomeFilter -- shared predicate: successful SOC incident investigation
+ |    +-- mesh/
+ |    |    +-- SocContainmentCommitmentBridge -- CDI observer; bridges ActionGate lifecycle events to qhorus oversight channel speech acts (PROPOSE/DONE/DECLINE/STATUS)
+ |    |    +-- OversightChannelState -- per-case state record; tracks channelId and PROPOSE messageId for commitment threading
  |    +-- compliance/
  |    |    +-- SocLedgerEntry        -- JpaLedgerEntry subclass; incidentId + stepType (JOINED inheritance)
  |    |    +-- SocLedgerEntryWriter  -- shared write helper; validates metadata, manages sequence numbers
