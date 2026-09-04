@@ -6,6 +6,7 @@ import io.casehub.engine.common.spi.query.CaseInstanceQuery;
 import io.casehub.platform.api.identity.CurrentPrincipal;
 import io.casehub.soc.domain.SocCaseTypes;
 import io.casehub.soc.rest.dto.IncidentSummaryDto;
+import io.casehub.qhorus.api.channel.ChannelReader;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -23,6 +24,7 @@ public class SocIncidentResource {
 
     @Inject CaseInstanceRepository repository;
     @Inject CurrentPrincipal currentPrincipal;
+    @Inject ChannelReader channelReader;
 
     @GET
     public Map<String, Object> listIncidents(
@@ -59,8 +61,12 @@ public class SocIncidentResource {
 
     @GET @Path("/{id}/channels")
     public List<Map<String, Object>> getChannels(@PathParam("id") UUID id) {
-        // Stub — returns empty until Qhorus channel integration is wired.
-        return List.of();
+        String prefix = io.casehub.api.model.CaseChannel.CASE_CHANNEL_PREFIX + id + "/";
+        return channelReader.findByNamePrefix(prefix).stream()
+                .map(ch -> Map.<String, Object>of(
+                        "name", ch.name(),
+                        "description", ch.description() != null ? ch.description() : ""))
+                .toList();
     }
 
     @GET @Path("/{id}/iocs")
