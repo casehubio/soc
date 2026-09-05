@@ -58,6 +58,10 @@ io.casehub.soc
  |    +-- SocStepType               -- enum: 6 investigation step types for ledger entries
  |    +-- SocTrustDimensions        -- constants: triage-accuracy, containment-appropriateness
  |    +-- SocAgentDescriptors      -- static factory; AgentDescriptor per worker with MITRE ATT&CK epistemic domains
+ |    +-- SocNotificationEvents    -- constants: 8 notification event types + EventTypeDescriptor factories
+ +-- domain/notification/
+ |    +-- SocIncidentNotification  -- SubscribableEvent record; parameterised incident lifecycle notification
+ |    +-- SocWorkItemNotification  -- SubscribableEvent record; parameterised work item notification
  +-- worker/contract/
       +-- IocEnrichmentOutput       -- record: iocs (list of IocEntry), summary
       +-- AttckMappingOutput        -- record: techniques (list of TechniqueEntry), primaryTactic, confidence, narrative
@@ -87,6 +91,9 @@ io.casehub.soc
  |    +-- mesh/
  |    |    +-- SocContainmentCommitmentBridge -- CDI observer; bridges ActionGate lifecycle events to qhorus oversight channel speech acts (PROPOSE/DONE/DECLINE/STATUS)
  |    |    +-- OversightChannelState -- per-case state record; tracks channelId and PROPOSE messageId for commitment threading
+ |    +-- notification/
+ |    |    +-- SocNotificationBridge  -- CDI observer; publishes 8 SubscribableEvent types to notification DataSource on incident status, SLA breach, and work item lifecycle events
+ |    |    +-- SocNotificationSeeder  -- CDI startup; seeds SYSTEM-scope subscriptions per tenant with idempotent content comparison
  |    +-- compliance/
  |    |    +-- SocLedgerEntry        -- JpaLedgerEntry subclass; incidentId + stepType (JOINED inheritance)
  |    |    +-- SocLedgerEntryWriter  -- shared write helper; validates metadata, manages sequence numbers
