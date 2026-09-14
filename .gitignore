@@ -15,3 +15,6 @@ proj
 node_modules/
 dist/
 .quinoa/
+.worktrees
+.worktrees/
+.claude/
