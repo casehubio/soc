@@ -274,6 +274,7 @@ class SocAttestationServiceTest {
     }
 
     static class StubCaseLedgerEntryRepository extends CaseLedgerEntryRepository {
+        StubCaseLedgerEntryRepository() { super(null); }
         private final Map<UUID, List<WorkerDecisionEntry>> entriesByCaseId = new HashMap<>();
 
         UUID addWorkerDecision(UUID caseId, String workerId, String capabilityTag) {
