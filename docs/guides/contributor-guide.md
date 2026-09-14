@@ -62,10 +62,17 @@ io.casehub.soc
  +-- domain/notification/
  |    +-- SocIncidentNotification  -- SubscribableEvent record; parameterised incident lifecycle notification
  |    +-- SocWorkItemNotification  -- SubscribableEvent record; parameterised work item notification
+ +-- engine/spi/
+ |    +-- ContainmentExecutor      -- SPI interface; pluggable containment execution backends
+ |    +-- ContainmentResult        -- record: success, timestamp, details, errorReason, retryable
+ |    +-- ContainmentContext       -- record: caseId, incidentId, approver, tenancyId, timeoutMs
+ |    +-- ContainmentRequest       -- record: API contract request body for HTTP containment connectors
+ |    +-- ContainmentResponse      -- record: API contract response body from HTTP containment connectors
  +-- worker/contract/
       +-- IocEnrichmentOutput       -- record: iocs (list of IocEntry), summary
       +-- AttckMappingOutput        -- record: techniques (list of TechniqueEntry), primaryTactic, confidence, narrative
       +-- ContainmentRecommendationOutput -- record: recommendedAction, riskScore, confidenceScore, rationale, actionParameters
+      +-- ContainmentExecutionOutput -- record: actionType, executed, success, details, errorReason, executionTimestamp, detectionToContainmentMs
 ```
 
 ### app/src/main/java
@@ -77,7 +84,11 @@ io.casehub.soc
  |    +-- SocCaseInputContributor   -- CaseInputContributor; converts RAS detections to serialisable alert context
  |    +-- SocFaultedCaseReviewCreator -- CaseOutcomeObserver; creates failure-review WorkItems for FAULTED cases
  |    +-- SocGanglionProducer       -- CDI producer for SiemAlertGanglion (api/ is pure Java, no CDI)
- |    +-- SocInvestigationCaseDescriptor -- POJO; assembles the 6 workers for incident-investigation cases
+ |    +-- SocInvestigationCaseDescriptor -- POJO; assembles the 10 workers for incident-investigation cases
+ |    +-- ContainmentEndpoint      -- record: url, method, timeoutSeconds for HTTP containment connectors
+ |    +-- ContainmentEndpointResolver -- @ApplicationScoped; reads casehub.soc.containment.endpoints.* config at @PostConstruct
+ |    +-- HttpContainmentExecutor  -- @ApplicationScoped; displaces LoggingContainmentExecutor, routes actions to HTTP connectors via config
+ |    +-- LoggingContainmentExecutor -- @DefaultBean; logs containment actions (fallback when no HTTP connectors configured)
  |    +-- SocAgentRegistrar         -- AgentDescriptorRegistrar SPI; registers descriptors with eidos AgentRegistry at startup
  |    +-- SocAttestationService     -- CaseOutcomeObserver; creates trust attestations on case resolution
  |    +-- SocIncidentStatusObserver -- CDI observer; tracks incident status transitions from CaseLifecycleEvent
@@ -104,6 +115,7 @@ io.casehub.soc
  |    |    +-- SocPiiSanitiser      -- regex PII redaction (IPv4, IPv6, email); fail-closed
  +-- rest/
  |    +-- SocComplianceResource     -- JAX-RS: /api/soc/compliance/{proof,timeline,dora}; @RolesAllowed
+ |    +-- SimulatedContainmentConnector -- JAX-RS: /sim/containment; dev/test simulated containment connector
  +-- routing/
  |    +-- SocActionRiskClassifier   -- ActionRiskClassifier with @RiskClassifier qualifier
  +-- worker/
@@ -116,6 +128,7 @@ io.casehub.soc
       +-- LlmIocEnrichmentWorker    -- Worker factory; ioc-enrichment, AgentWorkerFunction with IocEnrichmentOutput schema
       +-- LlmAttckMappingWorker     -- Worker factory; attck-mapping, AgentWorkerFunction with AttckMappingOutput schema
       +-- LlmContainmentRecommendationWorker -- Worker factory; containment-recommendation, WorkerFunction.Sync with PlannedAction extraction
+      +-- RuleContainmentExecutionWorker -- Worker factory; containment-execution, delegates to ContainmentExecutor SPI with retryable failure handling
       +-- SocAgentPrompts           -- constants: system prompts for the three LLM worker capabilities
 ```
 
