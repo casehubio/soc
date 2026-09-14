@@ -100,7 +100,7 @@ class PaloAltoApiClientTest {
     void configuredClientReportsApiBase() {
         var client = new PaloAltoApiClient(
                 "https://fw.corp.local", "test-key", "vsys1",
-                "localhost.localdomain", 2000, 60000);
+                "localhost.localdomain", 2000, 60000, io.vertx.core.Vertx.vertx());
 
         assertThat(client.isConfigured()).isTrue();
     }
@@ -109,7 +109,7 @@ class PaloAltoApiClientTest {
     void blankApiKeyCreatesUnconfigured() {
         var client = new PaloAltoApiClient(
                 "https://fw.corp.local", "", "vsys1",
-                "localhost.localdomain", 2000, 60000);
+                "localhost.localdomain", 2000, 60000, io.vertx.core.Vertx.vertx());
 
         assertThat(client.isConfigured()).isFalse();
     }

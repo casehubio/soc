@@ -1,7 +1,9 @@
 package io.casehub.soc.connector.identity;
 
+import io.vertx.core.Vertx;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -9,6 +11,9 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class IdentityConnectorConfig {
+
+    @Inject
+    Vertx vertx;
 
     @Produces
     @Singleton
@@ -27,7 +32,7 @@ public class IdentityConnectorConfig {
                 if (apiToken.isEmpty() || apiToken.get().isBlank()) {
                     yield IdentityProvider.unconfigured();
                 }
-                yield new OktaIdentityProvider(apiBase, apiToken.get());
+                yield new OktaIdentityProvider(apiBase, apiToken.get(), vertx);
             }
             case "graph" -> {
                 if (clientId.isEmpty() || clientId.get().isBlank()
@@ -37,7 +42,7 @@ public class IdentityConnectorConfig {
                 }
                 yield new GraphIdentityProvider(
                         apiBase.isBlank() ? "https://graph.microsoft.com" : apiBase,
-                        tenantId.get(), clientId.get(), clientSecret.get());
+                        tenantId.get(), clientId.get(), clientSecret.get(), vertx);
             }
             default -> IdentityProvider.unconfigured();
         };

@@ -20,16 +20,18 @@ public class PaloAltoApiClient {
     private final String deviceName;
     private final long commitPollIntervalMs;
     private final long commitTimeoutMs;
+    private final WebClient webClient;
 
     public PaloAltoApiClient(String apiBase, String apiKey, String vsys,
                               String deviceName, long commitPollIntervalMs,
-                              long commitTimeoutMs) {
+                              long commitTimeoutMs, Vertx vertx) {
         this.apiBase = apiBase;
         this.apiKey = apiKey;
         this.vsys = vsys;
         this.deviceName = deviceName;
         this.commitPollIntervalMs = commitPollIntervalMs;
         this.commitTimeoutMs = commitTimeoutMs;
+        this.webClient = WebClient.create(vertx);
     }
 
     private PaloAltoApiClient() {
@@ -39,6 +41,7 @@ public class PaloAltoApiClient {
         this.deviceName = "";
         this.commitPollIntervalMs = 0;
         this.commitTimeoutMs = 0;
+        this.webClient = null;
     }
 
     public static PaloAltoApiClient unconfigured() {
@@ -132,8 +135,7 @@ public class PaloAltoApiClient {
 
     private String postAndRead(String url, long timeoutMs) {
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            HttpResponse<Buffer> response = client
+            HttpResponse<Buffer> response = webClient
                     .postAbs(url)
                     .send()
                     .toCompletionStage()

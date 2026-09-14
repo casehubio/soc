@@ -2,6 +2,8 @@ package io.casehub.soc.connector.crowdstrike;
 
 import org.junit.jupiter.api.Test;
 
+import io.vertx.core.Vertx;
+
 import java.time.Duration;
 import java.time.Instant;
 
@@ -13,7 +15,7 @@ class CrowdStrikeOAuth2ClientTest {
     @Test
     void requestsTokenOnFirstCall() {
         var client = new CrowdStrikeOAuth2Client(
-                "https://fake.crowdstrike.com", "client-id", "client-secret");
+                "https://fake.crowdstrike.com", "client-id", "client-secret", Vertx.vertx());
 
         assertThatThrownBy(client::getAccessToken)
                 .isInstanceOf(CrowdStrikeAuthException.class);
@@ -22,7 +24,7 @@ class CrowdStrikeOAuth2ClientTest {
     @Test
     void cachedTokenReturnedWithinTtl() {
         var client = new CrowdStrikeOAuth2Client(
-                "https://fake.crowdstrike.com", "client-id", "client-secret");
+                "https://fake.crowdstrike.com", "client-id", "client-secret", Vertx.vertx());
 
         client.setCachedToken("cached-token", Instant.now().plus(Duration.ofMinutes(10)));
 
@@ -32,7 +34,7 @@ class CrowdStrikeOAuth2ClientTest {
     @Test
     void expiredTokenTriggersRefresh() {
         var client = new CrowdStrikeOAuth2Client(
-                "https://fake.crowdstrike.com", "client-id", "client-secret");
+                "https://fake.crowdstrike.com", "client-id", "client-secret", Vertx.vertx());
 
         client.setCachedToken("old-token", Instant.now().minus(Duration.ofMinutes(1)));
 
@@ -43,7 +45,7 @@ class CrowdStrikeOAuth2ClientTest {
     @Test
     void tokenWithin60sBufferTriggersRefresh() {
         var client = new CrowdStrikeOAuth2Client(
-                "https://fake.crowdstrike.com", "client-id", "client-secret");
+                "https://fake.crowdstrike.com", "client-id", "client-secret", Vertx.vertx());
 
         client.setCachedToken("almost-expired", Instant.now().plus(Duration.ofSeconds(30)));
 
@@ -54,7 +56,7 @@ class CrowdStrikeOAuth2ClientTest {
     @Test
     void blankClientIdThrowsOnConstruction() {
         assertThatThrownBy(() ->
-                new CrowdStrikeOAuth2Client("https://fake.crowdstrike.com", "", "secret"))
+                new CrowdStrikeOAuth2Client("https://fake.crowdstrike.com", "", "secret", Vertx.vertx()))
                 .isInstanceOf(IllegalArgumentException.class)
                 .hasMessageContaining("client-id");
     }

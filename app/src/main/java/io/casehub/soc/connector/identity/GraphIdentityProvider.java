@@ -21,22 +21,29 @@ public class GraphIdentityProvider implements IdentityProvider {
     private final String tenantId;
     private final String clientId;
     private final String clientSecret;
+    private final WebClient webClient;
 
     private volatile String cachedToken;
     private volatile Instant tokenExpiry = Instant.EPOCH;
 
     public GraphIdentityProvider(String apiBase, String tenantId,
-                                  String clientId, String clientSecret) {
-        this(apiBase, "https://login.microsoftonline.com", tenantId, clientId, clientSecret);
+                                  String clientId, String clientSecret, Vertx vertx) {
+        this(apiBase, "https://login.microsoftonline.com", tenantId, clientId, clientSecret, vertx);
     }
 
     GraphIdentityProvider(String apiBase, String tokenBase, String tenantId,
                            String clientId, String clientSecret) {
+        this(apiBase, tokenBase, tenantId, clientId, clientSecret, Vertx.vertx());
+    }
+
+    private GraphIdentityProvider(String apiBase, String tokenBase, String tenantId,
+                                   String clientId, String clientSecret, Vertx vertx) {
         this.apiBase = apiBase;
         this.tokenBase = tokenBase;
         this.tenantId = tenantId;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.webClient = WebClient.create(vertx);
     }
 
     @Override
@@ -118,8 +125,7 @@ public class GraphIdentityProvider implements IdentityProvider {
                 + "&scope=https%3A%2F%2Fgraph.microsoft.com%2F.default"
                 + "&grant_type=client_credentials";
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            HttpResponse<Buffer> response = client
+            HttpResponse<Buffer> response = webClient
                     .postAbs(url)
                     .putHeader("Content-Type", "application/x-www-form-urlencoded")
                     .sendBuffer(Buffer.buffer(body))
@@ -175,8 +181,7 @@ public class GraphIdentityProvider implements IdentityProvider {
 
     private HttpResponse<Buffer> post(String url, String token, String body) {
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            var req = client.postAbs(url)
+            var req = webClient.postAbs(url)
                     .putHeader("Authorization", "Bearer " + token)
                     .putHeader("Accept", "application/json");
             if (body != null) {
@@ -196,8 +201,7 @@ public class GraphIdentityProvider implements IdentityProvider {
 
     private HttpResponse<Buffer> patch(String url, String token, String body) {
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            return client.patchAbs(url)
+            return webClient.patchAbs(url)
                     .putHeader("Authorization", "Bearer " + token)
                     .putHeader("Content-Type", "application/json")
                     .putHeader("Accept", "application/json")

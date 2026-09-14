@@ -10,6 +10,7 @@ import io.vertx.core.Vertx;
 import io.vertx.core.buffer.Buffer;
 import io.vertx.ext.web.client.HttpResponse;
 import io.vertx.ext.web.client.WebClient;
+import jakarta.annotation.PostConstruct;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.Consumes;
@@ -36,6 +37,16 @@ public class CrowdStrikeContainmentConnector {
 
     @Inject
     CrowdStrikeOAuth2Client oAuth2Client;
+
+    @Inject
+    Vertx vertx;
+
+    WebClient webClient;
+
+    @PostConstruct
+    void init() {
+        webClient = WebClient.create(vertx);
+    }
 
     @ConfigProperty(name = "casehub.soc.crowdstrike.api-base",
                      defaultValue = "https://api.crowdstrike.com")
@@ -93,8 +104,7 @@ public class CrowdStrikeContainmentConnector {
         ids.add(deviceId);
 
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            HttpResponse<Buffer> response = client
+            HttpResponse<Buffer> response = webClient
                     .postAbs(url)
                     .putHeader("Authorization", "Bearer " + token)
                     .putHeader("Content-Type", "application/json")

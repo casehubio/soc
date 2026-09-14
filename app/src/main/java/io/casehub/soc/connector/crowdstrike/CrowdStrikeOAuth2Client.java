@@ -18,11 +18,12 @@ public class CrowdStrikeOAuth2Client {
     private final String apiBase;
     private final String clientId;
     private final String clientSecret;
+    private final WebClient webClient;
 
     private volatile String cachedToken;
     private volatile Instant tokenExpiry = Instant.EPOCH;
 
-    public CrowdStrikeOAuth2Client(String apiBase, String clientId, String clientSecret) {
+    public CrowdStrikeOAuth2Client(String apiBase, String clientId, String clientSecret, Vertx vertx) {
         if (clientId == null || clientId.isBlank()) {
             throw new IllegalArgumentException("CrowdStrike client-id must not be blank");
         }
@@ -32,12 +33,14 @@ public class CrowdStrikeOAuth2Client {
         this.apiBase = apiBase;
         this.clientId = clientId;
         this.clientSecret = clientSecret;
+        this.webClient = WebClient.create(vertx);
     }
 
     private CrowdStrikeOAuth2Client() {
         this.apiBase = "";
         this.clientId = "";
         this.clientSecret = "";
+        this.webClient = null;
     }
 
     public static CrowdStrikeOAuth2Client unconfigured() {
@@ -60,8 +63,7 @@ public class CrowdStrikeOAuth2Client {
         String body = "client_id=" + clientId + "&client_secret=" + clientSecret;
 
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            HttpResponse<Buffer> response = client
+            HttpResponse<Buffer> response = webClient
                     .postAbs(url)
                     .putHeader("Content-Type", "application/x-www-form-urlencoded")
                     .sendBuffer(Buffer.buffer(body))

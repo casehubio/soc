@@ -116,6 +116,29 @@ io.casehub.soc
  +-- rest/
  |    +-- SocComplianceResource     -- JAX-RS: /api/soc/compliance/{proof,timeline,dora}; @RolesAllowed
  |    +-- SimulatedContainmentConnector -- JAX-RS: /sim/containment; dev/test simulated containment connector
+ +-- connector/
+ |    +-- crowdstrike/
+ |    |    +-- CrowdStrikeContainmentConnector -- JAX-RS: /crowdstrike/containment; host isolation and endpoint wipe via Falcon API
+ |    |    +-- CrowdStrikeOAuth2Client         -- OAuth2 client credentials with in-memory token caching
+ |    |    +-- CrowdStrikeHealthCheck          -- JAX-RS: /crowdstrike/health
+ |    |    +-- CrowdStrikeConfig               -- CDI producer for CrowdStrikeOAuth2Client
+ |    |    +-- CrowdStrikeAuthException        -- runtime exception for auth failures
+ |    +-- paloalto/
+ |    |    +-- PaloAltoContainmentConnector     -- JAX-RS: /paloalto/containment; IP/domain blocking and network segmentation via PAN-OS XML API
+ |    |    +-- PaloAltoApiClient               -- PAN-OS XML API calls with two-phase commit and job polling
+ |    |    +-- PaloAltoApiResponse             -- XML response parser (regex-based for small fixed-shape payloads)
+ |    |    +-- PaloAltoHealthCheck             -- JAX-RS: /paloalto/health
+ |    |    +-- PaloAltoConfig                  -- CDI producer for PaloAltoApiClient
+ |    |    +-- PaloAltoApiException            -- runtime exception for API failures
+ |    +-- identity/
+ |         +-- IdentityContainmentConnector    -- JAX-RS: /identity/containment; account disable, session revoke, API key rotation
+ |         +-- IdentityProvider                -- strategy interface for Okta/Graph provider dispatch
+ |         +-- OktaIdentityProvider            -- Okta Users API implementation (SSWS token auth)
+ |         +-- GraphIdentityProvider           -- Microsoft Graph API implementation (OAuth2 client credentials)
+ |         +-- IdentityHealthCheck             -- JAX-RS: /identity/health
+ |         +-- IdentityConnectorConfig         -- CDI producer with config-driven provider selection
+ |         +-- IdentityResult                  -- record: provider operation result
+ |         +-- IdentityApiException            -- runtime exception for provider API failures
  +-- routing/
  |    +-- SocActionRiskClassifier   -- ActionRiskClassifier with @RiskClassifier qualifier
  +-- worker/

@@ -1,7 +1,9 @@
 package io.casehub.soc.connector.paloalto;
 
+import io.vertx.core.Vertx;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -9,6 +11,9 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class PaloAltoConfig {
+
+    @Inject
+    Vertx vertx;
 
     @Produces
     @Singleton
@@ -28,6 +33,6 @@ public class PaloAltoConfig {
             return PaloAltoApiClient.unconfigured();
         }
         return new PaloAltoApiClient(apiBase, apiKey.get(), vsys, deviceName,
-                commitPollIntervalMs, commitTimeoutMs);
+                commitPollIntervalMs, commitTimeoutMs, vertx);
     }
 }

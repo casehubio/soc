@@ -15,10 +15,18 @@ public class OktaIdentityProvider implements IdentityProvider {
 
     private final String apiBase;
     private final String apiToken;
+    private final WebClient webClient;
 
-    public OktaIdentityProvider(String apiBase, String apiToken) {
+    public OktaIdentityProvider(String apiBase, String apiToken, Vertx vertx) {
         this.apiBase = apiBase;
         this.apiToken = apiToken;
+        this.webClient = WebClient.create(vertx);
+    }
+
+    OktaIdentityProvider(String apiBase, String apiToken) {
+        this.apiBase = apiBase;
+        this.apiToken = apiToken;
+        this.webClient = WebClient.create(Vertx.vertx());
     }
 
     @Override
@@ -103,8 +111,7 @@ public class OktaIdentityProvider implements IdentityProvider {
 
     private HttpResponse<Buffer> post(String url, String body) {
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            var req = client.postAbs(url)
+            var req = webClient.postAbs(url)
                     .putHeader("Authorization", "SSWS " + apiToken)
                     .putHeader("Accept", "application/json");
             if (body != null) {
@@ -124,8 +131,7 @@ public class OktaIdentityProvider implements IdentityProvider {
 
     private HttpResponse<Buffer> delete(String url) {
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            return client.deleteAbs(url)
+            return webClient.deleteAbs(url)
                     .putHeader("Authorization", "SSWS " + apiToken)
                     .putHeader("Accept", "application/json")
                     .send().toCompletionStage().toCompletableFuture()
@@ -139,8 +145,7 @@ public class OktaIdentityProvider implements IdentityProvider {
 
     private HttpResponse<Buffer> get(String url) {
         try {
-            WebClient client = WebClient.create(Vertx.vertx());
-            return client.getAbs(url)
+            return webClient.getAbs(url)
                     .putHeader("Authorization", "SSWS " + apiToken)
                     .putHeader("Accept", "application/json")
                     .send().toCompletionStage().toCompletableFuture()

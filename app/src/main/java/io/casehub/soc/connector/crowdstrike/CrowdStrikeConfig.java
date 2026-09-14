@@ -1,7 +1,9 @@
 package io.casehub.soc.connector.crowdstrike;
 
+import io.vertx.core.Vertx;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.inject.Produces;
+import jakarta.inject.Inject;
 import jakarta.inject.Singleton;
 import org.eclipse.microprofile.config.inject.ConfigProperty;
 
@@ -9,6 +11,9 @@ import java.util.Optional;
 
 @ApplicationScoped
 public class CrowdStrikeConfig {
+
+    @Inject
+    Vertx vertx;
 
     @Produces
     @Singleton
@@ -21,6 +26,6 @@ public class CrowdStrikeConfig {
                 || clientSecret.isEmpty() || clientSecret.get().isBlank()) {
             return CrowdStrikeOAuth2Client.unconfigured();
         }
-        return new CrowdStrikeOAuth2Client(apiBase, clientId.get(), clientSecret.get());
+        return new CrowdStrikeOAuth2Client(apiBase, clientId.get(), clientSecret.get(), vertx);
     }
 }

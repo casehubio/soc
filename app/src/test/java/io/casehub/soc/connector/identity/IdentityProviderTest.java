@@ -2,6 +2,8 @@ package io.casehub.soc.connector.identity;
 
 import org.junit.jupiter.api.Test;
 
+import io.vertx.core.Vertx;
+
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
@@ -41,27 +43,27 @@ class IdentityProviderTest {
 
     @Test
     void oktaProviderReportsName() {
-        var provider = new OktaIdentityProvider("https://dev.okta.com", "ssws-token");
+        var provider = new OktaIdentityProvider("https://dev.okta.com", "ssws-token", Vertx.vertx());
         assertThat(provider.providerName()).isEqualTo("okta");
     }
 
     @Test
     void oktaProviderBuildsDisableUrl() {
-        var provider = new OktaIdentityProvider("https://dev.okta.com", "ssws-token");
+        var provider = new OktaIdentityProvider("https://dev.okta.com", "ssws-token", Vertx.vertx());
         assertThat(provider.buildDisableUrl("user-123"))
                 .isEqualTo("https://dev.okta.com/api/v1/users/user-123/lifecycle/suspend");
     }
 
     @Test
     void oktaProviderBuildsRevokeUrl() {
-        var provider = new OktaIdentityProvider("https://dev.okta.com", "ssws-token");
+        var provider = new OktaIdentityProvider("https://dev.okta.com", "ssws-token", Vertx.vertx());
         assertThat(provider.buildRevokeUrl("user-123"))
                 .isEqualTo("https://dev.okta.com/api/v1/users/user-123/sessions");
     }
 
     @Test
     void oktaProviderBuildsRotateUrl() {
-        var provider = new OktaIdentityProvider("https://dev.okta.com", "ssws-token");
+        var provider = new OktaIdentityProvider("https://dev.okta.com", "ssws-token", Vertx.vertx());
         assertThat(provider.buildRotateUrl("app-456"))
                 .isEqualTo("https://dev.okta.com/api/v1/apps/app-456/credentials/keys/generate?validityYears=1");
     }
@@ -69,14 +71,14 @@ class IdentityProviderTest {
     @Test
     void graphProviderReportsName() {
         var provider = new GraphIdentityProvider(
-                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1");
+                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1", Vertx.vertx());
         assertThat(provider.providerName()).isEqualTo("graph");
     }
 
     @Test
     void graphProviderBuildsDisableUrl() {
         var provider = new GraphIdentityProvider(
-                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1");
+                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1", Vertx.vertx());
         assertThat(provider.buildDisableUrl("user-123"))
                 .isEqualTo("https://graph.microsoft.com/v1.0/users/user-123");
     }
@@ -84,7 +86,7 @@ class IdentityProviderTest {
     @Test
     void graphProviderBuildsRevokeUrl() {
         var provider = new GraphIdentityProvider(
-                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1");
+                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1", Vertx.vertx());
         assertThat(provider.buildRevokeUrl("user-123"))
                 .isEqualTo("https://graph.microsoft.com/v1.0/users/user-123/revokeSignInSessions");
     }
@@ -92,7 +94,7 @@ class IdentityProviderTest {
     @Test
     void graphProviderBuildsRotateUrl() {
         var provider = new GraphIdentityProvider(
-                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1");
+                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1", Vertx.vertx());
         assertThat(provider.buildRotateUrl("app-456"))
                 .isEqualTo("https://graph.microsoft.com/v1.0/applications/app-456/addPassword");
     }
@@ -100,7 +102,7 @@ class IdentityProviderTest {
     @Test
     void graphProviderBuildsTokenUrl() {
         var provider = new GraphIdentityProvider(
-                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1");
+                "https://graph.microsoft.com", "tenant-1", "client-1", "secret-1", Vertx.vertx());
         assertThat(provider.buildTokenUrl())
                 .isEqualTo("https://login.microsoftonline.com/tenant-1/oauth2/v2.0/token");
     }

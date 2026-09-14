@@ -40,11 +40,13 @@ class CrowdStrikeContainmentWireMockTest {
                 .willReturn(okJson("{\"access_token\":\"test-token\",\"expires_in\":1799}")));
 
         String baseUrl = "http://localhost:" + wireMock.port();
-        oAuth2Client = new CrowdStrikeOAuth2Client(baseUrl, "test-id", "test-secret");
+        oAuth2Client = new CrowdStrikeOAuth2Client(baseUrl, "test-id", "test-secret",
+                io.vertx.core.Vertx.vertx());
 
         connector = new CrowdStrikeContainmentConnector();
         connector.oAuth2Client = oAuth2Client;
         connector.apiBase = baseUrl;
+        connector.webClient = io.vertx.ext.web.client.WebClient.create(io.vertx.core.Vertx.vertx());
     }
 
     @Test
@@ -128,7 +130,8 @@ class CrowdStrikeContainmentWireMockTest {
                         .withBody("{\"error\":\"invalid_client\"}")));
 
         oAuth2Client = new CrowdStrikeOAuth2Client(
-                "http://localhost:" + wireMock.port(), "bad-id", "bad-secret");
+                "http://localhost:" + wireMock.port(), "bad-id", "bad-secret",
+                io.vertx.core.Vertx.vertx());
         connector.oAuth2Client = oAuth2Client;
 
         ContainmentResponse response = connector.execute(new ContainmentRequest(

@@ -57,7 +57,7 @@ class PaloAltoContainmentWireMockTest {
 
         String baseUrl = "http://localhost:" + wireMock.port();
         apiClient = new PaloAltoApiClient(baseUrl, "test-api-key", "vsys1",
-                "localhost.localdomain", 100, 5000);
+                "localhost.localdomain", 100, 5000, io.vertx.core.Vertx.vertx());
 
         connector = new PaloAltoContainmentConnector();
         connector.apiClient = apiClient;
