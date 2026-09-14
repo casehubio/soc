@@ -77,6 +77,44 @@ class RuleContainmentExecutionWorkerTest {
         assertThat(output).containsEntry("executed", false);
     }
 
+
+    @Test
+    void recordsRetryableFailure() {
+        ContainmentExecutor failingExecutor = (actionType, params, ctx) ->
+                                                      ContainmentResult.failure("Connection refused", true);
+
+        Worker              worker = RuleContainmentExecutionWorker.create(failingExecutor);
+        Map<String, Object> input  = new LinkedHashMap<>();
+        input.put("containmentRecommendation", Map.of(
+                "recommendedAction", "ISOLATE_HOST",
+                "riskScore", 0.95,
+                "actionParameters", Map.of("hostId", "srv-42")));
+        input.put("alert", Map.of("detectedAt", "2026-09-02T10:00:00Z"));
+
+        var output = outputMap(invokeWorker(worker, input));
+        assertThat(output).containsEntry("executed", false);
+        assertThat(output).containsEntry("success", false);
+        assertThat(output).containsEntry("errorReason", "Connection refused");
+    }
+
+    @Test
+    void recordsPermanentFailure() {
+        ContainmentExecutor failingExecutor = (actionType, params, ctx) ->
+                                                      ContainmentResult.failure("400 bad request", false);
+
+        Worker              worker = RuleContainmentExecutionWorker.create(failingExecutor);
+        Map<String, Object> input  = new LinkedHashMap<>();
+        input.put("containmentRecommendation", Map.of(
+                "recommendedAction", "BLOCK_IP",
+                "riskScore", 0.5,
+                "actionParameters", Map.of("ip", "10.0.1.99")));
+
+        var output = outputMap(invokeWorker(worker, input));
+        assertThat(output).containsEntry("executed", false);
+        assertThat(output).containsEntry("success", false);
+        assertThat(output).containsEntry("errorReason", "400 bad request");
+    }
+
     @Test
     void skipsWhenNoContainmentRecommended() {
         Worker worker = RuleContainmentExecutionWorker.create(loggingExecutor);

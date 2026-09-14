@@ -54,6 +54,18 @@ public final class RuleContainmentExecutionWorker {
 
                     ContainmentResult result = executor.execute(actionType, actionParams, context);
 
+                    if (!result.success()) {
+                        var failOutput = new LinkedHashMap<String, Object>();
+                        failOutput.put("actionType", actionType);
+                        failOutput.put("executed", false);
+                        failOutput.put("success", false);
+                        failOutput.put("details", result.details());
+                        failOutput.put("errorReason", result.errorReason());
+                        failOutput.put("executionTimestamp", Instant.now().toString());
+                        failOutput.put("detectionToContainmentMs", 0L);
+                        return WorkerResult.of(failOutput);
+                    }
+
                     long detectionToContainmentMs = 0;
                     @SuppressWarnings("unchecked")
                     var alert = (Map<String, Object>) input.get("alert");
