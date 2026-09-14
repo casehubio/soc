@@ -15,7 +15,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 
 @QuarkusTest
-@Disabled("Blocked by pre-existing MemoryEmitter CDI issue (#34) — all @QuarkusTest integration tests affected")
+@Disabled("Blocked by qhorus SNAPSHOT drift — CDI deployment errors in qhorus runtime services")
 class ConnectorContainmentIntegrationTest {
 
     @Inject

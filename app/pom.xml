@@ -232,6 +232,12 @@
       <scope>test</scope>
     </dependency>
     <dependency>
+      <groupId>org.wiremock</groupId>
+      <artifactId>wiremock-standalone</artifactId>
+      <version>3.13.0</version>
+      <scope>test</scope>
+    </dependency>
+    <dependency>
       <groupId>io.casehub</groupId>
       <artifactId>casehub-neocortex-memory-inmem</artifactId>
       <version>${casehub.version}</version>
