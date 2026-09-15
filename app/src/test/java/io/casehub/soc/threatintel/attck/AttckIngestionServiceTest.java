@@ -26,8 +26,7 @@ class AttckIngestionServiceTest {
         service.embeddingIngestor = ingestor;
         service.onStartup(new StartupEvent());
 
-        enrichmentService = new AttckEnrichmentService();
-        enrichmentService.mindMapStore = mindMapStore;
+        enrichmentService = new AttckEnrichmentService(mindMapStore);
     }
 
     @Test

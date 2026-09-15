@@ -16,6 +16,12 @@ public class AttckEnrichmentService {
     @Inject
     MindMapStore mindMapStore;
 
+    public AttckEnrichmentService() {}
+
+    public AttckEnrichmentService(MindMapStore mindMapStore) {
+        this.mindMapStore = mindMapStore;
+    }
+
     public List<AttckRelatedEntity> getRelatedGroups(String mitreId) {
         MindMapNode node = mindMapStore.resolveNode(mitreId, null, REFERENCE_TENANT);
         if (node == null) return List.of();

@@ -1,5 +1,7 @@
 package io.casehub.soc.worker;
 
+import io.casehub.soc.threatintel.attck.AttckEnrichmentService;
+import io.casehub.neocortex.mindmap.inmem.InMemoryMindMapStore;
 import io.casehub.worker.api.Worker;
 import io.casehub.worker.api.WorkerFunction;
 import io.casehub.worker.api.WorkerResult;
@@ -12,7 +14,11 @@ import static org.assertj.core.api.Assertions.assertThat;
 
 class RuleAttckMappingWorkerTest {
 
-    private final Worker worker = RuleAttckMappingWorker.create();
+    private static AttckEnrichmentService stubEnrichmentService() {
+        return new AttckEnrichmentService(new InMemoryMindMapStore());
+    }
+
+    private final Worker worker = RuleAttckMappingWorker.create(stubEnrichmentService());
 
     @Test
     void workerMetadata() {

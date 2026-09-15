@@ -13,6 +13,7 @@ import io.casehub.soc.worker.RuleRecoveryVerificationWorker;
 import io.casehub.soc.worker.SocRecoveryVerificationResultWorker;
 import io.casehub.soc.worker.RuleCbrRetrievalWorker;
 import io.casehub.soc.worker.RuleIocEnrichmentWorker;
+import io.casehub.soc.threatintel.attck.AttckEnrichmentService;
 import io.casehub.worker.api.Worker;
 
 import java.time.Instant;
@@ -23,17 +24,20 @@ public final class SocInvestigationCaseDescriptor {
     private final ChatModel llmModel;
     private final io.casehub.soc.engine.cbr.SocCbrRetrieveService cbrRetrieveService;
     private final ContainmentExecutor containmentExecutor;
+    private final AttckEnrichmentService attckEnrichmentService;
 
     SocInvestigationCaseDescriptor() {
-        this(null, null, null);
+        this(null, null, null, null);
     }
 
     SocInvestigationCaseDescriptor(ChatModel llmModel,
                                    io.casehub.soc.engine.cbr.SocCbrRetrieveService cbrRetrieveService,
-                                   ContainmentExecutor containmentExecutor) {
+                                   ContainmentExecutor containmentExecutor,
+                                   AttckEnrichmentService attckEnrichmentService) {
         this.llmModel = llmModel;
         this.cbrRetrieveService = cbrRetrieveService;
         this.containmentExecutor = containmentExecutor;
+        this.attckEnrichmentService = attckEnrichmentService;
     }
 
     List<Worker> workers() {
@@ -44,7 +48,7 @@ public final class SocInvestigationCaseDescriptor {
                 RuleCbrRetrievalWorker.create(cbrRetrieveService),
                 RuleIocEnrichmentWorker.create(),
                 LlmIocEnrichmentWorker.create(llmModel),
-                RuleAttckMappingWorker.create(),
+                RuleAttckMappingWorker.create(attckEnrichmentService),
                 LlmAttckMappingWorker.create(llmModel),
                 RuleContainmentRecommendationWorker.create(),
                 LlmContainmentRecommendationWorker.create(llmModel),

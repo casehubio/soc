@@ -56,8 +56,7 @@ class AttckEnrichmentServiceTest {
         store.addEdge(EdgeInput.of(mimikatzId, t1003Id, "uses"), REFERENCE_TENANT);
         store.addEdge(EdgeInput.of(g0007Id, mimikatzId, "uses"), REFERENCE_TENANT);
 
-        service = new AttckEnrichmentService();
-        service.mindMapStore = store;
+        service = new AttckEnrichmentService(store);
     }
 
     @Test

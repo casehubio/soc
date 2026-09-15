@@ -1,4 +1,4 @@
-package io.casehub.soc.worker;
+package io.casehub.soc.threatintel.attck;
 
 import io.casehub.soc.worker.contract.AttckMappingOutput;
 

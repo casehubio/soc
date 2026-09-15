@@ -1,5 +1,8 @@
 package io.casehub.soc.worker;
 
+import io.casehub.soc.threatintel.attck.AttckEnrichmentService;
+import io.casehub.soc.threatintel.attck.AttckLookupTable;
+import io.casehub.soc.threatintel.attck.AttckRelatedEntity;
 import io.casehub.soc.worker.contract.AttckMappingOutput;
 import io.casehub.worker.api.Worker;
 import io.casehub.worker.api.WorkerResult;
@@ -12,7 +15,7 @@ public final class RuleAttckMappingWorker {
 
     private RuleAttckMappingWorker() {}
 
-    public static Worker create() {
+    public static Worker create(AttckEnrichmentService enrichmentService) {
         return Worker.builder()
                 .name("rule-attck-mapping")
                 .capabilityName("attck-mapping")
@@ -30,18 +33,33 @@ public final class RuleAttckMappingWorker {
                             .collect(Collectors.toList());
 
                     AttckMappingOutput mapping = AttckLookupTable.lookup(alertRule, iocTypes);
-                    var techniqueMaps = mapping.techniques().stream()
-                            .map(t -> Map.<String, Object>of(
-                                    "technique", t.technique(),
-                                    "confidence", t.confidence(),
-                                    "evidence", t.evidence()))
+                    var enriched = mapping.techniques().stream()
+                            .map(t -> enrichTechnique(t, enrichmentService))
                             .collect(Collectors.toList());
                     return WorkerResult.of(Map.of(
-                            "techniques", techniqueMaps,
+                            "techniques", enriched,
                             "primaryTactic", mapping.primaryTactic(),
                             "confidence", mapping.confidence(),
                             "narrative", mapping.narrative()));
                 })
                 .build();
+    }
+
+    private static Map<String, Object> enrichTechnique(
+            AttckMappingOutput.TechniqueEntry entry,
+            AttckEnrichmentService enrichmentService) {
+        var groups = enrichmentService.getRelatedGroups(entry.technique()).stream()
+                .map(AttckRelatedEntity::name).toList();
+        var mitigations = enrichmentService.getMitigations(entry.technique()).stream()
+                .map(e -> e.mitreId() + " — " + e.name()).toList();
+        var subTechniques = enrichmentService.getSubTechniques(entry.technique()).stream()
+                .map(e -> e.mitreId() + " — " + e.name()).toList();
+        return Map.of(
+                "technique", entry.technique(),
+                "confidence", entry.confidence(),
+                "evidence", entry.evidence(),
+                "relatedGroups", groups,
+                "mitigations", mitigations,
+                "subTechniques", subTechniques);
     }
 }

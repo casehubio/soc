@@ -1,5 +1,6 @@
 package io.casehub.soc.worker;
 
+import io.casehub.soc.threatintel.attck.AttckLookupTable;
 import io.casehub.soc.worker.contract.AttckMappingOutput;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
