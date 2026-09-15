@@ -29,6 +29,58 @@
             <scope>runtime</scope>
         </dependency>
 
+        <!-- MindMap API + runtime impl -->
+        <dependency>
+            <groupId>io.casehub</groupId>
+            <artifactId>casehub-neocortex-mindmap-api</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.casehub</groupId>
+            <artifactId>casehub-neocortex-mindmap-core</artifactId>
+            <version>0.2-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.casehub</groupId>
+            <artifactId>casehub-neocortex-mindmap-sqlite</artifactId>
+            <version>0.2-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.casehub</groupId>
+            <artifactId>casehub-neocortex-mindmap-inmem</artifactId>
+            <version>0.2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- RAG API + in-memory test impl -->
+        <dependency>
+            <groupId>io.casehub</groupId>
+            <artifactId>casehub-neocortex-rag-api</artifactId>
+            <version>0.2-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+            <groupId>io.casehub</groupId>
+            <artifactId>casehub-neocortex-rag</artifactId>
+            <version>0.2-SNAPSHOT</version>
+            <scope>runtime</scope>
+        </dependency>
+        <dependency>
+            <groupId>io.casehub</groupId>
+            <artifactId>casehub-neocortex-rag-testing</artifactId>
+            <version>0.2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
+        <!-- MindMap testing -->
+        <dependency>
+            <groupId>io.casehub</groupId>
+            <artifactId>casehub-neocortex-mindmap-testing</artifactId>
+            <version>0.2-SNAPSHOT</version>
+            <scope>test</scope>
+        </dependency>
+
     <!-- SOC domain model -->
     <dependency>
       <groupId>io.casehub</groupId>

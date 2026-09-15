@@ -1,0 +1,171 @@
+{
+  "type": "bundle",
+  "id": "bundle--test",
+  "objects": [
+    {
+      "type": "x-mitre-collection",
+      "id": "x-mitre-collection--test",
+      "name": "Enterprise ATT&CK",
+      "x_mitre_version": "16.1"
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--t1003",
+      "name": "OS Credential Dumping",
+      "description": "Adversaries may attempt to dump credentials.",
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "T1003"}
+      ],
+      "kill_chain_phases": [
+        {"kill_chain_name": "mitre-attack", "phase_name": "credential-access"}
+      ],
+      "x_mitre_platforms": ["Windows", "Linux"],
+      "x_mitre_data_sources": ["Process: OS API Execution"],
+      "x_mitre_detection": "Monitor for unexpected processes.",
+      "x_mitre_version": "1.4",
+      "x_mitre_is_subtechnique": false
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--t1003001",
+      "name": "LSASS Memory",
+      "description": "Adversaries may dump LSASS memory.",
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "T1003.001"}
+      ],
+      "kill_chain_phases": [
+        {"kill_chain_name": "mitre-attack", "phase_name": "credential-access"}
+      ],
+      "x_mitre_platforms": ["Windows"],
+      "x_mitre_data_sources": [],
+      "x_mitre_version": "1.0",
+      "x_mitre_is_subtechnique": true
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--deprecated",
+      "name": "Deprecated Technique",
+      "description": "Should be filtered.",
+      "x_mitre_deprecated": true,
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "T9999"}
+      ],
+      "kill_chain_phases": [],
+      "x_mitre_platforms": [],
+      "x_mitre_data_sources": [],
+      "x_mitre_version": "1.0",
+      "x_mitre_is_subtechnique": false
+    },
+    {
+      "type": "attack-pattern",
+      "id": "attack-pattern--revoked",
+      "name": "Revoked Technique",
+      "description": "Should be filtered.",
+      "revoked": true,
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "T9998"}
+      ],
+      "kill_chain_phases": [],
+      "x_mitre_platforms": [],
+      "x_mitre_data_sources": [],
+      "x_mitre_version": "1.0",
+      "x_mitre_is_subtechnique": false
+    },
+    {
+      "type": "intrusion-set",
+      "id": "intrusion-set--apt28",
+      "name": "APT28",
+      "description": "APT28 is a threat group attributed to Russia.",
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "G0007"}
+      ],
+      "aliases": ["APT28", "Fancy Bear", "Sofacy"]
+    },
+    {
+      "type": "intrusion-set",
+      "id": "intrusion-set--apt29",
+      "name": "APT29",
+      "description": "APT29 is attributed to SVR.",
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "G0016"}
+      ],
+      "aliases": ["APT29", "Cozy Bear"]
+    },
+    {
+      "type": "course-of-action",
+      "id": "course-of-action--m1026",
+      "name": "Privileged Account Management",
+      "description": "Manage the creation and use of privileged accounts.",
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "M1026"}
+      ]
+    },
+    {
+      "type": "malware",
+      "id": "malware--mimikatz",
+      "name": "Mimikatz",
+      "description": "Mimikatz is a credential dumper.",
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "S0002"}
+      ]
+    },
+    {
+      "type": "tool",
+      "id": "tool--psexec",
+      "name": "PsExec",
+      "description": "PsExec is a remote execution tool.",
+      "external_references": [
+        {"source_name": "mitre-attack", "external_id": "S0029"}
+      ]
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--apt28-uses-t1003",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--apt28",
+      "target_ref": "attack-pattern--t1003"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--apt29-uses-t1003",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--apt29",
+      "target_ref": "attack-pattern--t1003"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--m1026-mitigates-t1003",
+      "relationship_type": "mitigates",
+      "source_ref": "course-of-action--m1026",
+      "target_ref": "attack-pattern--t1003"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--subtechnique",
+      "relationship_type": "subtechnique-of",
+      "source_ref": "attack-pattern--t1003001",
+      "target_ref": "attack-pattern--t1003"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--apt28-uses-mimikatz",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--apt28",
+      "target_ref": "malware--mimikatz"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--mimikatz-uses-t1003",
+      "relationship_type": "uses",
+      "source_ref": "malware--mimikatz",
+      "target_ref": "attack-pattern--t1003"
+    },
+    {
+      "type": "relationship",
+      "id": "relationship--dangling",
+      "relationship_type": "uses",
+      "source_ref": "intrusion-set--unknown",
+      "target_ref": "attack-pattern--t1003"
+    }
+  ]
+}
