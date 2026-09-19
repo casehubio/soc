@@ -5,7 +5,7 @@
 
 ## Problem
 
-`SocIncidentResource.toSummary()` passes `Instant.now()` to the `createdAt` field of `IncidentSummaryDto`. The timestamp changes on every API call instead of reflecting when the incident was actually created.
+`SocIncidentResource.toSummary()` passes `Instant.now()` to the `createdAt` field of `IncidentSummaryResponse`. The timestamp changes on every API call instead of reflecting when the incident was actually created.
 
 ## Investigation findings
 
@@ -21,7 +21,7 @@ The root cause was a platform gap: `CaseInstance` should carry its own creation 
 
 Replace `Instant.now()` with `ci.getCreatedAt()` in `SocIncidentResource.toSummary()`.
 
-The `import java.time.Instant` can be removed since `IncidentSummaryDto` already imports it and `toSummary()` no longer references `Instant` directly.
+The `import java.time.Instant` can be removed since `IncidentSummaryResponse` already imports it and `toSummary()` no longer references `Instant` directly.
 
 ## Test
 

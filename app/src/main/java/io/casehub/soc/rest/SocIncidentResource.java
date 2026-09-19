@@ -5,7 +5,7 @@ import io.casehub.engine.common.spi.CaseInstanceRepository;
 import io.casehub.engine.common.spi.query.CaseInstanceQuery;
 import io.casehub.platform.api.identity.CurrentPrincipal;
 import io.casehub.soc.domain.SocCaseTypes;
-import io.casehub.soc.rest.dto.IncidentSummaryDto;
+import io.casehub.soc.rest.dto.IncidentSummaryResponse;
 import io.casehub.qhorus.api.channel.ChannelReader;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -36,8 +36,8 @@ public class SocIncidentResource {
                 .page(page != null ? page : 0)
                 .size(size != null ? size : 50)
                 .build();
-        List<IncidentSummaryDto> entities = repository.query(query, tenancyId)
-                .stream().map(this::toSummary).toList();
+        List<IncidentSummaryResponse> entities = repository.query(query, tenancyId)
+                                                           .stream().map(this::toSummary).toList();
         long total = repository.count(query, tenancyId);
         return Map.of("entities", entities, "totalCount", total);
     }
@@ -97,9 +97,9 @@ public class SocIncidentResource {
         return Map.of("techniques", List.of());
     }
 
-    private IncidentSummaryDto toSummary(CaseInstance ci) {
+    private IncidentSummaryResponse toSummary(CaseInstance ci) {
         var ctx = ci.getCaseContext();
-        return new IncidentSummaryDto(
+        return new IncidentSummaryResponse(
                 ci.getUuid(),
                 ctx != null ? stringOrDefault(ctx, "incidentStatus", "UNKNOWN") : "UNKNOWN",
                 ctx != null ? stringOrDefault(ctx, "alertSeverity", "UNKNOWN") : "UNKNOWN",
