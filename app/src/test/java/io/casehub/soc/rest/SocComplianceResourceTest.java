@@ -15,6 +15,8 @@ class SocComplianceResourceTest {
         RestAssured.given()
             .queryParam("from", "2020-01-01T00:00:00Z")
             .queryParam("to", "2030-01-01T00:00:00Z")
+            .queryParam("page", 0)
+            .queryParam("size", 50)
             .when().get("/api/soc/compliance/entries")
             .then()
             .statusCode(200)

@@ -21,7 +21,7 @@ import java.util.UUID;
 import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.anyOf;
 import static org.hamcrest.Matchers.empty;
-import static org.hamcrest.Matchers.greaterThanOrEqualTo;
+
 import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
@@ -47,8 +47,7 @@ class SocIncidentResourceTest {
             .when().get("/api/soc/incidents")
             .then()
             .statusCode(200)
-            .body("entities", notNullValue())
-            .body("totalCount", greaterThanOrEqualTo(0));
+            .body("$", notNullValue());
     }
 
     @Test
@@ -122,7 +121,7 @@ class SocIncidentResourceTest {
                                          .when().get("/api/soc/incidents")
                                          .then().statusCode(200)
                                          .extract().jsonPath()
-                                         .getString("entities.find { it.id == '" + incidentId + "' }.createdAt");
+                                         .getString("find { it.id == '" + incidentId + "' }.createdAt");
 
         assertThat(apiCreatedAt)
                 .as("API createdAt should match repository value")

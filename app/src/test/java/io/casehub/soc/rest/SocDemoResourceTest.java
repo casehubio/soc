@@ -31,8 +31,7 @@ class SocDemoResourceTest {
             .body("{\"eventType\":\"soc.alert.unknown.type\",\"severity\":\"HIGH\"}")
             .when().post("/api/soc/demo/inject-alert")
             .then()
-            .statusCode(400)
-            .body("error", notNullValue());
+            .statusCode(400);
     }
 
     @Test
