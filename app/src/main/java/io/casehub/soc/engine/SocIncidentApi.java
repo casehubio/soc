@@ -50,15 +50,14 @@ public class SocIncidentApi {
 
     @PlatformQuery("List incidents with pagination")
     @RestPath("/")
-    @PaginatedResponse(totalCountMethod = "totalIncidents")
     public List<IncidentSummaryResponse> listIncidents(
-            @QueryParam("page") Integer page,
-            @QueryParam("size") Integer size) {
+            @QueryParam("page") Integer pageNumber,
+            @QueryParam("size") Integer pageSize) {
         String tenancyId = currentPrincipal.tenancyId();
         CaseInstanceQuery query = CaseInstanceQuery.builder()
             .name(SocCaseTypes.INCIDENT_INVESTIGATION)
-            .page(page != null ? page : 0)
-            .size(size != null ? size : 50)
+            .page(pageNumber != null ? pageNumber : 0)
+            .size(pageSize != null ? pageSize : 50)
             .build();
         return repository.query(query, tenancyId).stream()
             .map(this::toSummary).toList();
