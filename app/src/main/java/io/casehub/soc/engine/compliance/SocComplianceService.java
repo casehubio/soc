@@ -1,7 +1,7 @@
 package io.casehub.soc.engine.compliance;
 
 import io.casehub.ledger.runtime.service.LedgerVerificationService;
-import io.casehub.ledger.runtime.service.model.InclusionProof;
+import io.casehub.ledger.core.merkle.InclusionProof;
 import io.casehub.soc.domain.ComplianceRequirement;
 import io.casehub.soc.domain.DoraResponseTimeReport;
 import io.casehub.soc.domain.PriorityStats;

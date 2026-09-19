@@ -2,7 +2,7 @@ package io.casehub.soc.rest;
 
 import io.casehub.ledger.api.model.ErasureReason;
 import io.casehub.ledger.runtime.privacy.LedgerErasureService;
-import io.casehub.ledger.runtime.service.model.InclusionProof;
+import io.casehub.ledger.core.merkle.InclusionProof;
 import io.casehub.platform.api.identity.CurrentPrincipal;
 import io.casehub.soc.domain.ComplianceRequirement;
 import io.casehub.soc.domain.DoraResponseTimeReport;
