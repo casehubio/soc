@@ -23,9 +23,14 @@ spec:
       inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, retrievedIncidents: .retrievedIncidents }"
       outputProjection: "{ attckMapping: ., incidentStatus: \"INVESTIGATING\" }"
 
+    - name: rag-retrieval
+      description: "Retrieve relevant threat intel prose from RAG corpora"
+      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, attckMapping: .attckMapping }"
+      outputProjection: "{ ragEnrichment: ., incidentStatus: \"INVESTIGATING\" }"
+
     - name: containment-recommendation
       description: "Recommend containment actions based on threat analysis"
-      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, attckMapping: .attckMapping, retrievedIncidents: .retrievedIncidents }"
+      inputProjection: "{ alert: .alert, iocEnrichment: .iocEnrichment, attckMapping: .attckMapping, retrievedIncidents: .retrievedIncidents, ragEnrichment: .ragEnrichment }"
       outputProjection: "{ containmentRecommendation: ., incidentStatus: \"CONTAINING\" }"
 
     - name: containment-execution
@@ -89,7 +94,14 @@ spec:
       when: ".iocEnrichment != null and .attckMapping == null"
       capability: attck-mapping
 
-    ## Fires after ATT&CK mapping. Recommends containment actions
+    ## Fires after ATT&CK mapping. Retrieves relevant prose from RAG
+    ## corpora to provide detection guidance and threat context.
+    - name: rag-retrieval
+      on: { contextChange: {} }
+      when: ".attckMapping != null and .ragEnrichment == null"
+      capability: rag-retrieval
+
+    ## Fires after RAG retrieval. Recommends containment actions
     ## based on the complete threat analysis. SocActionRiskClassifier
     ## gates high-impact containment actions for human approval.
     - name: containment-recommendation
@@ -133,7 +145,8 @@ spec:
             iocEnrichment: .iocEnrichment,
             attckMapping: .attckMapping,
             containmentRecommendation: .containmentRecommendation,
-            retrievedIncidents: .retrievedIncidents
+            retrievedIncidents: .retrievedIncidents,
+            ragEnrichment: .ragEnrichment
           }
         outputMapping: >-
           {

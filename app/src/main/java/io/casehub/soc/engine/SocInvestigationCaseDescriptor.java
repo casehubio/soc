@@ -8,11 +8,13 @@ import io.casehub.soc.worker.LlmContainmentRecommendationWorker;
 import io.casehub.soc.worker.LlmIocEnrichmentWorker;
 import io.casehub.soc.worker.RuleAttckMappingWorker;
 import io.casehub.soc.worker.RuleContainmentExecutionWorker;
+import io.casehub.soc.worker.RuleRagRetrievalWorker;
 import io.casehub.soc.worker.RuleContainmentRecommendationWorker;
 import io.casehub.soc.worker.RuleRecoveryVerificationWorker;
 import io.casehub.soc.worker.SocRecoveryVerificationResultWorker;
 import io.casehub.soc.worker.RuleCbrRetrievalWorker;
 import io.casehub.soc.worker.RuleIocEnrichmentWorker;
+import io.casehub.soc.engine.rag.SocRagRetrieveService;
 import io.casehub.soc.threatintel.attck.AttckEnrichmentService;
 import io.casehub.worker.api.Worker;
 
@@ -25,19 +27,22 @@ public final class SocInvestigationCaseDescriptor {
     private final io.casehub.soc.engine.cbr.SocCbrRetrieveService cbrRetrieveService;
     private final ContainmentExecutor containmentExecutor;
     private final AttckEnrichmentService attckEnrichmentService;
+    private final SocRagRetrieveService ragRetrieveService;
 
     SocInvestigationCaseDescriptor() {
-        this(null, null, null, null);
+        this(null, null, null, null, null);
     }
 
     SocInvestigationCaseDescriptor(ChatModel llmModel,
                                    io.casehub.soc.engine.cbr.SocCbrRetrieveService cbrRetrieveService,
                                    ContainmentExecutor containmentExecutor,
-                                   AttckEnrichmentService attckEnrichmentService) {
+                                   AttckEnrichmentService attckEnrichmentService,
+                                   SocRagRetrieveService ragRetrieveService) {
         this.llmModel = llmModel;
         this.cbrRetrieveService = cbrRetrieveService;
         this.containmentExecutor = containmentExecutor;
         this.attckEnrichmentService = attckEnrichmentService;
+        this.ragRetrieveService = ragRetrieveService;
     }
 
     List<Worker> workers() {
@@ -50,6 +55,7 @@ public final class SocInvestigationCaseDescriptor {
                 LlmIocEnrichmentWorker.create(llmModel),
                 RuleAttckMappingWorker.create(attckEnrichmentService),
                 LlmAttckMappingWorker.create(llmModel),
+                RuleRagRetrievalWorker.create(ragRetrieveService),
                 RuleContainmentRecommendationWorker.create(),
                 LlmContainmentRecommendationWorker.create(llmModel),
                 RuleContainmentExecutionWorker.create(executor),
