@@ -1,9 +1,9 @@
 package io.casehub.soc.engine.cbr;
 
 import io.casehub.neocortex.memory.MemoryDomain;
-import io.casehub.neocortex.memory.cbr.CbrCaseMemoryStore;
+import io.casehub.neocortex.memory.cbr.CbrRecordStore;
 import io.casehub.neocortex.memory.cbr.CbrQuery;
-import io.casehub.neocortex.memory.cbr.ScoredCbrCase;
+import io.casehub.neocortex.memory.cbr.CbrMatch;
 import io.casehub.platform.api.path.Path;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -23,10 +23,10 @@ public class SocCbrRetrieveService {
     private static final int TOP_K = 5;
     private static final double MIN_SIMILARITY = 0.3;
 
-    private final CbrCaseMemoryStore cbrStore;
+    private final CbrRecordStore cbrStore;
 
     @Inject
-    public SocCbrRetrieveService(CbrCaseMemoryStore cbrStore) {
+    public SocCbrRetrieveService(CbrRecordStore cbrStore) {
         this.cbrStore = cbrStore;
     }
 
@@ -41,7 +41,7 @@ public class SocCbrRetrieveService {
                     SocIncidentCbrCase.CBR_TYPE, features, TOP_K)
                 .withMinSimilarity(MIN_SIMILARITY);
 
-            List<ScoredCbrCase<SocIncidentCbrCase>> results =
+            List<CbrMatch<SocIncidentCbrCase>> results =
                 cbrStore.retrieveSimilar(query, SocIncidentCbrCase.class);
 
             LOG.infof("CBR retrieved %d similar incidents for tenant=%s", results.size(), tenantId);
@@ -52,8 +52,8 @@ public class SocCbrRetrieveService {
         }
     }
 
-    private Map<String, Object> toSerializable(ScoredCbrCase<SocIncidentCbrCase> scored) {
-        var c      = scored.cbrCase();
+    private Map<String, Object> toSerializable(CbrMatch<SocIncidentCbrCase> scored) {
+        var c      = scored.cbrRecord();
         var result = new LinkedHashMap<String, Object>();
         result.put("similarityScore", scored.score());
         putIfNotNull(result, "caseId", scored.caseId());

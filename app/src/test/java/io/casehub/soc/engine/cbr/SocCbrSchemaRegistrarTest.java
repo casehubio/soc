@@ -1,6 +1,6 @@
 package io.casehub.soc.engine.cbr;
 
-import io.casehub.neocortex.memory.cbr.CbrFeatureSchema;
+import io.casehub.neocortex.memory.cbr.CbrRecordSchema;
 import org.junit.jupiter.api.Test;
 
 import java.util.ArrayList;
@@ -31,9 +31,9 @@ class SocCbrSchemaRegistrarTest {
     }
 
     static class CapturingCbrStore extends StubCbrCaseMemoryStore {
-        final List<CbrFeatureSchema> registeredSchemas = new ArrayList<>();
+        final List<CbrRecordSchema> registeredSchemas = new ArrayList<>();
         @Override
-        public void registerSchema(CbrFeatureSchema schema) {
+        public void registerSchema(CbrRecordSchema schema) {
             registeredSchemas.add(schema);
         }
     }

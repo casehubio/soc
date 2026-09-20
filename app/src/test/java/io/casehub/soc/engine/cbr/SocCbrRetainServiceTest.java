@@ -2,7 +2,7 @@ package io.casehub.soc.engine.cbr;
 
 import io.casehub.api.spi.CaseOutcomeEvent;
 import io.casehub.neocortex.memory.MemoryDomain;
-import io.casehub.neocortex.memory.cbr.CbrCase;
+import io.casehub.neocortex.memory.cbr.CbrRecord;
 import io.casehub.platform.api.path.Path;
 import io.casehub.soc.domain.SocCaseTypes;
 import org.junit.jupiter.api.BeforeEach;
@@ -56,7 +56,7 @@ class SocCbrRetainServiceTest {
 
         assertThat(store.storedCases).hasSize(1);
         var stored = store.storedCases.getFirst();
-        assertThat(stored.cbrCase().alertType()).isEqualTo("malware");
+        assertThat(stored.cbrRecord().alertType()).isEqualTo("malware");
         assertThat(stored.tenantId()).isEqualTo("tenant-acme");
         assertThat(stored.caseId()).isEqualTo(caseId.toString());
         assertThat(stored.cbrType()).isEqualTo(SocIncidentCbrCase.CBR_TYPE);
@@ -72,14 +72,14 @@ class SocCbrRetainServiceTest {
 
         service.onOutcome(event);
         assertThat(store.storedCases).hasSize(1);
-        assertThat(store.storedCases.getFirst().cbrCase().severityOutcome()).isEqualTo("FALSE_POSITIVE");
+        assertThat(store.storedCases.getFirst().cbrRecord().severityOutcome()).isEqualTo("FALSE_POSITIVE");
     }
 
     @Test
     void storeFailure_logsAndContinues() {
         var failingStore = new StubCbrCaseMemoryStore() {
             @Override
-            public String store(CbrCase c, String t, String e, MemoryDomain d,
+            public String store(CbrRecord c, String t, String e, MemoryDomain d,
                                String tid, String cid, Path s) {
                 throw new RuntimeException("Store unavailable");
             }
@@ -96,12 +96,12 @@ class SocCbrRetainServiceTest {
     }
 
     static class CapturingCbrStore extends StubCbrCaseMemoryStore {
-        record StoredEntry(SocIncidentCbrCase cbrCase, String cbrType,
+        record StoredEntry(SocIncidentCbrCase cbrRecord, String cbrType,
                           String tenantId, String caseId) {}
         final List<StoredEntry> storedCases = new ArrayList<>();
 
         @Override
-        public String store(CbrCase c, String t, String e, MemoryDomain d,
+        public String store(CbrRecord c, String t, String e, MemoryDomain d,
                            String tid, String cid, Path s) {
             storedCases.add(new StoredEntry((SocIncidentCbrCase) c, t, tid, cid));
             return cid;

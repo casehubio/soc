@@ -2,7 +2,7 @@ package io.casehub.soc.engine.cbr;
 
 import io.casehub.api.spi.CaseOutcomeEvent;
 import io.casehub.neocortex.cognitive.Confidence;
-import io.casehub.neocortex.memory.cbr.CbrCase;
+import io.casehub.neocortex.memory.cbr.CbrRecord;
 import io.casehub.neocortex.memory.cbr.FeatureValue;
 
 import java.util.*;
@@ -23,15 +23,15 @@ public record SocIncidentCbrCase(
         String containmentOutcome,
         String playbook,
         long investigationDurationMinutes
-) implements CbrCase {
+) implements CbrRecord {
 
     public static final String CBR_TYPE = "soc-incident";
 
     @Override
-    public String cbrType() { return CBR_TYPE; }
+    public String recordType() { return CBR_TYPE; }
 
     @Override
-    public CbrCase withOutcome(String outcome, Confidence confidence) {
+    public CbrRecord withOutcome(String outcome, Confidence confidence) {
         return new SocIncidentCbrCase(problem, solution, outcome, confidence,
             features, trustScore, producerAgentId, alertType, sourceSystem,
             attckTechniqueIds, iocTypes, severityOutcome, containmentOutcome,
@@ -39,7 +39,7 @@ public record SocIncidentCbrCase(
     }
 
     @Override
-    public CbrCase withFeatures(Map<String, FeatureValue> features) {
+    public CbrRecord withFeatures(Map<String, FeatureValue> features) {
         return new SocIncidentCbrCase(problem, solution, outcome, confidence,
             features, trustScore, producerAgentId, alertType, sourceSystem,
             attckTechniqueIds, iocTypes, severityOutcome, containmentOutcome,

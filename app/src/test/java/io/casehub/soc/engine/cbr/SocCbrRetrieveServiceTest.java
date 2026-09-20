@@ -49,7 +49,7 @@ class SocCbrRetrieveServiceTest {
     void retrieve_storeFailure_returnsEmptyList() {
         var failingStore = new StubCbrCaseMemoryStore() {
             @Override
-            public <C extends CbrCase> List<ScoredCbrCase<C>> retrieveSimilar(CbrQuery q, Class<C> t) {
+            public <C extends CbrRecord> List<CbrMatch<C>> retrieveSimilar(CbrQuery q, Class<C> t) {
                 throw new RuntimeException("Store unavailable");
             }
         };
@@ -99,9 +99,9 @@ class SocCbrRetrieveServiceTest {
 
         @Override
         @SuppressWarnings("unchecked")
-        public <C extends CbrCase> List<ScoredCbrCase<C>> retrieveSimilar(CbrQuery q, Class<C> t) {
+        public <C extends CbrRecord> List<CbrMatch<C>> retrieveSimilar(CbrQuery q, Class<C> t) {
             return cases.stream()
-                .map(c -> (ScoredCbrCase<C>) new ScoredCbrCase<>((C) c, "case-" + cases.indexOf(c), 0.85))
+                .map(c -> (CbrMatch<C>) new CbrMatch<>((C) c, "case-" + cases.indexOf(c), 0.85))
                 .toList();
         }
     }

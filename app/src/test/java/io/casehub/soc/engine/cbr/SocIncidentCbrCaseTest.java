@@ -1,6 +1,6 @@
 package io.casehub.soc.engine.cbr;
 
-import io.casehub.neocortex.memory.cbr.CbrCase;
+import io.casehub.neocortex.memory.cbr.CbrRecord;
 import io.casehub.neocortex.memory.cbr.FeatureValue;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -21,8 +21,8 @@ class SocIncidentCbrCaseTest {
     @Test
     void implementsCbrCase() {
         var cbrCase = minimalCase();
-        assertThat(cbrCase).isInstanceOf(CbrCase.class);
-        assertThat(cbrCase.cbrType()).isEqualTo("soc-incident");
+        assertThat(cbrCase).isInstanceOf(CbrRecord.class);
+        assertThat(cbrCase.recordType()).isEqualTo("soc-incident");
     }
 
     @Test

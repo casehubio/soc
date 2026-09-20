@@ -2,7 +2,7 @@ package io.casehub.soc.engine.cbr;
 
 import io.casehub.neocortex.cognitive.Confidence;
 import io.casehub.neocortex.memory.MemoryDomain;
-import io.casehub.neocortex.memory.cbr.CbrCaseMemoryStore;
+import io.casehub.neocortex.memory.cbr.CbrRecordStore;
 import io.casehub.neocortex.memory.cbr.FeatureValue;
 import io.casehub.platform.api.path.Path;
 import io.quarkus.runtime.Startup;
@@ -23,10 +23,10 @@ public class SocCbrSeedDataLoader {
     private static final Path SCOPE = Path.of("casehubio", "soc", "incident-investigation");
     private static final String TENANT = "278776f9-e1b0-46fb-9032-8bddebdcf9ce";
 
-    private final CbrCaseMemoryStore cbrStore;
+    private final CbrRecordStore cbrStore;
 
     @Inject
-    public SocCbrSeedDataLoader(CbrCaseMemoryStore cbrStore) {
+    public SocCbrSeedDataLoader(CbrRecordStore cbrStore) {
         this.cbrStore = cbrStore;
     }
 

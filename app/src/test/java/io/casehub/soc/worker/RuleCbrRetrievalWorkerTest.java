@@ -60,58 +60,7 @@ class RuleCbrRetrievalWorkerTest {
     }
 
     private static SocCbrRetrieveService stubService(List<Map<String, Object>> results) {
-        return new SocCbrRetrieveService(new io.casehub.neocortex.memory.cbr.CbrCaseMemoryStore() {
-            @Override
-            public void registerSchema(io.casehub.neocortex.memory.cbr.CbrFeatureSchema s)                                                                                                                      {}
-
-            @Override
-            public String store(io.casehub.neocortex.memory.cbr.CbrCase c, String t, String e, io.casehub.neocortex.memory.MemoryDomain d, String tid, String cid, io.casehub.platform.api.path.Path s2)        {return cid;}
-
-            @Override
-            public <C extends io.casehub.neocortex.memory.cbr.CbrCase> java.util.List<io.casehub.neocortex.memory.cbr.ScoredCbrCase<C>> retrieveSimilar(io.casehub.neocortex.memory.cbr.CbrQuery q, Class<C> t) {return java.util.List.of();}
-
-            @Override
-            public Integer erase(io.casehub.neocortex.memory.EraseRequest r)                                                                                                                                    {return 0;}
-
-            @Override
-            public Integer eraseEntity(String e, String t)                                                                                                                                                      {return 0;}
-
-            @Override
-            public Integer eraseByScope(io.casehub.platform.api.path.Path s, String t)                                                                                                                          {return 0;}
-
-            @Override
-            public void recordOutcome(String c, String t, io.casehub.neocortex.memory.cbr.CbrOutcome o)                                                                                                         {}
-
-            @Override
-            public Integer purge(io.casehub.neocortex.memory.cbr.CbrRetentionPolicy p)                                                                                                                          {return 0;}
-
-            @Override
-            public java.util.List<String> findCaseIds(String t, io.casehub.neocortex.memory.MemoryDomain d, String e, java.util.Map<String, io.casehub.neocortex.memory.cbr.CbrFilter> f)                       {return java.util.List.of();}
-
-            @Override
-            public int reinstateAll(java.util.Collection<String> c, String t)                                                                                                                                  {return 0;}
-
-            @Override
-            public int reinstateMatching(String t, io.casehub.neocortex.memory.MemoryDomain d, String e, java.util.Map<String, io.casehub.neocortex.memory.cbr.CbrFilter> f) {return 0;}
-
-            @Override
-            public int supersedeMatching(String t, io.casehub.neocortex.memory.MemoryDomain d, String e, java.util.Map<String, io.casehub.neocortex.memory.cbr.CbrFilter> f, String r) {return 0;}
-
-            @Override
-            public int supersedeAll(java.util.Collection<String> c, String t, String r) {return 0;}
-
-            @Override
-            public boolean supersede(String c, String t, String s, String r)                                                                                                                                       {return true;}
-
-            @Override
-            public boolean reinstate(String c, String t)                                                                                                                                                           {return true;}
-
-            @Override
-            public io.casehub.neocortex.memory.cbr.SupersessionStatus getSupersessionStatus(String c, String t)                                                                                                 {return null;}
-
-            @Override
-            public java.util.List<io.casehub.neocortex.memory.cbr.SupersessionStatus> findSupersededCases(String t, io.casehub.neocortex.memory.MemoryDomain d)                                                 {return java.util.List.of();}
-        }) {
+        return new SocCbrRetrieveService(new io.casehub.soc.engine.cbr.StubCbrCaseMemoryStore()) {
             @Override
             public List<Map<String, Object>> retrieve(Map<String, Object> ctx, String tid) {
                 return results;

@@ -3,7 +3,7 @@ package io.casehub.soc.engine.cbr;
 import io.casehub.api.spi.CaseOutcomeEvent;
 import io.casehub.api.spi.CaseOutcomeObserver;
 import io.casehub.neocortex.memory.MemoryDomain;
-import io.casehub.neocortex.memory.cbr.CbrCaseMemoryStore;
+import io.casehub.neocortex.memory.cbr.CbrRecordStore;
 import io.casehub.platform.api.path.Path;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
@@ -16,10 +16,10 @@ public class SocCbrRetainService implements CaseOutcomeObserver {
     private static final MemoryDomain DOMAIN = new MemoryDomain("soc-incidents");
     private static final Path SCOPE = Path.of("casehubio", "soc", "incident-investigation");
 
-    private final CbrCaseMemoryStore cbrStore;
+    private final CbrRecordStore cbrStore;
 
     @Inject
-    SocCbrRetainService(CbrCaseMemoryStore cbrStore) {
+    SocCbrRetainService(CbrRecordStore cbrStore) {
         this.cbrStore = cbrStore;
     }
 

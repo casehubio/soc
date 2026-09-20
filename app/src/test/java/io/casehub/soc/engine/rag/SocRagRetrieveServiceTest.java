@@ -1,5 +1,6 @@
 package io.casehub.soc.engine.rag;
 
+import io.casehub.neocortex.rag.CaseContextRetriever;
 import io.casehub.neocortex.rag.RetrievedChunk;
 import io.casehub.neocortex.rag.testing.InMemoryCaseRetriever;
 import org.junit.jupiter.api.Test;
@@ -89,9 +90,9 @@ class SocRagRetrieveServiceTest {
     @Test
     void retrieveReturnsEmptyOnRetrieverException() {
         var service = new SocRagRetrieveService();
-        service.caseRetriever = (query, corpus, maxResults, filter) -> {
+        service.contextRetriever = new CaseContextRetriever((query, corpus, maxResults, filter) -> {
             throw new RuntimeException("Connection refused");
-        };
+        });
         var context = Map.<String, Object>of(
             "alert", Map.of("rule", "Some Alert"));
 
@@ -102,7 +103,7 @@ class SocRagRetrieveServiceTest {
 
     private static SocRagRetrieveService serviceWith(List<RetrievedChunk> chunks) {
         var service = new SocRagRetrieveService();
-        service.caseRetriever = InMemoryCaseRetriever.returning(chunks);
+        service.contextRetriever = new CaseContextRetriever(InMemoryCaseRetriever.returning(chunks));
         return service;
     }
 }

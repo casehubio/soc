@@ -7,10 +7,10 @@ import io.casehub.platform.api.path.Path;
 
 import java.util.List;
 
-public class StubCbrCaseMemoryStore implements CbrCaseMemoryStore {
-    @Override public void registerSchema(CbrFeatureSchema schema) {}
-    @Override public String store(CbrCase c, String t, String e, MemoryDomain d, String tid, String cid, Path s) { return cid; }
-    @Override public <C extends CbrCase> List<ScoredCbrCase<C>> retrieveSimilar(CbrQuery q, Class<C> t) { return List.of(); }
+public class StubCbrCaseMemoryStore implements CbrRecordStore {
+    @Override public void registerSchema(CbrRecordSchema schema) {}
+    @Override public String store(CbrRecord c, String t, String e, MemoryDomain d, String tid, String cid, Path s) { return cid; }
+    @Override public <C extends CbrRecord> List<CbrMatch<C>> retrieveSimilar(CbrQuery q, Class<C> t) { return List.of(); }
     @Override public Integer erase(EraseRequest r) { return 0; }
     @Override public Integer eraseEntity(String e, String t) { return 0; }
     @Override public Integer eraseByScope(Path s, String t) { return 0; }

@@ -1,8 +1,8 @@
 package io.casehub.soc.engine.cbr;
 
 import io.casehub.neocortex.memory.MemoryDomain;
-import io.casehub.neocortex.memory.cbr.CbrCase;
-import io.casehub.neocortex.memory.cbr.CbrCaseMemoryStore;
+import io.casehub.neocortex.memory.cbr.CbrRecord;
+import io.casehub.neocortex.memory.cbr.CbrRecordStore;
 import io.casehub.platform.api.path.Path;
 import org.junit.jupiter.api.Test;
 
@@ -48,10 +48,10 @@ class SocCbrSeedDataLoaderTest {
     }
 
     static class RecordingCbrStore extends StubCbrCaseMemoryStore {
-        final List<CbrCase> storedCases = new ArrayList<>();
+        final List<CbrRecord> storedCases = new ArrayList<>();
 
         @Override
-        public String store(CbrCase c, String type, String entityId,
+        public String store(CbrRecord c, String type, String entityId,
                 MemoryDomain domain, String tenantId, String caseId, Path scope) {
             storedCases.add(c);
             return caseId;
