@@ -99,6 +99,8 @@ io.casehub.soc
  |    |    +-- SocCbrSchemaRegistrar -- registers CBR schema attributes for SOC incidents
  |    |    +-- SocIncidentCbrCase   -- CbrCase record for SOC incidents
  |    |    +-- SocCaseOutcomeFilter -- shared predicate: successful SOC incident investigation
+ |    +-- rag/
+ |    |    +-- SocRagRetrieveService -- queries CaseContextRetriever with alert + ATT&CK + IOC context for prose retrieval
  |    +-- mesh/
  |    |    +-- SocContainmentCommitmentBridge -- CDI observer; bridges ActionGate lifecycle events to qhorus oversight channel speech acts (PROPOSE/DONE/DECLINE/STATUS)
  |    |    +-- OversightChannelState -- per-case state record; tracks channelId and PROPOSE messageId for commitment threading
@@ -143,10 +145,16 @@ io.casehub.soc
  |    +-- SocActionRiskClassifier   -- ActionRiskClassifier with @RiskClassifier qualifier
  +-- worker/
       +-- IocExtractor              -- static utility; regex extraction (IPv4, MD5, SHA1, SHA256, domain, URL, email, CVE)
-      +-- AttckLookupTable          -- static utility; rule prefix + IOC type -> ATT&CK technique mapping
+      +-- threatintel/attck/
+      |    +-- AttckConstants          -- shared constants: REFERENCE_TENANT, SUBGRAPH_NAME, CORPUS_NAME
+      |    +-- AttckStixParser         -- pure Java STIX 2.1 parser; filters deprecated/revoked objects
+      |    +-- AttckIngestionService   -- @Startup; parses STIX bundle, populates MindMap subgraph + RAG corpus
+      |    +-- AttckEnrichmentService  -- stateless MindMap graph queries (related groups, mitigations, sub-techniques)
+      |    +-- AttckLookupTable        -- static utility; rule prefix + IOC type -> ATT&CK technique mapping
       +-- ContainmentDecisionMatrix -- static utility; severity x tactic matrix -> containment recommendation
       +-- RuleIocEnrichmentWorker   -- Worker factory; ioc-enrichment capability, uses IocExtractor
-      +-- RuleAttckMappingWorker    -- Worker factory; attck-mapping capability, uses AttckLookupTable
+      +-- RuleAttckMappingWorker    -- Worker factory; attck-mapping capability, uses AttckLookupTable + AttckEnrichmentService
+      +-- RuleRagRetrievalWorker   -- Worker factory; rag-retrieval capability, delegates to SocRagRetrieveService
       +-- RuleContainmentRecommendationWorker -- Worker factory; containment-recommendation, uses ContainmentDecisionMatrix + PlannedAction
       +-- LlmIocEnrichmentWorker    -- Worker factory; ioc-enrichment, AgentWorkerFunction with IocEnrichmentOutput schema
       +-- LlmAttckMappingWorker     -- Worker factory; attck-mapping, AgentWorkerFunction with AttckMappingOutput schema

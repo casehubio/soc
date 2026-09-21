@@ -134,13 +134,16 @@ CaseInstance created with alert context
 [1] ioc-enrichment  --  extract IOCs from alert data
     |                    when: .alert != null and .iocEnrichment == null
     v
-[2] attck-mapping  --  map IOCs to MITRE ATT&CK techniques
+[2] attck-mapping  --  map IOCs to MITRE ATT&CK techniques + MindMap graph enrichment
     |                   when: .iocEnrichment != null and .attckMapping == null
     v
-[3] containment-recommendation  --  recommend containment actions
+[3] rag-retrieval  --  retrieve relevant threat intel prose from RAG corpora
+    |                   when: .attckMapping != null and .ragEnrichment == null
+    v
+[4] containment-recommendation  --  recommend containment actions
     |                                when: .attckMapping != null and .containmentRecommendation == null
     v
-[4] analyst-review  --  human task for tier-2 analyst
+[5] analyst-review  --  human task for tier-2 analyst
                         when: .containmentRecommendation != null and .analystDecision == null
                         candidateGroups: soc-tier2-analyst
                         expiresIn: PT4H
@@ -151,7 +154,8 @@ Each capability has **two worker implementations** -- rule-based and LLM:
 | Capability | Rule-Based Worker | LLM Worker | Output Contract |
 |---|---|---|---|
 | `ioc-enrichment` | `RuleIocEnrichmentWorker` -- regex extraction via `IocExtractor` (IPv4, MD5, SHA1, SHA256, domain, URL, email, CVE) | `LlmIocEnrichmentWorker` -- `AgentWorkerFunction` with `IocEnrichmentOutput` response schema | `IocEnrichmentOutput` (iocs[], summary) |
-| `attck-mapping` | `RuleAttckMappingWorker` -- `AttckLookupTable` with rule prefix + IOC type matching | `LlmAttckMappingWorker` -- `AgentWorkerFunction` with `AttckMappingOutput` response schema | `AttckMappingOutput` (techniques[], primaryTactic, confidence, narrative) |
+| `attck-mapping` | `RuleAttckMappingWorker` -- `AttckLookupTable` static mapping + `AttckEnrichmentService` MindMap graph enrichment (related groups, mitigations, sub-techniques) | `LlmAttckMappingWorker` -- `AgentWorkerFunction` with `AttckMappingOutput` response schema | `AttckMappingOutput` (techniques[], primaryTactic, confidence, narrative) |
+| `rag-retrieval` | `RuleRagRetrievalWorker` -- `SocRagRetrieveService` queries neocortex `CaseContextRetriever` with alert + ATT&CK + IOC context | — | retrievedChunks[], summary |
 | `containment-recommendation` | `RuleContainmentRecommendationWorker` -- `ContainmentDecisionMatrix` (severity x tactic matrix) with `PlannedAction` | `LlmContainmentRecommendationWorker` -- `WorkerFunction.Sync` with `PlannedAction` extraction | `ContainmentRecommendationOutput` (recommendedAction, riskScore, confidenceScore, rationale, actionParameters) |
 
 Workers are registered programmatically in `SocInvestigationCaseDescriptor` and injected into the case definition via `SocCaseHub.augment()`. Bootstrap routing selects rule-based workers by convention (insertion order). LLM workers register with `noFunction()` when `langchain4j-anthropic` is unavailable at runtime.
