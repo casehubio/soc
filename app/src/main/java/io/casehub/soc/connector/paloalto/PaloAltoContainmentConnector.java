@@ -1,5 +1,6 @@
 package io.casehub.soc.connector.paloalto;
 
+import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import io.casehub.soc.engine.spi.ContainmentRequest;
 import io.casehub.soc.engine.spi.ContainmentResponse;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -17,6 +18,7 @@ import java.util.Set;
 
 @Path("/paloalto/containment")
 @ApplicationScoped
+@HandWrittenEndpoint("External API proxy for Palo Alto firewall containment")
 public class PaloAltoContainmentConnector {
 
     private static final Logger LOG = Logger.getLogger(PaloAltoContainmentConnector.class);

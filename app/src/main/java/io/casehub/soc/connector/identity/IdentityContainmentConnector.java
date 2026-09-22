@@ -1,5 +1,6 @@
 package io.casehub.soc.connector.identity;
 
+import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import io.casehub.soc.engine.spi.ContainmentRequest;
 import io.casehub.soc.engine.spi.ContainmentResponse;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -16,6 +17,7 @@ import java.util.Set;
 
 @Path("/identity/containment")
 @ApplicationScoped
+@HandWrittenEndpoint("External API proxy for identity provider containment")
 public class IdentityContainmentConnector {
 
     private static final Logger LOG = Logger.getLogger(IdentityContainmentConnector.class);

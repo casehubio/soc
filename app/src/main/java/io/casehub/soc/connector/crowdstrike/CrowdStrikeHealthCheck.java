@@ -1,5 +1,6 @@
 package io.casehub.soc.connector.crowdstrike;
 
+import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @Path("/crowdstrike/health")
 @ApplicationScoped
+@HandWrittenEndpoint("CrowdStrike connectivity health check")
 public class CrowdStrikeHealthCheck {
 
     @Inject

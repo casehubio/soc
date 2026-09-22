@@ -1,5 +1,6 @@
 package io.casehub.soc.rest;
 
+import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import io.casehub.soc.engine.spi.ContainmentRequest;
 import io.casehub.soc.engine.spi.ContainmentResponse;
 import jakarta.enterprise.context.ApplicationScoped;
@@ -16,6 +17,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 @Path("/sim/containment")
 @ApplicationScoped
+@HandWrittenEndpoint("Demo simulation endpoint for containment testing")
 public class SimulatedContainmentConnector {
 
     private static final Logger LOG = Logger.getLogger(SimulatedContainmentConnector.class);

@@ -4,6 +4,7 @@ import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ArrayNode;
 import com.fasterxml.jackson.databind.node.ObjectNode;
+import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import io.casehub.soc.engine.spi.ContainmentRequest;
 import io.casehub.soc.engine.spi.ContainmentResponse;
 import io.vertx.core.Vertx;
@@ -26,6 +27,7 @@ import java.util.concurrent.TimeUnit;
 
 @Path("/crowdstrike/containment")
 @ApplicationScoped
+@HandWrittenEndpoint("External API proxy for CrowdStrike Falcon containment")
 public class CrowdStrikeContainmentConnector {
 
     private static final Logger LOG = Logger.getLogger(CrowdStrikeContainmentConnector.class);

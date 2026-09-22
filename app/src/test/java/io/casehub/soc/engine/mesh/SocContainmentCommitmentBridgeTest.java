@@ -1,7 +1,5 @@
 package io.casehub.soc.engine.mesh;
 
-import static org.assertj.core.api.Assertions.assertThat;
-
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.node.ObjectNode;
 import io.casehub.engine.common.spi.event.CaseLifecycleEvent;
@@ -14,14 +12,17 @@ import io.casehub.qhorus.api.message.DispatchResult;
 import io.casehub.qhorus.api.message.MessageDispatch;
 import io.casehub.qhorus.api.message.MessageDispatcher;
 import io.casehub.qhorus.api.message.MessageType;
+import org.junit.jupiter.api.BeforeEach;
+import org.junit.jupiter.api.Test;
+
 import java.time.Instant;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.UUID;
 import java.util.concurrent.atomic.AtomicLong;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+
+import static org.assertj.core.api.Assertions.assertThat;
 
 class SocContainmentCommitmentBridgeTest {
 
@@ -232,6 +233,16 @@ class SocContainmentCommitmentBridgeTest {
     @Override public Channel setReviewerInstances(UUID id, List<String> r) { return channel; }
     @Override public Channel setProtocols(UUID id, List<String> p) { return channel; }
     @Override public Channel setProtocolParticipants(UUID id, List<String> p) { return channel; }
+
+    @Override public Channel setEnforcementMode(UUID id, io.casehub.qhorus.api.channel.EnforcementMode mode) { return channel; }
+    @Override public Channel setEnforcementExclusions(UUID id, List<String> exclusions) { return channel; }
+    @Override public Channel setRoutingTrustThreshold(UUID id, Double threshold) { return channel; }
+    @Override public Channel setRedistributionCapacityThreshold(UUID id, Double threshold) { return channel; }
+    @Override public Channel setRoutingCapacityThreshold(UUID id, Double threshold) { return channel; }
+    @Override public void setTrackDelivery(UUID id, Boolean track) {}
+    @Override public void updateLastActivity(UUID id, String tenancyId) {}
+
+
   }
 
   static final class RecordingMessageDispatcher implements MessageDispatcher {

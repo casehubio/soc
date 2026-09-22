@@ -1,5 +1,6 @@
 package io.casehub.soc.connector.paloalto;
 
+import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import jakarta.ws.rs.GET;
@@ -12,6 +13,7 @@ import java.util.Map;
 
 @Path("/paloalto/health")
 @ApplicationScoped
+@HandWrittenEndpoint("Palo Alto connectivity health check")
 public class PaloAltoHealthCheck {
 
     @Inject
