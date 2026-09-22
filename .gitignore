@@ -18,3 +18,4 @@ dist/
 .worktrees
 .worktrees/
 .claude/
+app/src/main/resources/threatintel/enterprise-attack.json

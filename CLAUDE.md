@@ -96,6 +96,11 @@ JAVA_HOME=$(/usr/libexec/java_home -v 26) mvn --batch-mode install -DskipTests
 
 Use `mvn` not `./mvnw` — maven wrapper not configured on this machine.
 
+```bash
+# Download ATT&CK STIX bundle (~53MB) for deployment
+JAVA_HOME=$(/usr/libexec/java_home -v 26) mvn --batch-mode -Pdownload-attck generate-resources -pl app
+```
+
 ---
 
 ## Ecosystem Conventions

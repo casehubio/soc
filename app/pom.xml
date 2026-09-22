@@ -403,6 +403,35 @@
         <quarkus.native.enabled>true</quarkus.native.enabled>
       </properties>
     </profile>
+    <profile>
+      <id>download-attck</id>
+      <build>
+        <plugins>
+          <plugin>
+            <groupId>org.codehaus.mojo</groupId>
+            <artifactId>exec-maven-plugin</artifactId>
+            <version>3.5.0</version>
+            <executions>
+              <execution>
+                <id>download-attck-bundle</id>
+                <phase>generate-resources</phase>
+                <goals><goal>exec</goal></goals>
+                <configuration>
+                  <executable>curl</executable>
+                  <arguments>
+                    <argument>-sL</argument>
+                    <argument>-o</argument>
+                    <argument>${project.basedir}/src/main/resources/threatintel/enterprise-attack.json</argument>
+                    <argument>--create-dirs</argument>
+                    <argument>https://raw.githubusercontent.com/mitre-attack/attack-stix-data/master/enterprise-attack/enterprise-attack.json</argument>
+                  </arguments>
+                </configuration>
+              </execution>
+            </executions>
+          </plugin>
+        </plugins>
+      </build>
+    </profile>
   </profiles>
 
 </project>
