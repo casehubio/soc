@@ -14,8 +14,8 @@ import java.util.Map;
 public class SocRagRetrieveService {
 
     private static final int MAX_RESULTS = 10;
-    private static final List<CorpusRef> CORPORA = List.of(
-        new CorpusRef(AttckConstants.REFERENCE_TENANT, AttckConstants.CORPUS_NAME));
+    private static final CorpusRef ATTCK_CORPUS =
+        new CorpusRef(AttckConstants.REFERENCE_TENANT, AttckConstants.CORPUS_NAME);
 
     @Inject
     CaseContextRetriever contextRetriever;
@@ -23,9 +23,16 @@ public class SocRagRetrieveService {
     public List<Map<String, Object>> retrieve(
             Map<String, Object> caseContext, String tenantId) {
         String queryText = buildQueryText(caseContext);
-        return contextRetriever.retrieve(queryText, CORPORA, MAX_RESULTS).stream()
+        var corpora = resolveCorpora(tenantId);
+        return contextRetriever.retrieve(queryText, corpora, MAX_RESULTS).stream()
             .map(CaseContextRetriever::toMap)
             .toList();
+    }
+
+    List<CorpusRef> resolveCorpora(String tenantId) {
+        return List.of(
+            ATTCK_CORPUS,
+            new CorpusRef(tenantId, SocKnowledgeConstants.CORPUS_NAME));
     }
 
     String buildQueryText(Map<String, Object> caseContext) {

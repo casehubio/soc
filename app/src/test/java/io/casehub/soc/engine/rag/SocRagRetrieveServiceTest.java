@@ -1,12 +1,16 @@
 package io.casehub.soc.engine.rag;
 
 import io.casehub.neocortex.rag.CaseContextRetriever;
+import io.casehub.neocortex.rag.CaseRetriever;
+import io.casehub.neocortex.rag.CorpusRef;
 import io.casehub.neocortex.rag.RetrievedChunk;
 import io.casehub.neocortex.rag.testing.InMemoryCaseRetriever;
+import io.casehub.soc.threatintel.attck.AttckConstants;
 import org.junit.jupiter.api.Test;
 
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.CopyOnWriteArrayList;
 
 import static org.assertj.core.api.Assertions.assertThat;
 
@@ -100,6 +104,26 @@ class SocRagRetrieveServiceTest {
 
         assertThat(results).isEmpty();
     }
+
+    @Test
+    void retrieveQueriesBothAttckAndInternalKnowledgeCorpora() {
+        var queriedCorpora = new CopyOnWriteArrayList<CorpusRef>();
+        CaseRetriever capturingRetriever = (query, corpus, maxResults, filter) -> {
+            queriedCorpora.add(corpus);
+            return List.of();
+        };
+        var service = new SocRagRetrieveService();
+        service.contextRetriever = new CaseContextRetriever(capturingRetriever);
+        var context = Map.<String, Object>of("alert", Map.of("rule", "Test Alert"));
+
+        service.retrieve(context, "tenant-acme");
+
+        assertThat(queriedCorpora).extracting(CorpusRef::tenantId)
+                                  .contains(AttckConstants.REFERENCE_TENANT, "tenant-acme");
+        assertThat(queriedCorpora).extracting(CorpusRef::corpusName)
+                                  .contains(AttckConstants.CORPUS_NAME, SocKnowledgeConstants.CORPUS_NAME);
+    }
+
 
     private static SocRagRetrieveService serviceWith(List<RetrievedChunk> chunks) {
         var service = new SocRagRetrieveService();

@@ -68,6 +68,10 @@ io.casehub.soc
  |    +-- ContainmentContext       -- record: caseId, incidentId, approver, tenancyId, timeoutMs
  |    +-- ContainmentRequest       -- record: API contract request body for HTTP containment connectors
  |    +-- ContainmentResponse      -- record: API contract response body from HTTP containment connectors
+ |    +-- tip/
+ |    |    +-- TipIngestor          -- SPI interface; pluggable external threat intelligence platform adapters
+ |    |    +-- TipFeedConfig        -- record: feed ID, provider, corpus mapping, poll interval, credentials, MindMap linking
+ |    |    +-- TipIngestionResult   -- record: chunks ingested, MindMap nodes linked, errors
  +-- worker/contract/
       +-- IocEnrichmentOutput       -- record: iocs (list of IocEntry), summary
       +-- AttckMappingOutput        -- record: techniques (list of TechniqueEntry), primaryTactic, confidence, narrative
@@ -93,14 +97,16 @@ io.casehub.soc
  |    +-- SocAttestationService     -- CaseOutcomeObserver; creates trust attestations on case resolution
  |    +-- SocIncidentStatusObserver -- CDI observer; tracks incident status transitions from CaseLifecycleEvent
  |    +-- cbr/
- |    |    +-- SocCbrRetainService   -- CaseOutcomeObserver; stores resolved incidents in CBR memory
+ |    |    +-- SocCbrRetainService   -- CaseOutcomeObserver; stores resolved incidents in CBR memory + triggers SocKnowledgeIngestor for RAG corpus
  |    |    +-- SocCbrRetrieveService -- retrieves similar past incidents for triage enrichment
  |    |    +-- SocCbrCaseTypeRegistration -- CbrCaseTypeRegistration SPI; registers SOC case type
  |    |    +-- SocCbrSchemaRegistrar -- registers CBR schema attributes for SOC incidents
  |    |    +-- SocIncidentCbrCase   -- CbrCase record for SOC incidents
  |    |    +-- SocCaseOutcomeFilter -- shared predicate: successful SOC incident investigation
  |    +-- rag/
- |    |    +-- SocRagRetrieveService -- queries CaseContextRetriever with alert + ATT&CK + IOC context for prose retrieval
+ |    |    +-- SocRagRetrieveService   -- queries CaseContextRetriever across ATT&CK + per-tenant internal knowledge corpora
+ |    |    +-- SocKnowledgeIngestor    -- ingests incident post-mortems into per-tenant RAG corpus at case resolution
+ |    |    +-- SocKnowledgeConstants   -- corpus name constant for soc-internal-knowledge
  |    +-- mesh/
  |    |    +-- SocContainmentCommitmentBridge -- CDI observer; bridges ActionGate lifecycle events to qhorus oversight channel speech acts (PROPOSE/DONE/DECLINE/STATUS)
  |    |    +-- OversightChannelState -- per-case state record; tracks channelId and PROPOSE messageId for commitment threading

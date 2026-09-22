@@ -5,6 +5,7 @@ import io.casehub.api.spi.CaseOutcomeObserver;
 import io.casehub.neocortex.memory.MemoryDomain;
 import io.casehub.neocortex.memory.cbr.CbrRecordStore;
 import io.casehub.platform.api.path.Path;
+import io.casehub.soc.engine.rag.SocKnowledgeIngestor;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
 import org.jboss.logging.Logger;
@@ -17,10 +18,12 @@ public class SocCbrRetainService implements CaseOutcomeObserver {
     private static final Path SCOPE = Path.of("casehubio", "soc", "incident-investigation");
 
     private final CbrRecordStore cbrStore;
+    private final SocKnowledgeIngestor knowledgeIngestor;
 
     @Inject
-    SocCbrRetainService(CbrRecordStore cbrStore) {
+    SocCbrRetainService(CbrRecordStore cbrStore, SocKnowledgeIngestor knowledgeIngestor) {
         this.cbrStore = cbrStore;
+        this.knowledgeIngestor = knowledgeIngestor;
     }
 
     @Override
@@ -35,10 +38,11 @@ public class SocCbrRetainService implements CaseOutcomeObserver {
     }
 
     void retain(CaseOutcomeEvent event) {
-        var cbrCase = SocIncidentCbrCase.fromSnapshot(event.caseFileSnapshot(), event);
-        String caseId = event.caseId().toString();
+        var    cbrCase = SocIncidentCbrCase.fromSnapshot(event.caseFileSnapshot(), event);
+        String caseId  = event.caseId().toString();
         cbrStore.store(cbrCase, SocIncidentCbrCase.CBR_TYPE, caseId, DOMAIN,
-            event.tenancyId(), caseId, SCOPE);
+                       event.tenancyId(), caseId, SCOPE);
         LOG.infof("CBR retained soc-incident caseId=%s tenant=%s", caseId, event.tenancyId());
+        knowledgeIngestor.ingest(event);
     }
 }
