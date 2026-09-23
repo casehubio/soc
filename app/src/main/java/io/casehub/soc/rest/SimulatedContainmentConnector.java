@@ -4,6 +4,7 @@ import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import io.casehub.soc.engine.spi.ContainmentRequest;
 import io.casehub.soc.engine.spi.ContainmentResponse;
 import jakarta.enterprise.context.ApplicationScoped;
+import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -15,6 +16,7 @@ import java.util.Map;
 import java.util.UUID;
 import java.util.concurrent.ThreadLocalRandom;
 
+@HandWrittenEndpoint("simulation-only connector")
 @Path("/sim/containment")
 @ApplicationScoped
 @HandWrittenEndpoint("Demo simulation endpoint for containment testing")
