@@ -12,7 +12,7 @@ import io.casehub.api.model.CaseStatus;
 import io.casehub.work.api.WorkItem;
 import io.casehub.work.api.WorkItemLifecycleEvent;
 import io.casehub.work.api.WorkItemStatus;
-import io.casehub.work.engine.PlanItemCallerRef;
+import io.casehub.work.engine.PlanItemRef;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -110,7 +110,7 @@ class SocEscalatedWorkItemHandlerTest {
 
     private WorkItemLifecycleEvent buildEvent(WorkItemStatus status, String scope,
                                                UUID caseId, String tenancyId) {
-        String callerRef = PlanItemCallerRef.encode(caseId, UUID.randomUUID().toString());
+        String callerRef = PlanItemRef.encode(caseId, UUID.randomUUID().toString());
         WorkItem workItem = WorkItem.builder()
                 .id(UUID.randomUUID())
                 .status(status)
