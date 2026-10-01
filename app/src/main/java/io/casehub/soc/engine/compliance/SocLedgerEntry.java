@@ -1,6 +1,6 @@
 package io.casehub.soc.engine.compliance;
 
-import io.casehub.ledger.runtime.model.jpa.JpaLedgerEntry;
+import io.casehub.ledger.jpa.JpaLedgerEntry;
 import io.casehub.soc.domain.SocStepType;
 import jakarta.persistence.Column;
 import jakarta.persistence.DiscriminatorValue;

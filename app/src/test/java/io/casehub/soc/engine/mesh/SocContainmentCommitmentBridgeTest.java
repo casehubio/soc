@@ -241,6 +241,7 @@ class SocContainmentCommitmentBridgeTest {
     @Override public Channel setRoutingCapacityThreshold(UUID id, Double threshold) { return channel; }
     @Override public void setTrackDelivery(UUID id, Boolean track) {}
     @Override public void updateLastActivity(UUID id, String tenancyId) {}
+    @Override public Channel setPolicyOverrides(UUID id, java.util.Map<String, String> overrides) { return channel; }
 
 
   }

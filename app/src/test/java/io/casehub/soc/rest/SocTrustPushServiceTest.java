@@ -3,7 +3,7 @@ package io.casehub.soc.rest;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import io.casehub.ledger.runtime.service.routing.TrustScoreActorUpdatedEvent;
+import io.casehub.ledger.core.event.TrustScoreActorUpdatedEvent;
 import io.casehub.pages.push.EventBroadcaster;
 import io.casehub.pages.push.InMemoryEventStore;
 import io.casehub.pages.push.TopicRegistry;

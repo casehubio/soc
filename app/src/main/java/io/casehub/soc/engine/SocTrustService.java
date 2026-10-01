@@ -4,7 +4,7 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import io.casehub.engine.common.spi.event.SelectionContext;
 import io.casehub.ledger.model.WorkerDecisionEntry;
 import io.casehub.ledger.repository.CaseLedgerEntryRepository;
-import io.casehub.ledger.runtime.repository.ActorTrustScoreRepository;
+import io.casehub.ledger.api.spi.ActorTrustScoreRepository;
 import io.casehub.soc.domain.SocAgentDescriptors;
 import io.casehub.soc.domain.SocTrustDimensions;
 import io.casehub.soc.rest.dto.AgentTrustResponse;

@@ -73,7 +73,7 @@ public class SocIncidentApi {
     @PlatformQuery("Get incident details")
     @RestPath("/{id}")
     public IncidentDetailResponse getIncident(@PathParam UUID id) {
-        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId());
+        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId()).orElse(null);
         if (ci == null) return null;
         var ctx = ci.getCaseContext();
         return new IncidentDetailResponse(
@@ -90,7 +90,7 @@ public class SocIncidentApi {
     @RestPath("/{id}/timeline")
     @SuppressWarnings("unchecked")
     public List<TimelineEntryResponse> getTimeline(@PathParam UUID id) {
-        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId());
+        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId()).orElse(null);
         if (ci == null || ci.getCaseContext() == null) return List.of();
         Object trail = ci.getCaseContext().get("auditTrail");
         if (trail instanceof List<?> list) {
@@ -122,7 +122,7 @@ public class SocIncidentApi {
     @RestPath("/{id}/iocs")
     @SuppressWarnings("unchecked")
     public IocListResponse getIocs(@PathParam UUID id) {
-        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId());
+        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId()).orElse(null);
         if (ci == null || ci.getCaseContext() == null)
             return new IocListResponse(List.of());
         Object enrichment = ci.getCaseContext().get("iocEnrichment");
@@ -142,7 +142,7 @@ public class SocIncidentApi {
     @RestPath("/{id}/attck")
     @SuppressWarnings("unchecked")
     public AttckMappingResponse getAttck(@PathParam UUID id) {
-        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId());
+        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId()).orElse(null);
         if (ci == null || ci.getCaseContext() == null)
             return new AttckMappingResponse(List.of());
         Object mapping = ci.getCaseContext().get("attckMapping");
@@ -180,7 +180,7 @@ public class SocIncidentApi {
             throw new BadRequestException("Confidence must be 0.0-1.0");
         }
 
-        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId());
+        CaseInstance ci = repository.findByUuid(id, currentPrincipal.tenancyId()).orElse(null);
         if (ci == null) {
             throw new BadRequestException("Incident not found");
         }

@@ -5,7 +5,6 @@ import io.casehub.soc.engine.spi.ContainmentRequest;
 import io.casehub.soc.engine.spi.ContainmentResponse;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.inject.Inject;
-import io.casehub.platform.api.mcp.HandWrittenEndpoint;
 import jakarta.ws.rs.Consumes;
 import jakarta.ws.rs.POST;
 import jakarta.ws.rs.Path;
@@ -16,10 +15,9 @@ import org.jboss.logging.Logger;
 import java.util.Map;
 import java.util.Set;
 
-@HandWrittenEndpoint("external system connector")
+@HandWrittenEndpoint("External API proxy for identity provider containment")
 @Path("/identity/containment")
 @ApplicationScoped
-@HandWrittenEndpoint("External API proxy for identity provider containment")
 public class IdentityContainmentConnector {
 
     private static final Logger LOG = Logger.getLogger(IdentityContainmentConnector.class);

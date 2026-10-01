@@ -1,6 +1,6 @@
 package io.casehub.soc.engine.compliance;
 
-import io.casehub.ledger.runtime.persistence.LedgerPersistenceUnit;
+import io.casehub.ledger.jpa.LedgerPersistenceUnit;
 import io.casehub.soc.domain.SocStepType;
 import io.quarkus.arc.DefaultBean;
 import jakarta.enterprise.context.ApplicationScoped;

@@ -12,7 +12,7 @@ import io.casehub.api.model.CaseStatus;
 import io.casehub.work.api.WorkItem;
 import io.casehub.work.api.WorkItemLifecycleEvent;
 import io.casehub.work.api.WorkItemStatus;
-import io.casehub.work.engine.PlanItemRef;
+import io.casehub.work.engine.PlanItemCallerRef;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
@@ -110,7 +110,7 @@ class SocEscalatedWorkItemHandlerTest {
 
     private WorkItemLifecycleEvent buildEvent(WorkItemStatus status, String scope,
                                                UUID caseId, String tenancyId) {
-        String callerRef = PlanItemRef.encode(caseId, UUID.randomUUID().toString());
+        String callerRef = PlanItemCallerRef.encode(caseId, UUID.randomUUID().toString());
         WorkItem workItem = WorkItem.builder()
                 .id(UUID.randomUUID())
                 .status(status)
@@ -132,9 +132,9 @@ class SocEscalatedWorkItemHandlerTest {
 
         @Override public CaseInstance save(CaseInstance instance, String tenancyId) { return instance; }
         @Override public CaseInstance update(CaseInstance instance, String tenancyId) { return instance; }
-        @Override public CaseInstance findByUuid(UUID uuid, String tenancyId) {
+        @Override public Optional<CaseInstance> findByUuid(UUID uuid, String tenancyId) {
             lookupCount++;
-            return instances.get(uuid + ":" + tenancyId);
+            return Optional.ofNullable(instances.get(uuid + ":" + tenancyId));
         }
         @Override public void updateStateAndAppendEvent(CaseInstance instance, EventLog eventLog, String tenancyId) {}
     }

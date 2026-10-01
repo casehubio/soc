@@ -1,6 +1,6 @@
 package io.casehub.soc.rest;
 
-import io.casehub.ledger.runtime.service.routing.TrustScoreActorUpdatedEvent;
+import io.casehub.ledger.core.event.TrustScoreActorUpdatedEvent;
 import io.casehub.pages.push.EventBroadcaster;
 import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.enterprise.event.ObservesAsync;

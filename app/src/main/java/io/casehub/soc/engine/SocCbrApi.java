@@ -31,7 +31,7 @@ public class SocCbrApi {
     @RestPath("/similar/{caseId}")
     public CbrSimilarResponse getSimilarIncidents(@PathParam UUID caseId) {
         String tenantId = currentPrincipal.tenancyId();
-        CaseInstance ci = caseRepo.findByUuid(caseId, tenantId);
+        CaseInstance ci = caseRepo.findByUuid(caseId, tenantId).orElse(null);
         if (ci == null || ci.getCaseContext() == null) {
             return new CbrSimilarResponse(emptySummary(), List.of());
         }

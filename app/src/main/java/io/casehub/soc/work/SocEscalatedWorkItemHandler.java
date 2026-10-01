@@ -32,7 +32,7 @@ public class SocEscalatedWorkItemHandler {
         CallerRef ref = CallerRef.parse(event.callerRef());
         if (ref == null) return;
 
-        CaseInstance ci = repository.findByUuid(ref.caseId(), event.tenancyId());
+        CaseInstance ci = repository.findByUuid(ref.caseId(), event.tenancyId()).orElse(null);
         if (ci == null) {
             LOG.warnf("Case not found for ESCALATED WorkItem: caseId=%s", ref.caseId());
             return;
