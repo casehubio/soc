@@ -21,7 +21,7 @@ class SocAgentDescriptorsTest {
     @Test
     void allReturnsEightDescriptors() {
         List<AgentDescriptor> all = SocAgentDescriptors.all();
-        assertEquals(10, all.size());
+        assertEquals(11, all.size());
     }
 
     @Test
@@ -35,7 +35,7 @@ class SocAgentDescriptorsTest {
     @Test
     void descriptorsByWorkerNameHasEightEntries() {
         Map<String, AgentDescriptor> map = SocAgentDescriptors.descriptorsByWorkerName();
-        assertEquals(10, map.size());
+        assertEquals(11, map.size());
     }
 
     @Test

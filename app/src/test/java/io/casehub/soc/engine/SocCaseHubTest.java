@@ -30,9 +30,9 @@ class SocCaseHubTest {
     void hasThreeCapabilities() {
         var names = caseHub.getDefinition().getCapabilities()
             .stream().map(c -> c.name()).toList();
-        assertEquals(7, names.size());
+        assertEquals(8, names.size());
         assertTrue(names.containsAll(List.of(
-            "cbr-retrieval", "ioc-enrichment", "attck-mapping", "containment-recommendation", "containment-execution",
+            "cbr-retrieval", "ioc-enrichment", "attck-mapping", "rag-retrieval", "containment-recommendation", "containment-execution",
             "recovery-verification-start", "recovery-verification-result")));
     }
 
@@ -40,9 +40,9 @@ class SocCaseHubTest {
     void hasFourBindings() {
         var names = caseHub.getDefinition().getBindings()
             .stream().map(b -> b.getName()).toList();
-        assertEquals(8, names.size());
+        assertEquals(9, names.size());
         assertTrue(names.containsAll(List.of(
-            "cbr-retrieval", "ioc-enrichment", "attck-mapping", "containment-recommendation", "analyst-review", "containment-execution",
+            "cbr-retrieval", "ioc-enrichment", "attck-mapping", "rag-retrieval", "containment-recommendation", "analyst-review", "containment-execution",
             "recovery-verification-start", "recovery-verification-result")));
     }
 

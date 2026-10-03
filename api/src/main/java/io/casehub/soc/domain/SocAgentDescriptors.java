@@ -57,6 +57,12 @@ public final class SocAgentDescriptors {
             "attck-mapping", 0.85);
     }
 
+    public static AgentDescriptor ruleRagRetrieval() {
+        return ruleDescriptor("rule-rag-retrieval", "Rule-Based RAG Retrieval",
+            "rag-retrieval", 0.95,
+            Map.of());
+    }
+
     public static AgentDescriptor ruleContainmentRecommendation() {
         return ruleDescriptor("rule-containment-rec", "Rule-Based Containment Recommendation",
             "containment-recommendation", 0.95,
@@ -96,6 +102,7 @@ public final class SocAgentDescriptors {
                 ruleCbrRetrieval(),
                 ruleIocEnrichment(), llmIocEnrichment(),
                 ruleAttckMapping(), llmAttckMapping(),
+                ruleRagRetrieval(),
                 ruleContainmentRecommendation(), llmContainmentRecommendation(),
                 ruleContainmentExecution(),
                 ruleRecoveryVerificationStart(), ruleRecoveryVerificationResult());
@@ -108,6 +115,7 @@ public final class SocAgentDescriptors {
         map.put("llm-ioc-enrichment", llmIocEnrichment());
         map.put("rule-attck-mapping", ruleAttckMapping());
         map.put("llm-attck-mapping", llmAttckMapping());
+        map.put("rule-rag-retrieval", ruleRagRetrieval());
         map.put("rule-containment-rec", ruleContainmentRecommendation());
         map.put("llm-containment-rec", llmContainmentRecommendation());
         map.put("rule-containment-exec", ruleContainmentExecution());

@@ -30,7 +30,7 @@ class SocAgentRegistrarTest {
                                   .filter(r -> r instanceof SocAgentRegistrar)
                                   .findFirst().orElseThrow();
         var descriptors = registrar.descriptors();
-        assertEquals(10, descriptors.size());
+        assertEquals(11, descriptors.size());
     }
 
     @Test

@@ -264,7 +264,7 @@ Shared between rule-based and LLM workers:
 | `casehub-engine-planning` | Planning architecture (formerly blackboard) |
 | `casehub-engine-ledger` | Trust-weighted routing (activates `TrustWeightedAgentStrategy`) |
 | `casehub-engine-scheduler-quartz` | Quartz-based SLA scheduling |
-| `casehub-work-engine-adapter` | WorkItem integration for human tasks and oversight gates |
+| `casehub-engine-work-adapter` | WorkItem integration for human tasks and oversight gates |
 | `casehub-engine-persistence-memory` | In-memory engine SPIs (CaseInstance, PlanItem, EventLog, etc.) |
 | `casehub-ledger` | Tamper-evident audit trail, Merkle MMR |
 | `casehub-work` | Human task lifecycle (WorkItem, SLA breach policy) |
