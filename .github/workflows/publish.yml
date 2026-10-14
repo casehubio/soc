@@ -35,6 +35,6 @@ jobs:
 
       - name: Publish to GitHub Packages
         if: github.event_name != 'pull_request'
-        run: mvn --batch-mode deploy -DskipTests
+        run: mvn --batch-mode deploy -DskipTests -Dquarkus.quinoa=false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
