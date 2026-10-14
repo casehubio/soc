@@ -1,8 +1,14 @@
 package io.casehub.soc.app;
 
 import io.casehub.eidos.api.CapabilityHealth;
+import io.casehub.engine.common.spi.EventLogRepository;
 import io.casehub.engine.common.spi.PlanItemStore;
+import io.casehub.engine.common.spi.recovery.CaseContextRecoveryStrategy;
+import io.casehub.engine.persistence.memory.InMemoryCaseInstanceRepository;
+import io.casehub.engine.persistence.memory.InMemoryCaseMetaModelRepository;
+import io.casehub.engine.persistence.memory.InMemoryEventLogRepository;
 import io.casehub.engine.persistence.memory.InMemoryPlanItemStore;
+import io.casehub.engine.persistence.memory.InMemorySubCaseGroupRepository;
 import io.casehub.neocortex.rag.CaseContextRetriever;
 import io.casehub.neocortex.rag.CaseRetriever;
 import io.casehub.neocortex.rag.runtime.DedupIngestionConfig;
@@ -26,7 +32,7 @@ public class SocBeanOverrides {
     @Alternative
     @Priority(100)
     @ApplicationScoped
-    PlanItemStore planItemStore() {
+    InMemoryPlanItemStore planItemStore() {
         return new InMemoryPlanItemStore();
     }
 
@@ -78,5 +84,39 @@ public class SocBeanOverrides {
             @Override public List findAll() { return List.of(); }
             @Override public List findWithAutoUpdateConfigured() { return List.of(); }
         };
+    }
+
+    @Produces
+    @DefaultBean
+    @ApplicationScoped
+    InMemoryCaseInstanceRepository inMemoryCaseInstanceRepository(
+            EventLogRepository eventLogRepository,
+            Instance<CaseContextRecoveryStrategy> recoveryStrategy) {
+        InMemoryCaseInstanceRepository repo = new InMemoryCaseInstanceRepository(eventLogRepository);
+        if (recoveryStrategy.isResolvable()) {
+            repo.setRecoveryStrategy(recoveryStrategy.get());
+        }
+        return repo;
+    }
+
+    @Produces
+    @DefaultBean
+    @ApplicationScoped
+    InMemoryCaseMetaModelRepository inMemoryCaseMetaModelRepository() {
+        return new InMemoryCaseMetaModelRepository();
+    }
+
+    @Produces
+    @DefaultBean
+    @ApplicationScoped
+    InMemoryEventLogRepository inMemoryEventLogRepository() {
+        return new InMemoryEventLogRepository();
+    }
+
+    @Produces
+    @DefaultBean
+    @ApplicationScoped
+    InMemorySubCaseGroupRepository inMemorySubCaseGroupRepository() {
+        return new InMemorySubCaseGroupRepository();
     }
 }
