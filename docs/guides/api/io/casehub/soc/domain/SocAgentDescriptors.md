@@ -43,6 +43,10 @@
 
 ### `public static AgentDescriptor ruleAttckMapping()`
 
+### `public static AgentDescriptor ruleCbrRetrieval()`
+
+### `public static AgentDescriptor ruleContainmentExecution()`
+
 ### `public static AgentDescriptor ruleContainmentRecommendation()`
 
 ### `private static AgentDescriptor ruleDescriptor(java.lang.String agentId, java.lang.String name, java.lang.String capabilityName, double qualityHint, java.util.Map<java.lang.String,java.lang.Double> epistemicDomains)`
@@ -56,3 +60,9 @@
 - `epistemicDomains` (`java.util.Map<java.lang.String,java.lang.Double>`)
 
 ### `public static AgentDescriptor ruleIocEnrichment()`
+
+### `public static AgentDescriptor ruleRagRetrieval()`
+
+### `public static AgentDescriptor ruleRecoveryVerificationResult()`
+
+### `public static AgentDescriptor ruleRecoveryVerificationStart()`
