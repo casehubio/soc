@@ -19,4 +19,3 @@ dist/
 .claude/
 app/src/main/resources/threatintel/enterprise-attack.json
 
-.flattened-pom.xml
