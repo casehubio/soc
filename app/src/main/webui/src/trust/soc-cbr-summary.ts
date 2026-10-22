@@ -54,7 +54,7 @@ export class SocCbrSummary extends LitElement {
           <br/>Avg resolution: <span class="stat">${s.avgResolutionMinutes} min</span>
         ` : nothing}
       </div>
-      <blocks-similarity-panel .data=${this.incidents}></blocks-similarity-panel>
+      <agency-similarity-panel .data=${this.incidents}></agency-similarity-panel>
     `;
   }
 }

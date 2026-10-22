@@ -15,13 +15,13 @@ export function incidentsView(): Component {
 
 function listPane(): Component {
   return rows(
-    pagesHtml(`<blocks-case-explorer
+    pagesHtml(`<agency-case-explorer
       endpoint="/api/soc/incidents"
       entity-type="incident"
-    ></blocks-case-explorer>`),
-    pagesHtml(`<blocks-kpi-metric-row
+    ></agency-case-explorer>`),
+    pagesHtml(`<agency-kpi-metric-row
       endpoint="/api/soc/kpis"
-    ></blocks-kpi-metric-row>`),
+    ></agency-kpi-metric-row>`),
     pagesHtml(`<soc-alert-heatmap
       endpoint="/api/soc/alerts/heatmap"
     ></soc-alert-heatmap>`)
@@ -30,9 +30,9 @@ function listPane(): Component {
 
 function detailPane(): Component {
   return rows(
-    pagesHtml(`<blocks-timeline id="incident-timeline"></blocks-timeline>`),
+    pagesHtml(`<agency-timeline id="incident-timeline"></agency-timeline>`),
     tabs(
-      ["Channels", pagesHtml(`<blocks-channel-activity id="incident-channels"></blocks-channel-activity>`)],
+      ["Channels", pagesHtml(`<agency-channel-activity id="incident-channels"></agency-channel-activity>`)],
       ["ATT&CK", pagesHtml(`<soc-attck-matrix id="incident-attck"></soc-attck-matrix>`)],
       ["IOC", pagesHtml(`<soc-ioc-panel id="incident-iocs"></soc-ioc-panel>`)],
     )

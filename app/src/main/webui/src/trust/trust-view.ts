@@ -19,7 +19,7 @@ export function trustView(): Component {
 }
 
 function fleetOverview(): Component {
-  const kpiRow = `<blocks-kpi-metric-row endpoint="/api/soc/trust/fleet-kpis"></blocks-kpi-metric-row>`;
+  const kpiRow = `<agency-kpi-metric-row endpoint="/api/soc/trust/fleet-kpis"></agency-kpi-metric-row>`;
   const panels = SOC_AGENTS.map(id =>
     `<blocks-trust-score-panel mode="compact" endpoint="/api/soc" actor-id="${id}"></blocks-trust-score-panel>`
   ).join("");

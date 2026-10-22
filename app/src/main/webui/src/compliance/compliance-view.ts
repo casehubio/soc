@@ -16,15 +16,15 @@ function auditTrail(): Component {
 
 function complianceSummary(): Component {
   return pagesHtml(
-    `<blocks-compliance-summary endpoint="/api/soc/compliance/summary"></blocks-compliance-summary>`
+    `<agency-compliance-summary endpoint="/api/soc/compliance/summary"></agency-compliance-summary>`
   );
 }
 
 function gdprErasure(): Component {
   return pagesHtml(
-    `<blocks-gdpr-erasure-action
+    `<agency-gdpr-erasure-action
        endpoint="/api/soc/compliance/erasure"
        subject-label="Actor"
-     ></blocks-gdpr-erasure-action>`
+     ></agency-gdpr-erasure-action>`
   );
 }
