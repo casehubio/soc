@@ -321,7 +321,7 @@ Add to `app/src/main/webui/package.json`:
     "@casehubio/pages-runtime": "file:../../../../../pages/packages/pages-runtime",
     "@casehubio/pages-ui": "file:../../../../../pages/packages/pages-ui",
     "@casehubio/pages-data": "file:../../../../../pages/packages/pages-data",
-    "@casehubio/blocks-ui-core": "file:../../../../../blocks-ui/packages/blocks-ui-core",
+    "@casehubio/agency-ui-core": "file:../../../../../blocks-ui/packages/blocks-ui-core",
     "@nicegui/blocks-case-explorer": "file:../../../../../blocks-ui/components/case-explorer",
     "@nicegui/blocks-timeline": "file:../../../../../blocks-ui/components/blocks-timeline",
     "@nicegui/blocks-kpi-metric-row": "file:../../../../../blocks-ui/components/kpi-metric-row",

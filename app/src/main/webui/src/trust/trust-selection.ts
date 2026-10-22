@@ -1,6 +1,6 @@
 import { onPagesEvent, emitPagesEvent } from "../types/pages-events";
-import type { RoutingRationaleData } from "@casehubio/blocks-ui-routing-rationale";
-import "@casehubio/blocks-ui-routing-rationale";
+import type { RoutingRationaleData } from "@casehubio/agency-ui-routing-rationale";
+import "@casehubio/agency-ui-routing-rationale";
 
 export function wireTrustCaseSelection(): void {
   loadRecentCases();

@@ -1,6 +1,6 @@
 import { LitElement, html, css, nothing } from "lit";
 import { customElement, property } from "lit/decorators.js";
-import "@casehubio/blocks-ui-similarity-panel";
+import "@casehubio/agency-ui-similarity-panel";
 
 interface CbrSummary {
   totalSimilar: number;

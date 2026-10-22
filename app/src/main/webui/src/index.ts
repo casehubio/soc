@@ -6,7 +6,7 @@ import { workbenchView, wireWorkbenchSelection } from "./workbench/workbench-vie
 import { initWorkbenchFromUrl } from "./workbench/workbench-selection.js";
 import { trustView, wireTrustCaseSelection, initTrustFromUrl } from "./trust/trust-view.js";
 import { complianceView } from "./compliance/compliance-view.js";
-import "@casehubio/blocks-ui-notification-inbox";
+import "@casehubio/agency-ui-notification-inbox";
 
 const placeholder = (name: string, phase: string) =>
   html(`<div style="padding: 2rem; color: #666;">

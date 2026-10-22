@@ -270,14 +270,14 @@ Versions managed by parent BOM. `casehub-pages-push-runtime` already added in Ph
 
 ```json
 {
-  "@casehubio/blocks-ui-work-item-workbench": "file:../../../../../blocks-ui/components/work-item-workbench",
-  "@casehubio/blocks-ui-work-item-inbox": "file:../../../../../blocks-ui/components/work-item-inbox",
-  "@casehubio/blocks-ui-work-item-detail": "file:../../../../../blocks-ui/components/work-item-detail",
-  "@casehubio/blocks-ui-work-item-row": "file:../../../../../blocks-ui/components/work-item-row",
-  "@casehubio/blocks-ui-split-workbench": "file:../../../../../blocks-ui/components/split-workbench",
-  "@casehubio/blocks-ui-sla-indicator": "file:../../../../../blocks-ui/components/sla-indicator",
-  "@casehubio/blocks-ui-approval-gate": "file:../../../../../blocks-ui/components/approval-gate",
-  "@casehubio/blocks-ui-notification-inbox": "file:../../../../../blocks-ui/components/notification-inbox"
+  "@casehubio/agency-ui-work-item-workbench": "file:../../../../../blocks-ui/components/work-item-workbench",
+  "@casehubio/agency-ui-work-item-inbox": "file:../../../../../blocks-ui/components/work-item-inbox",
+  "@casehubio/agency-ui-work-item-detail": "file:../../../../../blocks-ui/components/work-item-detail",
+  "@casehubio/agency-ui-work-item-row": "file:../../../../../blocks-ui/components/work-item-row",
+  "@casehubio/agency-ui-split-workbench": "file:../../../../../blocks-ui/components/split-workbench",
+  "@casehubio/agency-ui-sla-indicator": "file:../../../../../blocks-ui/components/sla-indicator",
+  "@casehubio/agency-ui-approval-gate": "file:../../../../../blocks-ui/components/approval-gate",
+  "@casehubio/agency-ui-notification-inbox": "file:../../../../../blocks-ui/components/notification-inbox"
 }
 ```
 

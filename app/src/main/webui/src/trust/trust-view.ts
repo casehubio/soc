@@ -1,8 +1,8 @@
 import { rows, columns, html as pagesHtml } from "@casehubio/pages-ui";
 import type { Component } from "@casehubio/pages-ui";
-import "@casehubio/blocks-ui-trust-score-panel";
-import "@casehubio/blocks-ui-routing-rationale";
-import "@casehubio/blocks-ui-similarity-panel";
+import "@casehubio/agency-ui-trust-score-panel";
+import "@casehubio/agency-ui-routing-rationale";
+import "@casehubio/agency-ui-similarity-panel";
 import "./soc-cbr-summary.js";
 
 const SOC_AGENTS = [
