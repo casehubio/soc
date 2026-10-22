@@ -35,7 +35,7 @@ situations:
       - soc.alert.auth.password-spray
     correlationWindow: PT5M
     eventBufferDelay: PT10S
-    correlationKeyExpression: ".extensions.sourceip"
+    correlationKey: ".extensions.sourceip"
     chainMode:
       type: count
       ganglionId: brute-force-detector
@@ -57,7 +57,7 @@ situations:
       - soc.alert.auth.password-spray
     correlationWindow: PT1H
     eventBufferDelay: PT30S
-    correlationKeyExpression: ".extensions.targetaccount"
+    correlationKey: ".extensions.targetaccount"
     chainMode:
       type: count
       ganglionId: brute-force-detector
