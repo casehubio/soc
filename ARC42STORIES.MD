@@ -90,7 +90,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 - `casehub-ras`: SituationEvaluator (runtime), SituationStore (api — `InMemorySituationStore` exists in `ras/persistence-memory/`, `JpaSituationStore` in `ras/persistence-jpa/`)
 - `casehub-engine`: CaseHubRuntime, CaseInstance creation
 - `casehub-pages`: loadSite(), pages-runtime, pages-push-runtime (SSE for live incident updates)
-- `casehub-blocks-ui`: `<blocks-case-explorer>` for incident list
+- `casehub-agency-ui`: `<blocks-case-explorer>` for incident list
 
 **Acceptance:**
 - Integration test: send CloudEvent with CRITICAL severity → Ganglion returns DETECTED/0.95 → situation threshold met → CaseInstance created with priority=HIGH
@@ -138,7 +138,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 - `casehub-eidos`: AgentDescriptor, AgentRegistry
 - `casehub-platform`: AgentProvider (Claude sessions for LLM workers)
 - `casehub-qhorus`: /work channel dispatch, /observe channel for findings
-- `casehub-blocks-ui`: `<blocks-channel-activity>`, `<blocks-channel-feed>`
+- `casehub-agency-ui`: `<blocks-channel-activity>`, `<blocks-channel-feed>`
 
 **Acceptance:**
 - Unit tests for each worker (6 workers × diverse scenarios)
@@ -187,7 +187,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 **Platform capabilities:**
 - `casehub-work`: WorkItem, SlaBreachPolicy, WorkItemLifecycle
 - `casehub-work-engine-adapter`: HumanTaskTarget (in engine-api), OversightGateService
-- `casehub-blocks-ui`: work-item-workbench, sla-indicator, sla-breach-policy, approval-gate, notification-inbox
+- `casehub-agency-ui`: work-item-workbench, sla-indicator, sla-breach-policy, approval-gate, notification-inbox
 
 **Binding failure handling:**
 - If a worker fails in Layer 2, the binding chain stalls (subsequent `when` guards never become true)
@@ -278,7 +278,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 **Platform capabilities:**
 - `casehub-neocortex`: CbrCaseMemoryStore (retain/retrieve), CbrCaseTypeRegistration (engine-api CDI extension)
 - `casehub-engine`: CaseLifecycleEvent for lifecycle observation
-- `casehub-blocks-ui`: blocks-timeline, similarity-panel, kpi-metric-row
+- `casehub-agency-ui`: blocks-timeline, similarity-panel, kpi-metric-row
 
 **Acceptance:**
 - CBR retain on resolution → retrieve on next alert returns similar incident
@@ -329,7 +329,7 @@ All entries linked via `causedByEntryId` — full decision provenance from alert
 **Platform capabilities:**
 - `casehub-ledger`: JpaLedgerEntry subclasses (JOINED inheritance, `domainContentBytes()` override), Merkle MMR, `inclusionProof(entryId, tenancyId)`, GDPR erasure
 - `casehub-ledger`: ComplianceSupplement for GDPR Art.22 decision records
-- `casehub-blocks-ui`: audit-trail-viewer, compliance-summary, gdpr-erasure-action
+- `casehub-agency-ui`: audit-trail-viewer, compliance-summary, gdpr-erasure-action
 
 **Note:** `casehub-ops` EvidenceCollector does not exist. Compliance evidence collection is SOC-built from ledger queries. Propose `EvidenceCollector` SPI to parent as a follow-on platform contribution.
 
@@ -415,7 +415,7 @@ The SOC application shell is a Quarkus-served page using `loadSite()` from caseh
 
 **Theme:** OKLCH casehub-dark via `pages-ui-tokens`.
 
-**Consumption:** `casehub-blocks-ui-npm` Maven artifact + `casehub-pages-ui-static` Maven artifact.
+**Consumption:** `casehub-agency-ui-npm` Maven artifact + `casehub-pages-ui-static` Maven artifact.
 
 ---
 
