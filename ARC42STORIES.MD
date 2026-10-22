@@ -2,7 +2,7 @@
 
 **Date:** 2026-07-29 (rewritten from 2026-06-29 original)
 **Status:** Epic 1 complete. Platform audit complete. Vertical slice approach adopted.
-**Platform audit:** 2026-07-29 — pages (13 packages), blocks-ui (29 components), blocks (agentic orchestration), engine (unified execution model, virtual threads)
+**Platform audit:** 2026-07-29 — pages (13 packages), mosaic (29 components), agency (agentic orchestration), engine (unified execution model, virtual threads)
 
 This document defines the full delivery plan for casehub-soc. The approach is **vertical slices built layer by layer** — each slice delivers one incident scenario end-to-end, with UI components wired alongside each backend feature. No separate dashboard epic.
 
@@ -14,7 +14,7 @@ Build a Security Operations Center application on the CaseHub agentic harness th
 1. **Dual-agent incident response** — rule-based and LLM agents coexist from day one, routed by `ImplementationRoutingStrategy` trust scores (five-phase maturity: Bootstrap, Qualified, Borderline, Excluded-2B, Excluded-3)
 2. **CBR-integrated triage** — past incidents inform future triage as part of the core flow, not a bolt-on
 3. **Tamper-evident compliance** — SOC2/DORA/NIS2 evidence generated as a byproduct of normal operation
-4. **Growing application shell** — blocks-ui components compose into a working SOC operator view that grows with each layer
+4. **Growing application shell** — mosaic components compose into a working SOC operator view that grows with each layer
 5. **Adaptive containment governance** — irreversible actions gated by risk classification and human oversight
 
 ---
@@ -23,7 +23,7 @@ Build a Security Operations Center application on the CaseHub agentic harness th
 
 **Vertical slices, not sequential epics.** The original plan had 11 sequential epics (triage, then enrichment, then containment, then trust, then CBR, then dashboard...). The platform has matured enough that these concerns can be delivered together within a single incident scenario. Each slice delivers a working end-to-end flow.
 
-**UI is not a separate phase.** blocks-ui has 29 ready-made components (work-item-workbench, sla-indicator, approval-gate, trust-score-panel, audit-trail-viewer, channel-activity, etc.). These get wired as each backend feature lands. The application shell grows incrementally — no "Epic 8: Dashboard" deferred to the future.
+**UI is not a separate phase.** mosaic has 29 ready-made components (work-item-workbench, sla-indicator, approval-gate, trust-score-panel, audit-trail-viewer, channel-activity, etc.). These get wired as each backend feature lands. The application shell grows incrementally — no "Epic 8: Dashboard" deferred to the future.
 
 **Both worker types from the start.** Rule-based and LLM workers registered as separate named `Worker` beans, with separate bindings in the case YAML for each capability. `ImplementationRoutingStrategy` (landed — trust-weighted, five-phase maturity model) selects which binding(s) to fire based on trust scores. CDI `@DefaultBean`/`@Alternative` is NOT used for worker selection — that pattern is all-or-nothing displacement, not dual-candidate routing. The routing operates at the binding level: two bindings per capability, each referencing a different named worker.
 
@@ -90,7 +90,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 - `casehub-ras`: SituationEvaluator (runtime), SituationStore (api — `InMemorySituationStore` exists in `ras/persistence-memory/`, `JpaSituationStore` in `ras/persistence-jpa/`)
 - `casehub-engine`: CaseHubRuntime, CaseInstance creation
 - `casehub-pages`: loadSite(), pages-runtime, pages-push-runtime (SSE for live incident updates)
-- `casehub-blocks-ui`: `<blocks-case-explorer>` for incident list
+- `casehub-mosaic`: `<blocks-case-explorer>` for incident list
 
 **Acceptance:**
 - Integration test: send CloudEvent with CRITICAL severity → Ganglion returns DETECTED/0.95 → situation threshold met → CaseInstance created with priority=HIGH
@@ -138,7 +138,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 - `casehub-eidos`: AgentDescriptor, AgentRegistry
 - `casehub-platform`: AgentProvider (Claude sessions for LLM workers)
 - `casehub-qhorus`: /work channel dispatch, /observe channel for findings
-- `casehub-blocks-ui`: `<blocks-channel-activity>`, `<blocks-channel-feed>`
+- `casehub-mosaic`: `<blocks-channel-activity>`, `<blocks-channel-feed>`
 
 **Acceptance:**
 - Unit tests for each worker (6 workers × diverse scenarios)
@@ -187,7 +187,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 **Platform capabilities:**
 - `casehub-work`: WorkItem, SlaBreachPolicy, WorkItemLifecycle
 - `casehub-work-engine-adapter`: HumanTaskTarget (in engine-api), OversightGateService
-- `casehub-blocks-ui`: work-item-workbench, sla-indicator, sla-breach-policy, approval-gate, notification-inbox
+- `casehub-mosaic`: work-item-workbench, sla-indicator, sla-breach-policy, approval-gate, notification-inbox
 
 **Binding failure handling:**
 - If a worker fails in Layer 2, the binding chain stalls (subsequent `when` guards never become true)
@@ -278,7 +278,7 @@ The primary vertical slice. A CRITICAL/HIGH SIEM alert triggers an incident inve
 **Platform capabilities:**
 - `casehub-neocortex`: CbrCaseMemoryStore (retain/retrieve), CbrCaseTypeRegistration (engine-api CDI extension)
 - `casehub-engine`: CaseLifecycleEvent for lifecycle observation
-- `casehub-blocks-ui`: blocks-timeline, similarity-panel, kpi-metric-row
+- `casehub-mosaic`: blocks-timeline, similarity-panel, kpi-metric-row
 
 **Acceptance:**
 - CBR retain on resolution → retrieve on next alert returns similar incident
@@ -329,7 +329,7 @@ All entries linked via `causedByEntryId` — full decision provenance from alert
 **Platform capabilities:**
 - `casehub-ledger`: JpaLedgerEntry subclasses (JOINED inheritance, `domainContentBytes()` override), Merkle MMR, `inclusionProof(entryId, tenancyId)`, GDPR erasure
 - `casehub-ledger`: ComplianceSupplement for GDPR Art.22 decision records
-- `casehub-blocks-ui`: audit-trail-viewer, compliance-summary, gdpr-erasure-action
+- `casehub-mosaic`: audit-trail-viewer, compliance-summary, gdpr-erasure-action
 
 **Note:** `casehub-ops` EvidenceCollector does not exist. Compliance evidence collection is SOC-built from ledger queries. Propose `EvidenceCollector` SPI to parent as a follow-on platform contribution.
 
@@ -400,7 +400,7 @@ Full tenant isolation for managed SOC providers:
 
 ## Application Shell Architecture
 
-The SOC application shell is a Quarkus-served page using `loadSite()` from casehub-pages. It composes blocks-ui web components into a SOC operator workspace. The shell grows with each layer:
+The SOC application shell is a Quarkus-served page using `loadSite()` from casehub-pages. It composes mosaic web components into a SOC operator workspace. The shell grows with each layer:
 
 | Layer | Components Added |
 |-------|-----------------|
@@ -411,11 +411,11 @@ The SOC application shell is a Quarkus-served page using `loadSite()` from caseh
 | 4b | `blocks-timeline`, `similarity-panel`, `kpi-metric-row` |
 | 5 | `audit-trail-viewer`, `compliance-summary`, `gdpr-erasure-action` |
 
-**Data contracts:** REST endpoints serve JSON consumed by blocks-ui `DataSourceMixin`. SSE via `pages-push-runtime` for live updates.
+**Data contracts:** REST endpoints serve JSON consumed by mosaic `DataSourceMixin`. SSE via `pages-push-runtime` for live updates.
 
 **Theme:** OKLCH casehub-dark via `pages-ui-tokens`.
 
-**Consumption:** `casehub-blocks-ui-npm` Maven artifact + `casehub-pages-ui-static` Maven artifact.
+**Consumption:** `casehub-mosaic-npm` Maven artifact + `casehub-pages-ui-static` Maven artifact.
 
 ---
 
