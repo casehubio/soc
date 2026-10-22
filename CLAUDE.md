@@ -49,7 +49,7 @@ This is an **application layer**, not a framework. The foundation provides coord
 
 1. **CBR (Case-Based Reasoning)** — design incident triage as a CBR system from day one. Past incidents feed future triage. Use `CaseRetriever` SPI even though the RAG pipeline is still maturing. Plan for Retrieve/Reuse/Revise/Retain. Read `../parent/docs/CBR-CAPABILITY.md`.
 
-2. **casehub-agency** — the reusable building agency repo is being created. Design SOC patterns (approval gate for containment, debate for threat assessment, escalation for analyst review) as agency candidates. Implement them locally first, then propose extraction to blocks.
+2. **casehub-agency** — the reusable agency repo. Design SOC patterns (approval gate for containment, debate for threat assessment, escalation for analyst review) as agency candidates. Implement them locally first, then propose extraction to agency.
 
 3. **AI fusion** — think beyond rule-based agents. Where can LLM agents add value? Threat narrative synthesis? Automated IOC correlation? Natural language incident summaries? Design SPIs that allow LLM-powered and rule-based agents to coexist with the same trust model.
 
