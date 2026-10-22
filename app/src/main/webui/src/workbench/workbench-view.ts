@@ -4,9 +4,9 @@ import { onWorkItemSelected } from "./workbench-selection.js";
 import { wireTriageGate } from "./soc-triage-gate.js";
 import type { OutcomeDefinition } from "./soc-triage-gate.js";
 
-import "@casehubio/blocks-ui-work-item-inbox";
-import "@casehubio/blocks-ui-sla-indicator";
-import "@casehubio/blocks-ui-approval-gate";
+import "@casehubio/agency-ui-work-item-inbox";
+import "@casehubio/agency-ui-sla-indicator";
+import "@casehubio/agency-ui-approval-gate";
 
 export function workbenchView(): Component {
   return columns(

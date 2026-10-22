@@ -356,8 +356,8 @@ public List<String> findDistinctActors(Instant from, Instant to, String tenancyI
 ```typescript
 import { rows, html as pagesHtml } from "@casehubio/pages-ui";
 import type { Component } from "@casehubio/pages-ui";
-import "@casehubio/blocks-ui-compliance-summary";
-import "@casehubio/blocks-ui-gdpr-erasure-action";
+import "@casehubio/agency-ui-compliance-summary";
+import "@casehubio/agency-ui-gdpr-erasure-action";
 import "./soc-audit-trail.js";
 
 export function complianceView(): Component {
@@ -475,7 +475,7 @@ No `wireComplianceSelection()` or `initComplianceFromUrl()` needed — the compl
 | `app/src/main/webui/src/compliance/compliance-view.ts` | New — Compliance tab layout |
 | `app/src/main/webui/src/compliance/soc-audit-trail.ts` | New — SOC audit trail component |
 | `app/src/main/webui/src/index.ts` | Replace Compliance placeholder with complianceView() |
-| `app/src/main/webui/package.json` | Add `@casehubio/blocks-ui-compliance-summary`, `@casehubio/blocks-ui-gdpr-erasure-action`, `@casehubio/pages-table`, `@casehubio/pages-ui-components` (direct imports by soc-audit-trail) |
+| `app/src/main/webui/package.json` | Add `@casehubio/agency-ui-compliance-summary`, `@casehubio/agency-ui-gdpr-erasure-action`, `@casehubio/pages-table`, `@casehubio/pages-ui-components` (direct imports by soc-audit-trail) |
 
 ---
 

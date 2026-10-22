@@ -1,7 +1,7 @@
 import { rows, html as pagesHtml } from "@casehubio/pages-ui";
 import type { Component } from "@casehubio/pages-ui";
-import "@casehubio/blocks-ui-compliance-summary";
-import "@casehubio/blocks-ui-gdpr-erasure-action";
+import "@casehubio/agency-ui-compliance-summary";
+import "@casehubio/agency-ui-gdpr-erasure-action";
 import "./soc-audit-trail.js";
 
 export function complianceView(): Component {

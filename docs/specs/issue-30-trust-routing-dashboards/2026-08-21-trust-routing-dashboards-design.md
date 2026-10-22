@@ -79,9 +79,9 @@ Routing rationale data comes from `WorkerDecisionEntry.routingRationale`, which 
 // trust/trust-view.ts
 import { rows, columns, html as pagesHtml } from "@casehubio/pages-ui";
 import type { Component } from "@casehubio/pages-ui";
-import "@casehubio/blocks-ui-trust-score-panel";
-import "@casehubio/blocks-ui-routing-rationale";
-import "@casehubio/blocks-ui-similarity-panel";
+import "@casehubio/agency-ui-trust-score-panel";
+import "@casehubio/agency-ui-routing-rationale";
+import "@casehubio/agency-ui-similarity-panel";
 import "./soc-cbr-summary.js";
 
 const SOC_AGENTS = [
@@ -341,8 +341,8 @@ initTrustFromUrl();
 ### Selection Wiring (trust-selection.ts)
 
 ```typescript
-import { onPagesEvent, emitPagesEvent } from "@casehubio/blocks-ui-core";
-import type { RoutingRationaleData } from "@casehubio/blocks-ui-routing-rationale";
+import { onPagesEvent, emitPagesEvent } from "@casehubio/agency-ui-core";
+import type { RoutingRationaleData } from "@casehubio/agency-ui-routing-rationale";
 
 export function wireTrustCaseSelection(): void {
   onPagesEvent<{ id: string }>(document, "trust:case-selected", async ({ id }) => {
@@ -439,7 +439,7 @@ function clearDrillDown(): void {
 | `app/src/main/webui/src/trust/trust-selection.ts` | New — case selection wiring |
 | `app/src/main/webui/src/trust/soc-cbr-summary.ts` | New — CBR summary banner wrapper |
 | `app/src/main/webui/src/index.ts` | Modified — replace Trust placeholder with trustView() |
-| `app/src/main/webui/package.json` | Modified — add `@casehubio/blocks-ui-trust-score-panel`, `@casehubio/blocks-ui-routing-rationale`, `@casehubio/blocks-ui-similarity-panel` dependencies |
+| `app/src/main/webui/package.json` | Modified — add `@casehubio/agency-ui-trust-score-panel`, `@casehubio/agency-ui-routing-rationale`, `@casehubio/agency-ui-similarity-panel` dependencies |
 
 ---
 

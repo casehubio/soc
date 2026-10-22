@@ -392,7 +392,7 @@ For each module:
 - **Investigation review:** Senior analyst submits investigation report → LLM reviewer auto-generates critique (gaps, missed IOCs, alternative hypotheses)
 - **Consensus containment approval:** M-of-N vote on whether to proceed with containment (consensus gate pattern)
 
-**Gap:** Debate and review backends live in casehub-drafthouse. SOC would either depend on drafthouse or propose extracting these to casehub-blocks.
+**Gap:** Debate and review backends live in casehub-drafthouse. SOC would either depend on drafthouse or propose extracting these to casehub-agency.
 
 ---
 
@@ -543,13 +543,13 @@ severity_outcome, investigation_duration, containment_success
 
 ### Gap 3: Debate/Review Channel Extraction
 **Need:** SOC wants debate channels (multi-agent threat assessment) and review channels (automated investigation critique)
-**Current state:** These live in casehub-drafthouse — extracting to casehub-blocks would make them reusable
-**Proposal:** Extract debate and review channel backends to casehub-blocks
+**Current state:** These live in casehub-drafthouse — extracting to casehub-agency would make them reusable
+**Proposal:** Extract debate and review channel backends to casehub-agency
 
 ### Gap 4: Consensus Gate
 **Need:** M-of-N approval gate for containment actions (not just homogeneous WorkItems, but structured voting with threshold)
 **Current state:** Designed but not yet implemented (CHANNELS.md §3.1c)
-**Proposal:** Implement `ConsensusChannelBackend` in casehub-qhorus or casehub-blocks
+**Proposal:** Implement `ConsensusChannelBackend` in casehub-qhorus or casehub-agency
 
 ### Gap 5: Adaptive Plan Templates (CBR Revise Phase)
 **Need:** Blend parameters from top-k retrieved past incidents into a concrete investigation plan

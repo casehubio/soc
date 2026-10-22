@@ -186,7 +186,7 @@ db/soc/migration/V5000__*.sql         -- SOC-specific Flyway migrations (V5000+ 
 
 2. **Dual worker architecture** -- rule-based and LLM workers coexist for every capability. Registered as separate named `Worker` instances (NOT `@DefaultBean`/`@Alternative` -- CDI displacement is all-or-nothing). Bootstrap routing selects rule-based by insertion order. Trust-weighted routing (`ImplementationRoutingStrategy`) selects based on maturity scores once enough attestations accumulate.
 
-3. **casehub-blocks candidates** -- SOC patterns (approval gate for containment, debate for threat assessment, escalation for analyst review) designed as blocks candidates. Implement locally first, then propose extraction to blocks.
+3. **casehub-agency candidates** -- SOC patterns (approval gate for containment, debate for threat assessment, escalation for analyst review) designed as blocks candidates. Implement locally first, then propose extraction to blocks.
 
 4. **AI fusion** -- SPIs allow LLM-powered and rule-based agents to coexist with the same trust model. Threat narrative synthesis, automated IOC correlation, natural language incident summaries. LLM workers register with `noFunction()` when `langchain4j-anthropic` unavailable.
 
