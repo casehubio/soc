@@ -11,7 +11,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 class SocInvestigationCaseDescriptorTest {
 
     private final SocInvestigationCaseDescriptor descriptor =
-            new SocInvestigationCaseDescriptor(new io.casehub.soc.worker.MockChatModel("{}"), stubRetrieveService(), null, null, null);
+            new SocInvestigationCaseDescriptor(null, stubRetrieveService(), null, null, null);
 
     private static io.casehub.soc.engine.cbr.SocCbrRetrieveService stubRetrieveService() {
         return new io.casehub.soc.engine.cbr.SocCbrRetrieveService(
