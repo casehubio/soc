@@ -26,7 +26,7 @@ export function wireTrustCaseSelection(): void {
         container.innerHTML = `<p style="color: #666;">No routing data for this case</p>`;
       } else {
         for (const r of rationales) {
-          const el = document.createElement("blocks-routing-rationale");
+          const el = document.createElement("agency-routing-rationale");
           (el as any).data = r;
           container.appendChild(el);
         }

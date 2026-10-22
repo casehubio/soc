@@ -40,7 +40,7 @@ async function boot() {
   wireTrustCaseSelection();
   initTrustFromUrl();
 
-  const bell = document.createElement("blocks-notification-bell");
+  const bell = document.createElement("agency-notification-bell");
   bell.setAttribute("endpoint", "/notifications");
   bell.style.position = "fixed";
   bell.style.top = "1rem";

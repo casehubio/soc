@@ -17,20 +17,20 @@ export function workbenchView(): Component {
 }
 
 function listPane(): Component {
-  return pagesHtml(`<blocks-work-item-inbox
+  return pagesHtml(`<agency-work-item-inbox
     id="workbench-inbox"
     endpoint="/workitems"
-  ></blocks-work-item-inbox>`);
+  ></agency-work-item-inbox>`);
 }
 
 function detailPane(): Component {
   return rows(
     pagesHtml(`<div id="workbench-detail" style="display:none; padding: 1rem;">
-      <blocks-sla-indicator id="workbench-sla" compact></blocks-sla-indicator>
+      <agency-sla-indicator id="workbench-sla" compact></agency-sla-indicator>
 
       <div id="workbench-context" style="margin: 0.5rem 0;"></div>
 
-      <blocks-approval-gate id="workbench-gate"></blocks-approval-gate>
+      <agency-approval-gate id="workbench-gate"></agency-approval-gate>
 
       <div id="workbench-notes" style="margin-top: 1rem;">
         <textarea id="note-input" placeholder="Add investigation note..." rows="3"
