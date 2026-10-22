@@ -1,6 +1,6 @@
 package io.casehub.soc.engine;
 
-import dev.langchain4j.model.chat.ChatModel;
+import io.casehub.platform.agent.AgentProvider;
 import io.casehub.soc.engine.spi.ContainmentExecutor;
 import io.casehub.soc.engine.spi.ContainmentResult;
 import io.casehub.soc.worker.LlmAttckMappingWorker;
@@ -23,7 +23,7 @@ import java.util.List;
 
 public final class SocInvestigationCaseDescriptor {
 
-    private final ChatModel llmModel;
+    private final AgentProvider agentProvider;
     private final io.casehub.soc.engine.cbr.SocCbrRetrieveService cbrRetrieveService;
     private final ContainmentExecutor containmentExecutor;
     private final AttckEnrichmentService attckEnrichmentService;
@@ -33,12 +33,12 @@ public final class SocInvestigationCaseDescriptor {
         this(null, null, null, null, null);
     }
 
-    SocInvestigationCaseDescriptor(ChatModel llmModel,
+    SocInvestigationCaseDescriptor(AgentProvider agentProvider,
                                    io.casehub.soc.engine.cbr.SocCbrRetrieveService cbrRetrieveService,
                                    ContainmentExecutor containmentExecutor,
                                    AttckEnrichmentService attckEnrichmentService,
                                    SocRagRetrieveService ragRetrieveService) {
-        this.llmModel = llmModel;
+        this.agentProvider = agentProvider;
         this.cbrRetrieveService = cbrRetrieveService;
         this.containmentExecutor = containmentExecutor;
         this.attckEnrichmentService = attckEnrichmentService;
@@ -52,12 +52,12 @@ public final class SocInvestigationCaseDescriptor {
         return List.of(
                 RuleCbrRetrievalWorker.create(cbrRetrieveService),
                 RuleIocEnrichmentWorker.create(),
-                LlmIocEnrichmentWorker.create(llmModel),
+                LlmIocEnrichmentWorker.create(agentProvider),
                 RuleAttckMappingWorker.create(attckEnrichmentService),
-                LlmAttckMappingWorker.create(llmModel),
+                LlmAttckMappingWorker.create(agentProvider),
                 RuleRagRetrievalWorker.create(ragRetrieveService),
                 RuleContainmentRecommendationWorker.create(),
-                LlmContainmentRecommendationWorker.create(llmModel),
+                LlmContainmentRecommendationWorker.create(agentProvider),
                 RuleContainmentExecutionWorker.create(executor),
                 RuleRecoveryVerificationWorker.create(),
                 SocRecoveryVerificationResultWorker.create());

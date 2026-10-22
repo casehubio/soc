@@ -1,7 +1,7 @@
 package io.casehub.soc.worker;
 
-import dev.langchain4j.model.chat.ChatModel;
-import io.casehub.api.model.ai.Agent;
+import io.casehub.api.model.ai.WorkerAgentInvoker;
+import io.casehub.platform.agent.AgentProvider;
 import io.casehub.soc.domain.SocActionType;
 import io.casehub.soc.worker.contract.ContainmentRecommendationOutput;
 import io.casehub.worker.api.PlannedAction;
@@ -15,8 +15,8 @@ public final class LlmContainmentRecommendationWorker {
     private LlmContainmentRecommendationWorker() {}
 
     @SuppressWarnings("unchecked")
-    public static Worker create(ChatModel chatModel) {
-        if (chatModel == null) {
+    public static Worker create(AgentProvider agentProvider) {
+        if (agentProvider == null) {
             return Worker.builder()
                          .name("llm-containment-rec")
                          .capabilityName("containment-recommendation")
