@@ -12,7 +12,7 @@
     "@casehubio/pages-data": "file:../../../../../pages/packages/pages-data",
     "@casehubio/agency-ui-core": "file:../../../../../blocks-ui/packages/blocks-ui-core",
     "@casehubio/agency-ui-case-explorer": "file:../../../../../blocks-ui/components/case-explorer",
-    "@casehubio/agency-ui-blocks-timeline": "file:../../../../../blocks-ui/components/blocks-timeline",
+    "@casehubio/mosaic-agency-timeline": "file:../../../../../blocks-ui/components/blocks-timeline",
     "@casehubio/agency-ui-kpi-metric-row": "file:../../../../../blocks-ui/components/kpi-metric-row",
     "@casehubio/agency-ui-channel-activity": "file:../../../../../blocks-ui/components/channel-activity",
     "@casehubio/agency-ui-work-item-workbench": "file:../../../../../blocks-ui/components/work-item-workbench",
