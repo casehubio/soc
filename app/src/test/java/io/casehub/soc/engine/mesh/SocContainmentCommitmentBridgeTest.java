@@ -242,6 +242,7 @@ class SocContainmentCommitmentBridgeTest {
     @Override public void setTrackDelivery(UUID id, Boolean track) {}
     @Override public void updateLastActivity(UUID id, String tenancyId) {}
     @Override public Channel setPolicyOverrides(UUID id, java.util.Map<String, String> overrides) { return channel; }
+    @Override public Channel setParticipationPolicy(UUID id, io.casehub.qhorus.api.channel.ParticipationPolicyMode policy) { return channel; }
   }
 
   static final class RecordingMessageDispatcher implements MessageDispatcher {
