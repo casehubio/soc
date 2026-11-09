@@ -29,6 +29,7 @@ import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 @McpDomain(value = "soc/compliance", app = "soc", basePath = "/api/soc/compliance", summary = "Security compliance — regulatory checks, audit readiness")
@@ -63,46 +64,46 @@ public class SocComplianceApi {
     @PlatformQuery("Get DORA response time report")
     @RestPath("/dora")
     public DoraResponseTimeReport getDoraReport(
-            @QueryParam("from") Instant from,
-            @QueryParam("to") Instant to) {
-        return service.doraReport(from, to, currentPrincipal.tenancyId());
+            @QueryParam("from") Optional<Instant> from,
+            @QueryParam("to") Optional<Instant> to) {
+        return service.doraReport(from.orElse(null), to.orElse(null), currentPrincipal.tenancyId());
     }
 
     @PlatformQuery("Get filtered audit entries")
     @RestPath("/entries")
     public PagedAuditEntries getEntries(
-            @QueryParam("from") Instant from,
-            @QueryParam("to") Instant to,
-            @QueryParam("stepType") SocStepType stepType,
-            @QueryParam("actorId") String actorId,
-            @QueryParam("incidentId") UUID incidentId,
-            @QueryParam("page") @DefaultValue("0") Integer page,
-            @QueryParam("size") @DefaultValue("50") Integer size) {
-        Instant effectiveFrom = from != null ? from : Instant.now().minus(30, ChronoUnit.DAYS);
-        Instant effectiveTo = to != null ? to : Instant.now();
-        int effectivePage = Math.max(0, page != null ? page : 0);
-        int effectiveSize = Math.min(Math.max(size != null ? size : 50, 1), 200);
-        return service.filteredEntries(effectiveFrom, effectiveTo, stepType, actorId,
-            incidentId, effectivePage, effectiveSize, currentPrincipal.tenancyId());
+            @QueryParam("from") Optional<Instant> from,
+            @QueryParam("to") Optional<Instant> to,
+            @QueryParam("stepType") Optional<SocStepType> stepType,
+            @QueryParam("actorId") Optional<String> actorId,
+            @QueryParam("incidentId") Optional<UUID> incidentId,
+            @QueryParam("page") Optional<Integer> page,
+            @QueryParam("size") Optional<Integer> size) {
+        Instant effectiveFrom = from.orElseGet(() -> Instant.now().minus(30, ChronoUnit.DAYS));
+        Instant effectiveTo = to.orElseGet(Instant::now);
+        int effectivePage = Math.max(0, page.orElse(0));
+        int effectiveSize = Math.min(Math.max(size.orElse(50), 1), 200);
+        return service.filteredEntries(effectiveFrom, effectiveTo, stepType.orElse(null), actorId.orElse(null),
+            incidentId.orElse(null), effectivePage, effectiveSize, currentPrincipal.tenancyId());
     }
 
     @PlatformQuery("Get distinct actors from audit entries")
     @RestPath("/entries/actors")
     public List<String> getDistinctActors(
-            @QueryParam("from") Instant from,
-            @QueryParam("to") Instant to) {
-        Instant effectiveFrom = from != null ? from : Instant.now().minus(30, ChronoUnit.DAYS);
-        Instant effectiveTo = to != null ? to : Instant.now();
+            @QueryParam("from") Optional<Instant> from,
+            @QueryParam("to") Optional<Instant> to) {
+        Instant effectiveFrom = from.orElseGet(() -> Instant.now().minus(30, ChronoUnit.DAYS));
+        Instant effectiveTo = to.orElseGet(Instant::now);
         return service.distinctActors(effectiveFrom, effectiveTo, currentPrincipal.tenancyId());
     }
 
     @PlatformQuery("Get compliance requirement summary")
     @RestPath("/summary")
     public List<ComplianceRequirement> getSummary(
-            @QueryParam("from") Instant from,
-            @QueryParam("to") Instant to) {
-        Instant effectiveFrom = from != null ? from : Instant.now().minus(30, ChronoUnit.DAYS);
-        Instant effectiveTo = to != null ? to : Instant.now();
+            @QueryParam("from") Optional<Instant> from,
+            @QueryParam("to") Optional<Instant> to) {
+        Instant effectiveFrom = from.orElseGet(() -> Instant.now().minus(30, ChronoUnit.DAYS));
+        Instant effectiveTo = to.orElseGet(Instant::now);
         return service.complianceSummary(effectiveFrom, effectiveTo, currentPrincipal.tenancyId());
     }
 

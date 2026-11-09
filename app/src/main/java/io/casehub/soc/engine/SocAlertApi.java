@@ -8,6 +8,7 @@ import jakarta.enterprise.context.ApplicationScoped;
 import jakarta.ws.rs.QueryParam;
 
 import java.util.List;
+import java.util.Optional;
 
 @McpDomain(value = "soc/alerts", app = "soc", basePath = "/api/soc/alerts", summary = "Security alert management — ingest, correlate, escalate")
 @ApplicationScoped
@@ -16,9 +17,9 @@ public class SocAlertApi {
     @PlatformQuery("Get alert heatmap data by time range")
     @RestPath("/heatmap")
     public AlertHeatmapResponse getHeatmap(
-            @QueryParam("timeUnit") String timeUnit,
-            @QueryParam("from") String from,
-            @QueryParam("to") String to) {
+            @QueryParam("timeUnit") Optional<String> timeUnit,
+            @QueryParam("from") Optional<String> from,
+            @QueryParam("to") Optional<String> to) {
         return new AlertHeatmapResponse(
             List.of(),
             List.of(),

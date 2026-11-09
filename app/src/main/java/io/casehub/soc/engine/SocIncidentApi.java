@@ -34,6 +34,7 @@ import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 
@@ -51,13 +52,13 @@ public class SocIncidentApi {
     @PlatformQuery("List incidents with pagination")
     @RestPath("/")
     public List<IncidentSummaryResponse> listIncidents(
-            @QueryParam("page") Integer pageNumber,
-            @QueryParam("size") Integer pageSize) {
+            @QueryParam("page") Optional<Integer> pageNumber,
+            @QueryParam("size") Optional<Integer> pageSize) {
         String tenancyId = currentPrincipal.tenancyId();
         CaseInstanceQuery query = CaseInstanceQuery.builder()
             .name(SocCaseTypes.INCIDENT_INVESTIGATION)
-            .page(pageNumber != null ? pageNumber : 0)
-            .size(pageSize != null ? pageSize : 50)
+            .page(pageNumber.orElse(0))
+            .size(pageSize.orElse(50))
             .build();
         return repository.query(query, tenancyId).stream()
             .map(this::toSummary).toList();
