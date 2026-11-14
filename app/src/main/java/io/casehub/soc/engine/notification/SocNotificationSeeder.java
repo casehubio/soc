@@ -166,7 +166,7 @@ public class SocNotificationSeeder {
                                                   String entityType, String entityIdField,
                                                   String actorIdField) {
         return new NotificationTemplate(title, body, severity, category,
-            actionUrl, entityType, entityIdField, actorIdField);
+            actionUrl, entityType, entityIdField, actorIdField, null);
     }
 
     private static NotificationTarget target(TargetType type, String id) {
