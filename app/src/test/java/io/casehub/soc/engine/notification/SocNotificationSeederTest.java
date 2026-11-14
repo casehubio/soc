@@ -119,7 +119,7 @@ class SocNotificationSeederTest {
         var changed = new io.casehub.platform.api.subscription.NotificationTemplate(
             "CHANGED: " + t.titlePattern(), t.bodyPattern(), t.severity(),
             t.category(), t.actionUrlPattern(), t.entityType(),
-            t.entityIdField(), t.actorIdField());
+            t.entityIdField(), t.actorIdField(), t.replyHint());
         return new Subscription(s.id(), s.ownerId(), s.tenancyId(), s.name(),
             s.eventType(), s.filters(), s.targets(), s.includeActor(),
             changed, s.enabled(), s.scope(), s.createdAt(), s.updatedAt());
