@@ -1,0 +1,61 @@
+{
+  "name": "@casehubio/pages-aria",
+  "version": "0.1.0",
+  "type": "module",
+  "sideEffects": [
+    "dist/*.js",
+    "src/controller/standalone.ts",
+    "src/controller/step-catalog.ts",
+    "src/controller/playbook-controller.ts",
+    "src/controller/playbook-narrative.ts",
+    "src/controller/playbook-yaml-viewer.ts",
+    "src/controller/library-view.ts",
+    "src/tutorial/tutorial-host.ts"
+  ],
+  "exports": {
+    "./walker": {
+      "types": "./dist/walker/index.d.ts",
+      "default": "./dist/walker/index.js"
+    },
+    "./executor": {
+      "types": "./dist/executor/index.d.ts",
+      "default": "./dist/executor/index.js"
+    },
+    "./server": {
+      "types": "./dist/server/index.d.ts",
+      "default": "./dist/server/index.js"
+    },
+    "./playbook": {
+      "types": "./dist/playbook/index.d.ts",
+      "default": "./dist/playbook/index.js"
+    },
+    "./controller": {
+      "types": "./dist/controller/index.d.ts",
+      "default": "./dist/controller/index.js"
+    },
+    "./tutorial": {
+      "types": "./dist/tutorial/index.d.ts",
+      "default": "./dist/tutorial/index.js"
+    }
+  },
+  "scripts": {
+    "test": "vitest run",
+    "build:controller": "node ../../node_modules/esbuild/bin/esbuild src/controller/standalone.ts --bundle --format=esm --outfile=dist/controller.js --target=es2022 --tsconfig=tsconfig.json --external:node:fs --external:node:url --external:node:path --external:node:child_process",
+    "build:tutorial": "node ../../node_modules/esbuild/bin/esbuild src/tutorial/standalone.ts --bundle --format=esm --outfile=dist/tutorial.js --target=es2022 --tsconfig=tsconfig.json --external:node:fs --external:node:url --external:node:path --external:node:child_process",
+    "build": "yarn build:controller && yarn build:tutorial",
+    "clean": "rimraf dist .typecheck"
+  },
+  "dependencies": {
+    "lit": "^3.3.3",
+    "yaml": "^2.9.0"
+  },
+  "devDependencies": {
+    "jsdom": "^26.1.0",
+    "rimraf": "^6.1.0",
+    "vitest": "^3.2.4"
+  },
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

@@ -1,0 +1,38 @@
+{
+  "name": "@casehubio/mosaic-agent-viewer",
+  "version": "0.1.0",
+  "description": "Agent identity, pattern topology, and drill-down viewer components for blocks agentic YAML",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": true,
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./*": "./dist/*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "Apache-2.0"
+}

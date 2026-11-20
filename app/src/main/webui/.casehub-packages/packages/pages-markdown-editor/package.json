@@ -1,0 +1,41 @@
+{
+  "name": "@casehubio/pages-markdown-editor",
+  "version": "0.1.0",
+  "description": "Milkdown-based rich markdown editor \u2014 Lit Web Component",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-pages.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "sideEffects": [
+    "./dist/index.js",
+    "./src/index.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist .typecheck"
+  },
+  "dependencies": {
+    "@milkdown/kit": "^7.6.0",
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.2.1"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

@@ -1,0 +1,1307 @@
+import { describe, it, expect } from "vitest";
+import type { Component } from "@casehubio/pages-component";
+import type { DataSetId, ColumnId } from "@casehubio/pages-data";
+import "@casehubio/pages-viz";
+import type { PagesElement } from "@casehubio/pages-viz";
+import { loadSite } from "./site.js";
+
+function simpleSite(): Component {
+  return {
+    type: "page",
+    props: {
+      name: "App",
+      datasets: [{
+        uuid: "sales" as DataSetId,
+        content: JSON.stringify([
+          { region: "North", revenue: 100 },
+          { region: "South", revenue: 200 },
+        ]),
+      }],
+    },
+    slots: {
+      default: [
+        { type: "title", props: { text: "Dashboard" } },
+      ],
+    },
+  };
+}
+
+describe("loadSite", () => {
+  it("renders component tree into target", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, simpleSite());
+    expect(target.children.length).toBeGreaterThan(0);
+    expect(target.querySelector("[data-component-type='page']")).toBeTruthy();
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("returns working Site interface", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, simpleSite());
+    expect(site.root).toBeTruthy();
+    expect(site.root.type).toBe("page");
+    expect(site.state).toBeTruthy();
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("page() returns component by path", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, simpleSite());
+    const root = site.page("");
+    expect(root).toBeTruthy();
+    expect(root?.type).toBe("page");
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("dataset() resolves from page scope", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, simpleSite());
+    const ds = site.dataset("sales" as DataSetId);
+    expect(ds).toBeTruthy();
+    expect(ds?.uuid).toBe("sales");
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("dispose clears target", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, simpleSite());
+    site.dispose();
+    expect(target.children.length).toBe(0);
+    document.body.removeChild(target);
+  });
+
+  it("dispose is idempotent", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, simpleSite());
+    site.dispose();
+    site.dispose();
+    expect(target.children.length).toBe(0);
+    document.body.removeChild(target);
+  });
+
+  it("page() returns null for unknown path", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, simpleSite());
+    expect(site.page("nonexistent")).toBeNull();
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("dataset() returns null for unknown id", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, simpleSite());
+    expect(site.dataset("unknown" as DataSetId)).toBeNull();
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("accepts a YAML string as source", async () => {
+    const yaml = `
+pages:
+  - components:
+      - html: "<p>hello</p>"
+`;
+    const target = document.createElement("div");
+    const site = await loadSite(target, yaml);
+    expect(site.root.type).toBe("page");
+    expect(target.innerHTML).toContain("hello");
+    site.dispose();
+  });
+
+  it("forwards custom fetch and baseUrl to data pipeline", async () => {
+    const fetchCalls: string[] = [];
+    const customFetch: typeof globalThis.fetch = (input) => {
+      fetchCalls.push(input instanceof Request ? input.url : String(input));
+      return Promise.resolve(new Response(JSON.stringify([["A", 1]]), {
+        headers: { "Content-Type": "application/json" },
+      }));
+    };
+
+    const root: Component = {
+      type: "page",
+      props: {
+        name: "App",
+        datasets: [{
+          uuid: "remote" as DataSetId,
+          url: "data/test.json",
+        }],
+      },
+      slots: {
+        default: [{
+          type: "metric",
+          id: "tbl",
+          props: {
+            lookup: { dataSetId: "remote" as DataSetId, operations: [] },
+          },
+        }],
+      },
+    };
+
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, root, {
+      fetch: customFetch,
+      baseUrl: "https://example.com/api/",
+    });
+
+    // Wait for data request to resolve
+    for (let i = 0; i < 50; i++) {
+      if (fetchCalls.length > 0) break;
+      await new Promise((r) => setTimeout(r, 10));
+    }
+
+    expect(fetchCalls.length).toBeGreaterThan(0);
+    expect(fetchCalls[0]).toContain("data/test.json");
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("data components are rendered and registered during initial render", async () => {
+    const yaml = `
+datasets:
+  - uuid: test
+    content: '[["A", 1], ["B", 2]]'
+pages:
+  - components:
+      - displayer:
+          type: BARCHART
+          lookup:
+            uuid: test
+            group:
+              - columnGroup:
+                  source: Column 0
+                functions:
+                  - source: Column 0
+                  - source: Column 1
+                    function: SUM
+`;
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, yaml);
+    const barChart = target.querySelector("[data-component-type='bar-chart']");
+    expect(barChart).not.toBeNull();
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("applies dark mode CSS class when global.mode is dark", async () => {
+    const yaml = `
+global:
+  mode: dark
+pages:
+  - components:
+      - html: "dark page"
+`;
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, yaml);
+    expect(target.classList.contains("pages-theme-default-dark")).toBe(true);
+    expect(target.classList.contains("pages-theme-default-light")).toBe(false);
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("resets dark mode when loading a non-dark dashboard after a dark one", async () => {
+    const darkYaml = `
+global:
+  mode: dark
+pages:
+  - components:
+      - html: "dark"
+`;
+    const lightYaml = `
+pages:
+  - components:
+      - html: "light"
+`;
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const darkSite = await loadSite(target, darkYaml);
+    expect(target.classList.contains("pages-theme-default-dark")).toBe(true);
+    darkSite.dispose();
+
+    const lightSite = await loadSite(target, lightYaml);
+    expect(target.classList.contains("pages-theme-default-light")).toBe(true);
+    expect(target.classList.contains("pages-theme-default-dark")).toBe(false);
+    lightSite.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+describe("loadSite — lazy rendering and registry eviction", () => {
+  it("registry eviction loop executes without errors on slot changes", async () => {
+    // Test: verify the pages-slot-change handler with the eviction loop
+    // executes successfully during navigation
+    const root: Component = {
+      type: "page",
+      props: { name: "App" },
+      slots: {
+        default: [{
+          type: "tabs",
+          id: "tabs-1",
+          slots: {
+            A: [{ type: "title", props: { text: "A" } }],
+            B: [{ type: "title", props: { text: "B" } }],
+          },
+        }],
+      },
+    };
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, root);
+
+    // Verify tabs component is rendered
+    const tabsComponent = target.querySelector("[data-component-type='tabs']");
+    expect(tabsComponent).toBeTruthy();
+
+    // Navigate multiple times to trigger slot-change events repeatedly
+    // This causes the eviction loop to run for each slot change
+    site.navigate("B");
+    site.navigate("A");
+    site.navigate("B");
+
+    // If we reach here, eviction executed without throwing
+    // and the site is still functional
+    expect(site.state).toBeDefined();
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("multiple navigations do not crash registry eviction", async () => {
+    // Stress test: navigate rapidly to ensure eviction handles
+    // concurrent slot changes correctly
+    const root: Component = {
+      type: "page",
+      props: { name: "App" },
+      slots: {
+        default: [{
+          type: "tabs",
+          id: "tabs-1",
+          slots: {
+            Tab1: [{ type: "html" }],
+            Tab2: [{ type: "html" }],
+            Tab3: [{ type: "html" }],
+          },
+        }],
+      },
+    };
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, root);
+
+    // Rapid navigation
+    site.navigate("Tab2");
+    site.navigate("Tab3");
+    site.navigate("Tab1");
+    site.navigate("Tab2");
+
+    // Registry should be functional
+    expect(site.root).toBeTruthy();
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+describe("loadSite — cross-filter: selector updates listening component", () => {
+  async function waitForData(
+    target: HTMLElement,
+    selector: string,
+    maxWait = 500,
+  ): Promise<HTMLElement> {
+    const el = target.querySelector<HTMLElement>(selector);
+    if (!el) throw new Error(`Element not found: ${selector}`);
+    const componentType = el.dataset.componentType;
+    if (!componentType) throw new Error(`No componentType on ${selector}`);
+    const vizEl = el.querySelector<HTMLElement & { dataSet?: unknown }>(
+      `pages-${componentType}`,
+    );
+    if (!vizEl) throw new Error(`Viz element not found in ${selector}`);
+    const start = Date.now();
+    while (!vizEl.dataSet && Date.now() - start < maxWait) {
+      await new Promise((r) => setTimeout(r, 10));
+    }
+    if (!vizEl.dataSet) throw new Error(`Data not loaded for ${selector} within ${String(maxWait)}ms`);
+    return el;
+  }
+
+  it("selector filter updates bar chart data on same page (no tabs)", async () => {
+    const root: Component = {
+      type: "page",
+      props: {
+        name: "App",
+        datasets: [{
+          uuid: "test" as DataSetId,
+          content: JSON.stringify([
+            ["Computers", "Scanner", 5],
+            ["Computers", "Printer", 7],
+            ["Electronics", "Camera", 10],
+            ["Electronics", "Headphones", 5],
+          ]),
+          columns: [
+            { id: "Section", type: "LABEL" },
+            { id: "Product", type: "LABEL" },
+            { id: "Qty", type: "NUMBER" },
+          ],
+        }],
+      },
+      slots: {
+        default: [
+          {
+            type: "selector",
+            id: "sel-1",
+            props: {
+              filter: { notification: true },
+              lookup: {
+                dataSetId: "test" as DataSetId,
+                operations: [{
+                  type: "group" as const,
+                  groupingKey: {
+                    sourceId: "Section" as ColumnId,
+                    columnId: "Section" as ColumnId,
+                    strategy: { mode: "distinct" as const },
+                    maxIntervals: 100,
+                    emptyIntervals: true,
+                    ascendingOrder: true,
+                  },
+                  columns: [
+                    { kind: "key" as const, sourceId: "Section" as ColumnId, columnId: "Section" as ColumnId },
+                  ],
+                }],
+              },
+            },
+          },
+          {
+            type: "metric",
+            id: "chart-1",
+            props: {
+              filter: { listening: true },
+              lookup: {
+                dataSetId: "test" as DataSetId,
+                operations: [{
+                  type: "group" as const,
+                  groupingKey: {
+                    sourceId: "Product" as ColumnId,
+                    columnId: "Product" as ColumnId,
+                    strategy: { mode: "distinct" as const },
+                    maxIntervals: 100,
+                    emptyIntervals: true,
+                    ascendingOrder: true,
+                  },
+                  columns: [
+                    { kind: "key" as const, sourceId: "Product" as ColumnId, columnId: "Product" as ColumnId },
+                    { kind: "aggregate" as const, sourceId: "Qty" as ColumnId, columnId: "Qty" as ColumnId, fn: { fn: "SUM" as const } },
+                  ],
+                }],
+              },
+            },
+          },
+        ],
+      },
+    };
+
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, root);
+
+    // Wait for both components to have data
+    const selectorContainer = await waitForData(target, "[data-component-id='sel-1']");
+    await waitForData(target, "[data-component-id='chart-1']");
+
+    // Find the selector's dropdown in shadow DOM
+    const selectorViz = selectorContainer.querySelector("pages-selector");
+    expect(selectorViz).toBeTruthy();
+
+    const selectEl = selectorViz!.shadowRoot!.querySelector("select");
+    expect(selectEl).toBeTruthy();
+
+    // The dropdown should have "All" + distinct values
+    const options = selectEl!.querySelectorAll("option");
+    expect(options.length).toBeGreaterThanOrEqual(3);
+
+    // Select "Computers" (option value is the row index)
+    selectEl!.value = "0";
+    selectEl!.dispatchEvent(new Event("change"));
+
+    // Wait for re-query
+    await new Promise((r) => setTimeout(r, 50));
+
+    // The metric should now show filtered data
+    const chartViz = target.querySelector<PagesElement<any>>(
+      "[data-component-id='chart-1'] pages-metric",
+    );
+
+    expect(chartViz!.dataSet).toBeTruthy();
+    // After filtering to "Computers", metric should show only Scanner + Printer (2 rows)
+    expect(chartViz!.dataSet!.rows.length).toBe(2);
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("selector filter works inside lazy-rendered tab after navigation", async () => {
+    const dataset = {
+      uuid: "ds" as DataSetId,
+      content: JSON.stringify([
+        ["A", "X", 1],
+        ["A", "Y", 2],
+        ["B", "Z", 3],
+      ]),
+      columns: [
+        { id: "Cat", type: "LABEL" },
+        { id: "Name", type: "LABEL" },
+        { id: "Val", type: "NUMBER" },
+      ],
+    };
+
+    const groupByCat = {
+      type: "group" as const,
+      groupingKey: {
+        sourceId: "Cat" as ColumnId, columnId: "Cat" as ColumnId,
+        strategy: { mode: "distinct" as const }, maxIntervals: 100,
+        emptyIntervals: true, ascendingOrder: true,
+      },
+      columns: [{ kind: "key" as const, sourceId: "Cat" as ColumnId, columnId: "Cat" as ColumnId }],
+    };
+
+    const groupByName = {
+      type: "group" as const,
+      groupingKey: {
+        sourceId: "Name" as ColumnId, columnId: "Name" as ColumnId,
+        strategy: { mode: "distinct" as const }, maxIntervals: 100,
+        emptyIntervals: true, ascendingOrder: true,
+      },
+      columns: [
+        { kind: "key" as const, sourceId: "Name" as ColumnId, columnId: "Name" as ColumnId },
+        { kind: "aggregate" as const, sourceId: "Val" as ColumnId, columnId: "Val" as ColumnId, fn: { fn: "SUM" as const } },
+      ],
+    };
+
+    const root: Component = {
+      type: "page",
+      props: { name: "App", datasets: [dataset] },
+      slots: {
+        default: [{
+          type: "tabs",
+          id: "nav-tabs",
+          slots: {
+            Overview: [{ type: "title", props: { text: "Overview page" } }],
+            Filtered: [{
+              type: "page",
+              props: { name: "Filtered" },
+              slots: {
+                default: [
+                  {
+                    type: "selector", id: "filter-sel",
+                    props: {
+                      filter: { notification: true },
+                      lookup: { dataSetId: "ds" as DataSetId, operations: [groupByCat] },
+                    },
+                  },
+                  {
+                    type: "metric", id: "filter-tbl",
+                    props: {
+                      filter: { listening: true },
+                      lookup: { dataSetId: "ds" as DataSetId, operations: [groupByName] },
+                    },
+                  },
+                ],
+              },
+            }],
+          },
+        }],
+      },
+    };
+
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, root);
+
+    // Initially, only Overview tab is rendered (lazy)
+    expect(target.querySelector("[data-component-id='filter-sel']")).toBeNull();
+    expect(target.querySelector("[data-component-id='filter-tbl']")).toBeNull();
+
+    // Navigate to "Filtered" tab
+    site.navigate("Filtered");
+
+    // Wait for data to load on the newly-rendered tab
+    const selContainer = await waitForData(target, "[data-component-id='filter-sel']");
+    await waitForData(target, "[data-component-id='filter-tbl']");
+
+    // Metric should have 3 rows (X, Y, Z) before filtering
+    const tblViz = target.querySelector<PagesElement<any>>(
+      "[data-component-id='filter-tbl'] pages-metric",
+    )!;
+    expect(tblViz.dataSet!.rows.length).toBe(3);
+
+    // Select "A" in the selector dropdown
+    const selViz = selContainer.querySelector("pages-selector")!;
+    const select = selViz.shadowRoot!.querySelector("select")!;
+    select.value = "0";
+    select.dispatchEvent(new Event("change"));
+    await new Promise((r) => setTimeout(r, 50));
+
+    // Table should now show only 2 rows (X, Y — filtered to Cat "A")
+    expect(tblViz.dataSet!.rows.length).toBe(2);
+
+    // Navigate away — tab content destroyed
+    site.navigate("Overview");
+    expect(target.querySelector("[data-component-id='filter-tbl']")).toBeNull();
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+describe("loadSite — navigation type rendering", () => {
+  it("SIDEBAR type parses and renders sidebar nav", async () => {
+    const yaml = `
+pages:
+  - name: App
+    components:
+      - type: SIDEBAR
+        properties:
+          navGroupId: main
+  - name: Overview
+    components:
+      - html: "Overview"
+  - name: Detail
+    components:
+      - html: "Detail"
+navTree:
+  root_items:
+    - type: GROUP
+      id: main
+      children:
+        - page: Overview
+        - page: Detail
+`;
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, yaml);
+
+    const sidebar = target.querySelector(".pages-sidebar");
+    expect(sidebar).not.toBeNull();
+    const buttons = sidebar!.querySelectorAll("button[data-slot]");
+    expect(buttons).toHaveLength(2);
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("TREE type with nested groups renders hierarchical tree", async () => {
+    const yaml = `
+pages:
+  - name: App
+    components:
+      - type: TREE
+        properties:
+          navGroupId: nav
+  - name: Dashboard
+    components:
+      - html: "Dashboard"
+  - name: Profile
+    components:
+      - html: "Profile"
+  - name: Security
+    components:
+      - html: "Security"
+navTree:
+  root_items:
+    - type: GROUP
+      id: nav
+      children:
+        - page: Dashboard
+        - type: GROUP
+          id: Settings
+          children:
+            - page: Profile
+            - page: Security
+`;
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const site = await loadSite(target, yaml);
+
+    const treeNav = target.querySelector(".pages-tree-nav");
+    expect(treeNav).not.toBeNull();
+
+    const groupLabels = treeNav!.querySelectorAll(".tree-group-label");
+    expect(groupLabels).toHaveLength(1);
+    expect(groupLabels[0]!.textContent).toContain("Settings");
+
+    const leaves = treeNav!.querySelectorAll(".tree-leaf");
+    expect(leaves).toHaveLength(3); // Dashboard, Profile, Security
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+// ── Dock Toggle Integration ────────────────────────────────────────
+
+describe("dock toggle integration", () => {
+  it("pages-dock-toggle hides targeted panel", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const tree: Component = {
+      type: "rows",
+      slots: {
+        default: [
+          {
+            type: "split",
+            props: { direction: "horizontal", ratio: [50, 50] },
+            slots: {
+              "0": [{ type: "html", props: { content: "Center" } }],
+              "1": [{ type: "html", id: "side", props: { content: "Side" } }],
+            },
+          },
+        ],
+      },
+    };
+
+    const site = await loadSite(target, tree);
+
+    const sideEl = target.querySelector('[data-component-id="side"]')!;
+    expect(sideEl).toBeTruthy();
+    const slotContainer = sideEl.closest("[data-slot]") as HTMLElement;
+    expect(slotContainer.style.display).not.toBe("none");
+
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true,
+      composed: true,
+      detail: { panelId: "side", visible: false },
+    }));
+
+    expect(slotContainer.style.display).toBe("none");
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("pages-dock-toggle restore preserves parent split display:flex", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const tree: Component = {
+      type: "split",
+      props: { direction: "horizontal", ratio: [50, 50] },
+      slots: {
+        "0": [{ type: "html", id: "left", props: { content: "Left" } }],
+        "1": [{ type: "html", id: "right", props: { content: "Right" } }],
+      },
+    };
+
+    const site = await loadSite(target, tree);
+
+    const splitEl = target.querySelector('[data-component-type="split"]') as HTMLElement;
+    expect(splitEl.style.display).toBe("flex");
+
+    // Hide both panels — split should collapse
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true, composed: true,
+      detail: { panelId: "left", visible: false },
+    }));
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true, composed: true,
+      detail: { panelId: "right", visible: false },
+    }));
+    expect(splitEl.style.display).toBe("none");
+
+    // Show one panel — split should restore to flex, not block
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true, composed: true,
+      detail: { panelId: "left", visible: true },
+    }));
+    expect(splitEl.style.display).toBe("flex");
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("pages-dock-toggle restore preserves slot container display", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const tree: Component = {
+      type: "split",
+      props: { direction: "horizontal", ratio: [50, 50] },
+      slots: {
+        "0": [{ type: "html", id: "left", props: { content: "Left" } }],
+        "1": [{ type: "html", id: "right", props: { content: "Right" } }],
+      },
+    };
+
+    const site = await loadSite(target, tree);
+
+    const leftEl = target.querySelector('[data-component-id="left"]')!;
+    const slotContainer = leftEl.closest("[data-slot]") as HTMLElement;
+    const originalDisplay = slotContainer.style.display;
+
+    // Hide then restore
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true, composed: true,
+      detail: { panelId: "left", visible: false },
+    }));
+    expect(slotContainer.style.display).toBe("none");
+
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true, composed: true,
+      detail: { panelId: "left", visible: true },
+    }));
+    expect(slotContainer.style.display).toBe(originalDisplay);
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+// ── pages-event inter-panel communication ───────────────────────────
+
+describe("pages-event inter-panel communication", () => {
+  it("pages-event bubbles to document from within loadSite target", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const tree: Component = {
+      type: "rows",
+      slots: { default: [{ type: "html", props: { content: "Panel" } }] },
+    };
+    const site = await loadSite(target, tree);
+
+    const received: Array<{ topic: string; payload: unknown }> = [];
+    document.addEventListener("pages-event", ((e: Event) => {
+      received.push((e as CustomEvent).detail);
+    }));
+
+    const inner = target.querySelector("[data-component-type='html']")!;
+    inner.dispatchEvent(new CustomEvent("pages-event", {
+      bubbles: true,
+      composed: true,
+      detail: { topic: "test-topic", payload: { value: 42 } },
+    }));
+
+    expect(received).toHaveLength(1);
+    expect(received[0]!.topic).toBe("test-topic");
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+// ── Floating Workspace Integration ─────────────────────────────────
+
+describe("floating-workspace integration", () => {
+  it("renders centre content synchronously", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const tree: Component = {
+      type: "page",
+      props: { name: "App" },
+      slots: {
+        default: [{
+          type: "floating-workspace",
+          props: {
+            centre: { type: "html", props: { content: "<p>Centre</p>" } },
+            organisers: true,
+          },
+        }],
+      },
+    };
+    const site = await loadSite(target, tree);
+    const centreEl = target.querySelector("[data-floating-workspace-centre]");
+    expect(centreEl).toBeTruthy();
+    expect(centreEl!.innerHTML).toContain("Centre");
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("renders multiple centre components", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const tree: Component = {
+      type: "page",
+      props: { name: "App" },
+      slots: {
+        default: [{
+          type: "floating-workspace",
+          props: {
+            centre: [
+              { type: "html", props: { content: "<p>First</p>" } },
+              { type: "html", props: { content: "<p>Second</p>" } },
+            ],
+            organisers: true,
+          },
+        }],
+      },
+    };
+    const site = await loadSite(target, tree);
+    const centreEl = target.querySelector("[data-floating-workspace-centre]");
+    expect(centreEl).toBeTruthy();
+    expect(centreEl!.innerHTML).toContain("First");
+    expect(centreEl!.innerHTML).toContain("Second");
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("captureLayout includes frames from seed layout", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const tree: Component = {
+      type: "page",
+      props: { name: "App" },
+      slots: {
+        default: [{
+          type: "floating-workspace",
+          props: {
+            centre: { type: "html", props: { content: "main" } },
+          },
+        }],
+      },
+    };
+    const seedFrames = [{
+      key: "f1", order: 0,
+      position: { x: 50, y: 50 }, size: { width: 400, height: 300 },
+      zIndex: 1, pinned: false, hidden: false,
+      tabs: [{ key: "t1", label: "Tab 1", content: { type: "html" as const, props: { content: "x" } } }],
+      activeTabKey: "t1",
+    }];
+    const site = await loadSite(target, tree, {
+      layout: {
+        splits: {}, docks: {}, panels: {},
+        frames: seedFrames,
+      },
+    });
+    const layout = site.layout;
+    expect(layout.containerState).toBeTruthy();
+    expect(layout.containerState!.layout).toBe("free");
+    expect(layout.containerState!.tabs).toHaveLength(1);
+    expect(layout.containerState!.tabs[0]!.key).toBe("f1");
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("frame event handlers do not crash", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const tree: Component = {
+      type: "page",
+      props: { name: "App" },
+      slots: {
+        default: [{
+          type: "floating-workspace",
+          props: {
+            centre: { type: "html", props: { content: "main" } },
+          },
+        }],
+      },
+    };
+    const site = await loadSite(target, tree);
+
+    target.dispatchEvent(new CustomEvent("pages-frame-close", {
+      bubbles: true, composed: true,
+      detail: { frameKey: "nonexistent" },
+    }));
+    target.dispatchEvent(new CustomEvent("pages-frame-pin", {
+      bubbles: true, composed: true,
+      detail: { frameKey: "nonexistent" },
+    }));
+    target.dispatchEvent(new CustomEvent("pages-frame-move", {
+      bubbles: true, composed: true,
+      detail: { frameKey: "nonexistent", position: { x: 100, y: 100 } },
+    }));
+    target.dispatchEvent(new CustomEvent("pages-frame-resize", {
+      bubbles: true, composed: true,
+      detail: { frameKey: "nonexistent", size: { width: 500, height: 400 } },
+    }));
+
+    expect(site.root).toBeTruthy();
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+describe("nested floating-workspace isolation", () => {
+  // happy-dom ≤20.11.x: CSSStyleDeclarationPropertyManager.clone stack overflow on var()
+  it.skip("adding a frame in one nested workspace does not affect sibling workspaces", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+    const tree: Component = {
+      type: "page",
+      props: { name: "App" },
+      slots: {
+        default: [{
+          type: "floating-workspace",
+          props: {
+            centre: { type: "html", props: { content: "main" } },
+            organisers: true,
+          },
+        }],
+      },
+    };
+    const seedFrames = [{
+      key: "workbench", order: 0,
+      position: { x: 40, y: 30 }, size: { width: 600, height: 400 },
+      zIndex: 1, pinned: false, hidden: false,
+      tabs: [
+        {
+          key: "editor", label: "Editor",
+          content: {
+            type: "floating-workspace" as const,
+            props: {
+              centre: { type: "html", props: { content: "editor" } },
+              organisers: true,
+            },
+          },
+        },
+        {
+          key: "debug", label: "Debug",
+          content: {
+            type: "floating-workspace" as const,
+            props: {
+              centre: { type: "html", props: { content: "debug" } },
+              organisers: true,
+            },
+          },
+        },
+      ],
+      activeTabKey: "editor",
+    }];
+    const site = await loadSite(target, tree, {
+      layout: { splits: {}, docks: {}, panels: {}, frames: seedFrames },
+    });
+
+    const overlays = target.querySelectorAll("[data-floating-workspace-overlay]");
+    expect(overlays.length).toBeGreaterThanOrEqual(2);
+
+    const countFramesIn = (overlay: Element) =>
+      overlay.querySelectorAll("[data-frame-key]").length;
+
+    const editorOverlay = overlays[1]!;
+    const debugOverlay = overlays[2];
+
+    const editorFramesBefore = countFramesIn(editorOverlay);
+    const debugFramesBefore = debugOverlay ? countFramesIn(debugOverlay) : 0;
+
+    const editorToolbar = editorOverlay.closest("[data-component-type='floating-workspace']")
+      ?.querySelector("[data-container-toolbar]");
+    const addBtn = editorToolbar?.querySelector("[data-toolbar-add]");
+    expect(addBtn).toBeTruthy();
+    (addBtn as HTMLElement).click();
+
+    const editorFramesAfter = countFramesIn(editorOverlay);
+    const debugFramesAfter = debugOverlay ? countFramesIn(debugOverlay) : 0;
+
+    expect(editorFramesAfter).toBe(editorFramesBefore + 1);
+    expect(debugFramesAfter).toBe(debugFramesBefore);
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+describe("component-level dock-toggle", () => {
+  it("hides individual component in shared slot without hiding siblings", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const tree: Component = {
+      type: "rows",
+      slots: {
+        default: [
+          { type: "html", id: "panel-a", props: { content: "A" } },
+          { type: "html", id: "panel-b", props: { content: "B" } },
+        ],
+      },
+    };
+
+    const site = await loadSite(target, tree);
+
+    const panelA = target.querySelector('[data-component-id="panel-a"]') as HTMLElement;
+    const panelB = target.querySelector('[data-component-id="panel-b"]') as HTMLElement;
+    expect(panelA).toBeTruthy();
+    expect(panelB).toBeTruthy();
+
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true, composed: true,
+      detail: { panelId: "panel-a", visible: false },
+    }));
+
+    expect(panelA.style.display).toBe("none");
+    expect(panelB.style.display).not.toBe("none");
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("cascades collapse when all components in shared slot are hidden", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const tree: Component = {
+      type: "split",
+      props: { direction: "horizontal", ratio: [50, 50] },
+      slots: {
+        "0": [{
+          type: "rows",
+          slots: {
+            default: [
+              { type: "html", id: "zone-panel", props: { content: "Z" } },
+            ],
+          },
+        }],
+        "1": [{ type: "html", props: { content: "Centre" } }],
+      },
+    };
+
+    const site = await loadSite(target, tree);
+
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true, composed: true,
+      detail: { panelId: "zone-panel", visible: false },
+    }));
+
+    const splitSlot0 = target.querySelector('[data-component-type="split"] > [data-slot="0"]') as HTMLElement;
+    expect(splitSlot0.style.display).toBe("none");
+
+    target.dispatchEvent(new CustomEvent("pages-dock-toggle", {
+      bubbles: true, composed: true,
+      detail: { panelId: "zone-panel", visible: true },
+    }));
+
+    expect(splitSlot0.style.display).not.toBe("none");
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+describe("activateDockPanel", () => {
+  it("shows the panel and returns true", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const workbench: Component = {
+      type: "rows",
+      slots: {
+        default: [
+          {
+            type: "rows",
+            slots: {
+              default: [
+                { type: "deferred", id: "nav", style: { display: "none" },
+                  slots: { default: [{ type: "html", props: { content: "Nav" } }] } },
+              ],
+            },
+          },
+          {
+            type: "dock-bar",
+            props: {
+              orientation: "vertical",
+              exclusive: true,
+              side: "left",
+              items: [
+                { icon: "N", label: "Nav", panelId: "nav", zone: "top" },
+              ],
+            },
+          },
+        ],
+      },
+    };
+
+    const site = await loadSite(target, workbench);
+
+    const result = site.activateDockPanel("nav");
+    expect(result).toBe(true);
+
+    const panel = target.querySelector<HTMLElement>('[data-component-id="nav"]')!;
+    expect(panel.style.display).not.toBe("none");
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+
+  it("returns false for unknown key", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const site = await loadSite(target, { type: "html", props: { content: "<p>Hello</p>" } });
+
+    const result = site.activateDockPanel("nonexistent");
+    expect(result).toBe(false);
+
+    site.dispose();
+    document.body.removeChild(target);
+  });
+});
+
+describe("restoreFromUrl dock dispatch", () => {
+  it("popstate with dock state change dispatches pages-dock-toggle", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const workbench: Component = {
+      type: "rows",
+      slots: {
+        default: [
+          {
+            type: "rows",
+            slots: {
+              default: [
+                { type: "deferred", id: "nav", style: { display: "none" },
+                  slots: { default: [{ type: "html", props: { content: "Nav" } }] } },
+                { type: "deferred", id: "files", style: { display: "none" },
+                  slots: { default: [{ type: "html", props: { content: "Files" } }] } },
+              ],
+            },
+          },
+          {
+            type: "dock-bar",
+            props: {
+              orientation: "vertical",
+              exclusive: true,
+              side: "left",
+              items: [
+                { icon: "N", label: "Nav", panelId: "nav", defaultOpen: true, zone: "top" },
+                { icon: "F", label: "Files", panelId: "files", zone: "top" },
+              ],
+            },
+          },
+        ],
+      },
+    };
+
+    const site = await loadSite(target, workbench);
+
+    const navPanel = target.querySelector<HTMLElement>('[data-component-id="nav"]')!;
+    expect(navPanel.style.display).not.toBe("none");
+
+    history.pushState(null, "", "#/page/?dock=nav:closed,files:open");
+    history.pushState(null, "", "#/page/");
+
+    history.back();
+    await new Promise(r => setTimeout(r, 50));
+
+    const filesPanel = target.querySelector<HTMLElement>('[data-component-id="files"]')!;
+    expect(filesPanel.style.display).not.toBe("none");
+    expect(navPanel.style.display).toBe("none");
+
+    site.dispose();
+    document.body.removeChild(target);
+    history.replaceState(null, "", location.pathname);
+  });
+});
+
+describe("panel merge in restoreFromUrl", () => {
+  it("panel=nav activates nav panel even when dock=nav:closed", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const workbench: Component = {
+      type: "rows",
+      slots: {
+        default: [
+          {
+            type: "rows",
+            slots: {
+              default: [
+                { type: "deferred", id: "nav", style: { display: "none" },
+                  slots: { default: [{ type: "html", props: { content: "Nav" } }] } },
+              ],
+            },
+          },
+          {
+            type: "dock-bar",
+            props: {
+              orientation: "vertical",
+              exclusive: true,
+              side: "left",
+              items: [
+                { icon: "N", label: "Nav", panelId: "nav", defaultOpen: true, zone: "top" },
+              ],
+            },
+          },
+        ],
+      },
+    };
+
+    const site = await loadSite(target, workbench);
+
+    history.pushState(null, "", "#/page/?dock=nav:closed&panel=nav");
+    history.pushState(null, "", "#/page/");
+
+    history.back();
+    await new Promise(r => setTimeout(r, 50));
+
+    const navPanel = target.querySelector<HTMLElement>('[data-component-id="nav"]')!;
+    expect(navPanel.style.display).not.toBe("none");
+
+    site.dispose();
+    document.body.removeChild(target);
+    history.replaceState(null, "", location.pathname);
+  });
+
+  it("panel activates panels not mentioned in dock param", async () => {
+    const target = document.createElement("div");
+    document.body.appendChild(target);
+
+    const workbench: Component = {
+      type: "rows",
+      slots: {
+        default: [
+          {
+            type: "rows",
+            slots: {
+              default: [
+                { type: "deferred", id: "nav", style: { display: "none" },
+                  slots: { default: [{ type: "html", props: { content: "Nav" } }] } },
+              ],
+            },
+          },
+          {
+            type: "dock-bar",
+            props: {
+              orientation: "vertical",
+              exclusive: true,
+              side: "left",
+              items: [
+                { icon: "N", label: "Nav", panelId: "nav", zone: "top" },
+              ],
+            },
+          },
+        ],
+      },
+    };
+
+    const site = await loadSite(target, workbench);
+
+    history.pushState(null, "", "#/page/?panel=nav");
+    history.pushState(null, "", "#/page/");
+
+    history.back();
+    await new Promise(r => setTimeout(r, 50));
+
+    const navPanel = target.querySelector<HTMLElement>('[data-component-id="nav"]')!;
+    expect(navPanel.style.display).not.toBe("none");
+
+    site.dispose();
+    document.body.removeChild(target);
+    history.replaceState(null, "", location.pathname);
+  });
+});
+

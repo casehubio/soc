@@ -1,0 +1,20 @@
+{
+  "name": "@casehubio/mosaic-event-trail",
+  "version": "0.1.0",
+  "description": "DEPRECATED — migrated to @casehubio/pages-ui-components/event-trail",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "deprecated": "Use @casehubio/pages-ui-components/event-trail instead",
+  "type": "module",
+  "license": "Apache-2.0",
+  "main": "src/index.ts",
+  "files": [
+    "src",
+    "package.json"
+  ]
+}

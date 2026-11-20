@@ -1,0 +1,59 @@
+export const WorkItemStatus = {
+    PENDING: 'PENDING',
+    ASSIGNED: 'ASSIGNED',
+    IN_PROGRESS: 'IN_PROGRESS',
+    COMPLETED: 'COMPLETED',
+    REJECTED: 'REJECTED',
+    FAULTED: 'FAULTED',
+    DELEGATED: 'DELEGATED',
+    SUSPENDED: 'SUSPENDED',
+    CANCELLED: 'CANCELLED',
+    EXPIRED: 'EXPIRED',
+    ESCALATED: 'ESCALATED',
+    OBSOLETE: 'OBSOLETE',
+};
+export function isActiveStatus(status) {
+    return (status === 'PENDING'
+        || status === 'ASSIGNED'
+        || status === 'IN_PROGRESS'
+        || status === 'SUSPENDED'
+        || status === 'DELEGATED');
+}
+export function isTerminalStatus(status) {
+    return !isActiveStatus(status);
+}
+export const WorkItemPriority = {
+    LOW: 'LOW',
+    MEDIUM: 'MEDIUM',
+    HIGH: 'HIGH',
+    URGENT: 'URGENT',
+};
+export const WorkEventType = {
+    CREATED: 'CREATED',
+    ASSIGNED: 'ASSIGNED',
+    STARTED: 'STARTED',
+    COMPLETED: 'COMPLETED',
+    REJECTED: 'REJECTED',
+    FAULTED: 'FAULTED',
+    DELEGATED: 'DELEGATED',
+    DELEGATION_ACCEPTED: 'DELEGATION_ACCEPTED',
+    DELEGATION_DECLINED: 'DELEGATION_DECLINED',
+    RELEASED: 'RELEASED',
+    SUSPENDED: 'SUSPENDED',
+    RESUMED: 'RESUMED',
+    CANCELLED: 'CANCELLED',
+    OBSOLETE: 'OBSOLETE',
+    EXPIRED: 'EXPIRED',
+    CLAIM_EXPIRED: 'CLAIM_EXPIRED',
+    SPAWNED: 'SPAWNED',
+    ESCALATED: 'ESCALATED',
+    DEADLINE_EXTENDED: 'DEADLINE_EXTENDED',
+    SLA_REASSIGNED: 'SLA_REASSIGNED',
+    SLA_EXTENDED: 'SLA_EXTENDED',
+    SIGNAL_RECEIVED: 'SIGNAL_RECEIVED',
+    MANUALLY_ESCALATED: 'MANUALLY_ESCALATED',
+    PROGRESS_UPDATE: 'PROGRESS_UPDATE',
+    LABEL_ADDED: 'LABEL_ADDED',
+    LABEL_REMOVED: 'LABEL_REMOVED',
+};
+//# sourceMappingURL=work-item.js.map

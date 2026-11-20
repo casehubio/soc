@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Donut Creek — Character Trials</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, sans-serif; background: #2a2a3e; color: #e0e0e0; padding: 32px; }
+  h1 { text-align: center; color: #fff; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 32px; font-size: 14px; }
+  .row { display: flex; gap: 32px; justify-content: center; margin-bottom: 32px; }
+  .card { background: #1a1a2e; border-radius: 10px; padding: 16px; text-align: center; }
+  .card h3 { margin-top: 8px; font-size: 14px; }
+  .card .sub { font-size: 11px; color: #888; margin-top: 2px; }
+  svg { display: block; margin: 0 auto; width: 200px; height: 240px; }
+</style>
+</head>
+<body>
+<h1>Barney vs Homer — Can You Tell Them Apart?</h1>
+<p class="subtitle">Same body type, same yellow skin — only character-specific details differentiate</p>
+
+<div class="row" style="margin-bottom:16px">
+<!-- REFERENCE Barney from icons8 -->
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="200" height="200"><path fill="#febf10" d="M7.41,18.984c0,0-3.638,6.75,2.202,14.218c0,0,4.883,6.367,9.91,7.42l4.739,3.543 c0,0,5.045-3.961,3.552-8.396l1.469-3.411c0,0,3.876,0.028,3.784-3.011c0,0,10.823,4.812,12.116-0.55c0,0-0.622-3.447-4.548-5.17 c0,0,2.059-2.585-0.862-4.069l1.34-3.303c0,0,4.5-2.25-3.447-4.691l-9.239-3.543L12.771,9.745L7.41,18.984z"/><path fill="#c56528" d="M5.894,19.606l2.342-0.839l0.499,1.605l1.404-0.766c0,0-0.383-4.787,5.043-3.223l2.872-2.106 l0.255,2.043c0,0,3.096-5.234,5.17-6.351v2.904l4.628-3.83c0,0,6.543,3.543,8.968,2.457c0,0,0.16-1.66-3.83-3.926l3.128-1.755 c0,0-2.322-1.436-5.553,0.479c0,0,6.032-6.104-1.125-2.202l-1.03-0.216L26.63,3.306l1.149,2.418c0,0-4.38-1.939-8.33-1.819 l2.346,1.723l-4.093,0.455c0,0-3.902-3.016-5.577-1.699l1.771,1.915L10.162,6.92l3.83,1.819c0,0-5.84,3.662-5.816,4.404h3.543 C11.718,13.144,5.67,18.122,5.894,19.606z"/><path fill="#d6e5e5" d="M20.574,25.782c0,0-0.479,3.902,2.681,1.819c0,0,1.747,2.537,3.471,0.886 c0,0,2.011,1.723,2.753-0.407C29.479,28.08,23.973,24.777,20.574,25.782z"/><path fill="#d6e5e5" d="M21.652,15.992c0,0-0.527,6.391,7.229,3.59c0,0,3.351-1.652,3.04-3.997L21.652,15.992z"/><path fill="#d6e5e5" d="M35.487,15.729c0,0-2.106,1.987,1.532,3.064l3.423,0.742c0,0,1.604-2.322,0.479-3.112L35.487,15.729 z"/><path d="M12.188,18.902c0.176-0.044,0.351-0.091,0.529-0.125c0.033-0.006,0.069-0.01,0.102-0.017 c-0.136,0.031-0.039,0.006-0.001,0.003c0.072-0.005,0.144-0.005,0.215,0c0.017,0.001,0.035,0.002,0.052,0.004 c0.055,0.006,0.047,0.005-0.025-0.004c0.033-0.005,0.084,0.015,0.116,0.022c0.085,0.018,0.168,0.04,0.252,0.064 c0.088,0.025,0.174,0.054,0.26,0.084c0.034,0.013,0.026,0.01-0.024-0.01c0.025,0.012,0.05,0.024,0.074,0.038 c0.022,0.013,0.12,0.084,0.036,0.014c0.018,0.015,0.034,0.033,0.053,0.048c0.06,0.05-0.019-0.02-0.032-0.045 c0.023,0.043,0.058,0.084,0.083,0.126c0.059,0.099,0.095,0.228,0.162,0.319c-0.072-0.098-0.022-0.052-0.004-0.008 c0.013,0.032,0.024,0.065,0.036,0.098c0.019,0.057,0.037,0.115,0.051,0.173c0.002,0.01,0.008,0.067,0.015,0.074 c-0.042-0.043-0.007-0.128-0.008-0.044c0,0.017-0.004,0.042-0.001,0.058c0.017-0.103,0.02-0.131,0.009-0.083 c0.045-0.094,0.056-0.121,0.033-0.08c-0.13,0.227-0.061,0.557,0.179,0.684c0.238,0.126,0.545,0.063,0.684-0.179 c0.176-0.307,0.079-0.687-0.044-0.995c-0.114-0.285-0.249-0.61-0.476-0.827c-0.356-0.339-0.918-0.471-1.393-0.524 c-0.406-0.045-0.808,0.069-1.198,0.166c-0.254,0.063-0.431,0.363-0.349,0.615C11.658,18.816,11.916,18.97,12.188,18.902 L12.188,18.902z"/><path d="M25.077,15.833c-0.04,0.103-0.076,0.208-0.1,0.316c-0.031,0.14-0.056,0.291-0.042,0.435 c0.018,0.178,0.056,0.356,0.165,0.503c0.049,0.067,0.094,0.129,0.158,0.181c0.11,0.09,0.185,0.133,0.319,0.184 c0.058,0.022,0.115,0.029,0.176,0.038c0.067,0.009,0.13,0.018,0.197,0.012c0.182-0.016,0.327-0.056,0.491-0.134 c0.247-0.117,0.445-0.346,0.555-0.593c0.07-0.157,0.123-0.312,0.151-0.481c0.029-0.169,0.047-0.341,0.061-0.512 c-0.006-0.044-0.012-0.089-0.018-0.133c-0.015-0.065-0.045-0.122-0.089-0.17c-0.065-0.084-0.154-0.153-0.26-0.179 c-0.363-0.089-0.765-0.015-1.065,0.21c-0.165,0.123-0.309,0.263-0.41,0.446s-0.155,0.38-0.162,0.589 c-0.008,0.262,0.236,0.512,0.5,0.5c0.278-0.012,0.491-0.22,0.5-0.5c0.001-0.026,0.003-0.051,0.006-0.077"/></svg>
+  <h3>Reference (icons8)</h3>
+  <div class="sub">Study this face shape, mouth, proportions</div>
+</div>
+</div>
+
+<div class="row">
+
+<!-- HOMER (reference) -->
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+    <!-- Body — white shirt, blue pants -->
+    <path d="M 48,168 L 152,168 L 158,220 L 42,220 Z" fill="#FFF" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Collar -->
+    <path d="M 76,168 L 100,182 L 124,168" fill="#FFF" stroke="#111" stroke-width="2"/>
+    <!-- Blue pants hint -->
+    <path d="M 44,210 L 156,210 L 158,220 L 42,220 Z" fill="#4299E1" stroke="#111" stroke-width="2"/>
+
+    <!-- Arms -->
+    <path d="M 48,172 Q 30,176 20,188 Q 14,200 18,212" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <path d="M 16,210 Q 10,206 12,200 Q 16,198 18,202 L 18,212 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <path d="M 152,172 Q 170,176 180,188 Q 186,200 182,212" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <path d="M 180,210 Q 186,206 188,200 Q 184,198 182,202 L 182,212 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HEAD — Homer's classic oval -->
+    <path d="M 68,148 Q 68,168 100,174 Q 132,168 132,148 C 142,132 144,100 138,72 C 132,42 118,32 100,32 C 82,32 68,42 62,72 C 56,100 58,132 68,148 Z" fill="#FCD34D" stroke="#111" stroke-width="3"/>
+    <!-- Ears -->
+    <ellipse cx="56" cy="108" rx="8" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="144" cy="108" rx="8" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- BALD HEAD — Homer's signature: just 2 hairs + side M fringe -->
+    <!-- M-shaped fringe at sides -->
+    <path d="M 56,96 C 52,86 54,78 62,76" fill="none" stroke="#111" stroke-width="2.5"/>
+    <path d="M 144,96 C 148,86 146,78 138,76" fill="none" stroke="#111" stroke-width="2.5"/>
+    <!-- The famous 2 hairs on top -->
+    <path d="M 86,36 Q 84,26 88,22" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <path d="M 94,34 Q 92,24 96,20" stroke="#111" stroke-width="2.5" fill="none" stroke-linecap="round"/>
+    <!-- Zigzag back of head -->
+    <path d="M 56,90 L 48,92 L 54,96 L 48,100" fill="none" stroke="#111" stroke-width="2"/>
+
+    <!-- Eyes — standard Springfield -->
+    <circle cx="84" cy="92" r="16" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <circle cx="86" cy="94" r="3" fill="#111"/>
+    <circle cx="116" cy="92" r="16" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <circle cx="114" cy="94" r="3" fill="#111"/>
+    <!-- Simple brows -->
+    <path d="M 70,76 Q 84,70 98,76" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 102,76 Q 116,70 130,76" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Nose — Springfield overbite muzzle -->
+    <path d="M 96,92 C 92,102 92,108 102,108 C 108,108 108,102 102,100" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- Overbite/muzzle — Homer's big mouth area -->
+    <path d="M 76,118 C 76,110 88,108 100,108 C 112,108 124,110 124,118 C 124,136 112,142 100,142 C 88,142 76,136 76,118 Z" fill="#D2B48C" stroke="#111" stroke-width="3"/>
+    <!-- Mouth line -->
+    <path d="M 80,124 Q 100,134 120,124" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- Neck -->
+    <rect x="86" y="156" width="28" height="14" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+
+    <!-- Feet -->
+    <path d="M 54,220 Q 52,228 58,230 L 82,230 Q 86,228 84,220" fill="#718096" stroke="#111" stroke-width="2"/>
+    <path d="M 116,220 Q 114,228 120,230 L 144,230 Q 148,228 146,220" fill="#718096" stroke="#111" stroke-width="2"/>
+  </svg>
+  <h3>Homer (Everyman)</h3>
+  <div class="sub">Bald · 2 hairs · white shirt · overbite</div>
+</div>
+
+<!-- BARNEY GUMBLE -->
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240">
+    <!-- Body — SALMON t-shirt, NO NECK — shirt meets jaw directly -->
+    <!-- Wide barrel shape matching the head width -->
+    <path d="M 36,160 L 164,160 L 168,220 L 32,220 Z" fill="#D4956E" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Stain marks -->
+    <circle cx="82" cy="190" r="4" fill="#A07050" opacity="0.15"/>
+    <circle cx="120" cy="184" r="3" fill="#A07050" opacity="0.12"/>
+    <!-- Collar sits right at chin level — no neck showing -->
+    <path d="M 72,160 Q 100,170 128,160" fill="#D4956E" stroke="#111" stroke-width="2"/>
+    <!-- Visible gut — shirt rides up -->
+    <path d="M 76,210 Q 100,218 124,210" fill="#FCD34D" stroke="none"/>
+    <path d="M 76,210 Q 100,218 124,210" fill="none" stroke="#111" stroke-width="1.5" opacity="0.4"/>
+
+    <!-- Arms — chubby, holding beer -->
+    <!-- Left arm — hanging loose (drunk slouch) -->
+    <path d="M 36,166 Q 20,174 14,190 Q 8,206 14,216" fill="#D4956E" stroke="#111" stroke-width="3"/>
+    <path d="M 14,214 Q 8,210 10,204 Q 14,202 16,206 L 16,216 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- Right arm — HOLDING BEER -->
+    <path d="M 164,166 Q 178,172 186,184 Q 190,196 188,206" fill="#D4956E" stroke="#111" stroke-width="3"/>
+    <path d="M 184,200 Q 190,196 192,202 Q 194,208 188,210 L 184,208 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- BEER MUG — oversized, foamy -->
+    <rect x="180" y="172" width="16" height="24" rx="3" fill="#C9A227" stroke="#111" stroke-width="2.5"/>
+    <!-- Beer liquid -->
+    <rect x="182" y="178" width="12" height="16" rx="2" fill="#E8A020"/>
+    <!-- Foam head -->
+    <path d="M 180,176 Q 184,170 188,174 Q 192,168 196,174 L 196,178 L 180,178 Z" fill="#FFF" stroke="#111" stroke-width="2"/>
+    <!-- Mug handle -->
+    <path d="M 196,180 Q 204,182 204,190 Q 204,198 196,200" fill="none" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HEAD — DROOPY PEAR SHAPE (NOT Homer's oval!) -->
+    <!-- Barney: narrow forehead, cheeks puff outward, jowls HANG DOWN -->
+    <!-- The widest point is at the jowls, not the temples -->
+    <path d="M 74,140
+             Q 62,148 58,158 Q 56,166 64,172 Q 80,178 100,178 Q 120,178 136,172 Q 144,166 142,158 Q 138,148 126,140
+             C 142,126 148,100 144,76
+             C 140,52 126,40 100,38
+             C 74,40 60,52 56,76
+             C 52,100 58,126 74,140 Z" fill="#FCD34D" stroke="#111" stroke-width="3"/>
+    <!-- Jowl droop shadows — the weight pulling down -->
+    <path d="M 62,152 Q 58,160 64,168" fill="none" stroke="#E8B820" stroke-width="2" opacity="0.25"/>
+    <path d="M 138,152 Q 142,160 136,168" fill="none" stroke="#E8B820" stroke-width="2" opacity="0.25"/>
+    <!-- Puffy cheek bulges -->
+    <path d="M 56,120 Q 48,130 52,140" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+    <path d="M 144,120 Q 152,130 148,140" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+
+    <!-- Ears — lower on head (jowls push everything down) -->
+    <ellipse cx="48" cy="114" rx="8" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="152" cy="114" rx="8" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HAIR — leaf-shaped tufts LAID DOWN in all directions, overlapping -->
+    <!-- Each tuft is a wide flat leaf shape, draped at an angle -->
+    <!-- Think leaves scattered on a surface — not spikes standing up -->
+
+    <!-- Base layer — a few larger leaves covering the top of the head -->
+    <!-- Large leaf draping LEFT -->
+    <path d="M 100,46 Q 80,38 58,30 Q 50,28 46,34 Q 52,40 70,44 Q 84,48 100,50" fill="#c56528" stroke="#111" stroke-width="2.5"/>
+    <!-- Large leaf draping RIGHT -->
+    <path d="M 96,44 Q 116,36 140,32 Q 148,30 152,36 Q 146,42 128,46 Q 112,48 96,48" fill="#c56528" stroke="#111" stroke-width="2.5"/>
+    <!-- Leaf going BACK/UP from center -->
+    <path d="M 90,48 Q 88,34 92,18 Q 96,12 102,14 Q 106,20 108,36 Q 110,46 106,50" fill="#c56528" stroke="#111" stroke-width="2.5"/>
+
+    <!-- Second layer — smaller leaves at different angles -->
+    <!-- Leaf flopping forward-left -->
+    <path d="M 82,50 Q 68,42 54,40 Q 48,42 52,48 Q 62,50 78,52" fill="#c56528" stroke="#111" stroke-width="2"/>
+    <!-- Leaf sticking up-right -->
+    <path d="M 104,44 Q 112,28 122,20 Q 126,18 128,24 Q 122,34 112,44" fill="#c56528" stroke="#111" stroke-width="2"/>
+    <!-- Leaf drooping to the left side of head -->
+    <path d="M 72,54 Q 58,52 46,56 Q 42,60 48,62 Q 58,60 70,56" fill="#c56528" stroke="#111" stroke-width="2"/>
+    <!-- Leaf flopping right and forward -->
+    <path d="M 126,52 Q 140,48 150,52 Q 154,56 148,58 Q 138,56 128,54" fill="#c56528" stroke="#111" stroke-width="2"/>
+
+    <!-- Top layer — tufts FLOPPING FORWARD over the forehead -->
+    <!-- Tuft drooping down over left forehead -->
+    <path d="M 82,46 Q 74,50 66,58 Q 62,62 66,64 Q 72,60 80,52 Q 86,48 88,46" fill="#c56528" stroke="#111" stroke-width="2"/>
+    <!-- Tuft drooping down over right forehead -->
+    <path d="M 112,46 Q 120,52 126,60 Q 130,64 126,66 Q 120,62 114,54 Q 110,48 110,46" fill="#c56528" stroke="#111" stroke-width="2"/>
+    <!-- One tuft flopping forward/down center -->
+    <path d="M 96,44 Q 94,52 90,60 Q 88,66 92,66 Q 96,60 98,52 Q 100,46 100,44" fill="#c56528" stroke="#111" stroke-width="2"/>
+    <!-- One small stray sticking up (just one, not all of them) -->
+    <path d="M 104,40 Q 108,28 112,20 Q 114,18 114,24 Q 110,32 108,40" fill="#c56528" stroke="#111" stroke-width="2"/>
+
+    <!-- 5 O'CLOCK SHADOW — on the jowl area -->
+    <circle cx="66" cy="148" r="1" fill="#888" opacity="0.2"/>
+    <circle cx="74" cy="152" r="1" fill="#888" opacity="0.15"/>
+    <circle cx="82" cy="156" r="1" fill="#888" opacity="0.2"/>
+    <circle cx="92" cy="160" r="1" fill="#888" opacity="0.15"/>
+    <circle cx="100" cy="162" r="1" fill="#888" opacity="0.2"/>
+    <circle cx="108" cy="160" r="1" fill="#888" opacity="0.15"/>
+    <circle cx="118" cy="156" r="1" fill="#888" opacity="0.2"/>
+    <circle cx="126" cy="152" r="1" fill="#888" opacity="0.15"/>
+    <circle cx="134" cy="148" r="1" fill="#888" opacity="0.2"/>
+    <circle cx="78" cy="158" r="1" fill="#888" opacity="0.12"/>
+    <circle cx="100" cy="164" r="1" fill="#888" opacity="0.12"/>
+    <circle cx="122" cy="158" r="1" fill="#888" opacity="0.12"/>
+
+    <!-- EYES — HALF-CLOSED, dazed/drunk, slightly further apart on wider face -->
+    <circle cx="80" cy="96" r="16" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <circle cx="82" cy="98" r="3" fill="#111"/>
+    <circle cx="120" cy="96" r="16" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <circle cx="118" cy="98" r="3" fill="#111"/>
+    <!-- HEAVY drooping lids — drunk/sleepy -->
+    <path d="M 64,96 C 64,84 80,74 96,86 L 64,86 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <path d="M 104,86 C 120,74 136,84 136,96 L 104,86 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- Bloodshot lines -->
+    <line x1="70" y1="94" x2="74" y2="96" stroke="#E53E3E" stroke-width="0.8" opacity="0.3"/>
+    <line x1="72" y1="100" x2="76" y2="98" stroke="#E53E3E" stroke-width="0.8" opacity="0.25"/>
+    <line x1="130" y1="94" x2="126" y2="96" stroke="#E53E3E" stroke-width="0.8" opacity="0.3"/>
+
+    <!-- Brows — droopy, not in control -->
+    <path d="M 64,76 Q 80,72 96,80" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 104,80 Q 120,72 136,76" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- NOSE — bigger, more bulbous than Homer's, extends into beak area -->
+    <path d="M 92,94 C 86,104 84,114 92,118 Q 100,122 108,118 C 116,114 114,104 108,94" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- MOUTH — small slack opening below the beak nose, just a few teeth -->
+    <path d="M 90,128 Q 100,124 110,128 Q 112,138 100,142 Q 88,138 90,128 Z" fill="#4A1010" stroke="#111" stroke-width="2.5"/>
+    <!-- Just 2 teeth poking down (small, buck) -->
+    <rect x="95" y="128" width="5" height="5" rx="1" fill="#FFF" stroke="#111" stroke-width="1.5"/>
+    <rect x="101" y="128" width="5" height="5" rx="1" fill="#FFF" stroke="#111" stroke-width="1.5"/>
+
+    <!-- BURP CLOUD -->
+    <circle cx="154" cy="50" r="6" fill="#8B8" opacity="0.15"/>
+    <circle cx="162" cy="38" r="4" fill="#8B8" opacity="0.1"/>
+    <circle cx="166" cy="28" r="3" fill="#8B8" opacity="0.08"/>
+
+    <!-- NO NECK — head sits directly on body, jowls merge into shoulders -->
+
+    <!-- Feet — scuffed shoes -->
+    <path d="M 48,220 Q 46,228 52,230 L 80,230 Q 84,228 82,220" fill="#5A3A1A" stroke="#111" stroke-width="2"/>
+    <path d="M 118,220 Q 116,228 122,230 L 150,230 Q 154,228 152,220" fill="#5A3A1A" stroke="#111" stroke-width="2"/>
+  </svg>
+  <h3>Barney Gumble</h3>
+  <div class="sub">Messy hair · ruddy nose · half-closed eyes · beer · stubble</div>
+</div>
+
+</div>
+
+<!-- PROFESSOR FRINK -->
+<h1 style="margin-top:32px">Professor Frink (Creator)</h1>
+<div class="row">
+
+<!-- Reference image -->
+<div class="card">
+  <img src="https://city-png.b-cdn.net/preview/preview_public/temp/hd-professor-john-frink-the-simpsons-scientist-png-701751719329419q5lyi2wasw.webp" width="200" height="200" style="object-fit:contain; background:#1a1a2e; border-radius:6px;"/>
+  <h3>Reference</h3>
+  <div class="sub">Source: CityPNG</div>
+</div>
+
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+    <!-- Body — white lab coat, THIN narrow shoulders (lanky) -->
+    <path d="M 66,170 L 134,170 L 138,220 L 62,220 Z" fill="#F0F0F0" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Lab coat lapels -->
+    <path d="M 82,170 L 86,192" stroke="#ddd" stroke-width="1.5"/>
+    <path d="M 118,170 L 114,192" stroke="#ddd" stroke-width="1.5"/>
+    <!-- Shirt underneath -->
+    <rect x="90" y="170" width="20" height="20" fill="#FFF" stroke="#111" stroke-width="1.5"/>
+    <!-- Blue bow tie -->
+    <path d="M 92,172 L 100,178 L 108,172 L 100,168 Z" fill="#4299E1" stroke="#111" stroke-width="2"/>
+    <circle cx="100" cy="173" r="2" fill="#2B6CB0" stroke="#111" stroke-width="1"/>
+    <!-- Lab coat pocket -->
+    <rect x="70" y="190" width="14" height="12" rx="2" fill="none" stroke="#ddd" stroke-width="1.5"/>
+    <!-- Pens in pocket -->
+    <rect x="74" y="186" width="2" height="8" fill="#E53E3E"/>
+    <rect x="78" y="188" width="2" height="6" fill="#4299E1"/>
+
+    <!-- Arms — thin, holding beaker -->
+    <path d="M 66,174 Q 50,178 42,188 Q 36,198 40,210" fill="#F0F0F0" stroke="#111" stroke-width="2.5"/>
+    <path d="M 38,208 Q 34,204 36,198 Q 40,196 42,200 L 42,210 Z" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+    <path d="M 134,174 Q 150,176 158,186 Q 164,196 162,206" fill="#F0F0F0" stroke="#111" stroke-width="2.5"/>
+    <path d="M 160,204 Q 166,200 168,206 Q 170,212 164,212 L 160,210 Z" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+    <!-- Beaker -->
+    <path d="M 164,180 L 160,198 L 172,198 L 168,180 Z" fill="#ADE8F4" fill-opacity="0.5" stroke="#111" stroke-width="2"/>
+    <circle cx="164" cy="190" r="2" fill="none" stroke="#4299E1" stroke-width="1"/>
+    <circle cx="168" cy="186" r="1.5" fill="none" stroke="#4299E1" stroke-width="1"/>
+    <circle cx="166" cy="176" r="2" fill="none" stroke="#4299E1" stroke-width="1" opacity="0.5"/>
+
+    <!-- HEAD — TALL and THIN (NOT Homer's wide oval!) -->
+    <path d="M 76,144 Q 76,164 100,170 Q 124,164 124,144 C 130,128 130,80 126,56 C 122,36 114,26 100,24 C 86,26 78,36 74,56 C 70,80 70,128 76,144 Z" fill="#FCD34D" stroke="#111" stroke-width="3"/>
+
+    <!-- Thin neck -->
+    <rect x="90" y="162" width="20" height="10" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+
+    <!-- Ears -->
+    <ellipse cx="70" cy="100" rx="6" ry="8" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="130" cy="100" rx="6" ry="8" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HAIR — center-parted brownish-green, two neat humps -->
+    <path d="M 76,54 C 72,36 82,24 98,24 L 98,34 C 86,36 78,42 76,54 Z" fill="#6B7B4A" stroke="#111" stroke-width="2.5"/>
+    <path d="M 124,54 C 128,36 118,24 102,24 L 102,34 C 114,36 122,42 124,54 Z" fill="#6B7B4A" stroke="#111" stroke-width="2.5"/>
+    <line x1="100" y1="24" x2="100" y2="38" stroke="#111" stroke-width="1.5"/>
+
+    <!-- HUGE ROUND GLASSES — dominate the face -->
+    <circle cx="86" cy="90" r="20" fill="#D4E8FF" fill-opacity="0.3" stroke="#111" stroke-width="3.5"/>
+    <circle cx="114" cy="90" r="20" fill="#D4E8FF" fill-opacity="0.3" stroke="#111" stroke-width="3.5"/>
+    <line x1="106" y1="88" x2="94" y2="88" stroke="#111" stroke-width="3"/>
+    <line x1="66" y1="88" x2="70" y2="88" stroke="#111" stroke-width="2.5"/>
+    <line x1="130" y1="88" x2="134" y2="88" stroke="#111" stroke-width="2.5"/>
+    <!-- Lens glare -->
+    <path d="M 76,80 Q 80,76 86,78" fill="none" stroke="#FFF" stroke-width="2" opacity="0.3"/>
+    <path d="M 104,80 Q 108,76 114,78" fill="none" stroke="#FFF" stroke-width="2" opacity="0.3"/>
+    <!-- Tiny pupils barely visible -->
+    <circle cx="88" cy="92" r="2" fill="#111" opacity="0.6"/>
+    <circle cx="112" cy="92" r="2" fill="#111" opacity="0.6"/>
+
+    <!-- NOSE — small, pointed -->
+    <path d="M 98,98 L 96,108 Q 100,112 104,108 L 102,98" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+
+    <!-- BUCK TEETH — protruding -->
+    <path d="M 88,118 Q 100,116 112,118" fill="none" stroke="#111" stroke-width="2"/>
+    <rect x="93" y="118" width="6" height="8" rx="1" fill="#FFF" stroke="#111" stroke-width="2"/>
+    <rect x="101" y="118" width="6" height="8" rx="1" fill="#FFF" stroke="#111" stroke-width="2"/>
+    <line x1="100" y1="118" x2="100" y2="126" stroke="#111" stroke-width="1"/>
+    <!-- Weak chin -->
+    <path d="M 90,128 Q 100,132 110,128" fill="none" stroke="#111" stroke-width="1.5"/>
+
+    <!-- Feet -->
+    <path d="M 70,220 Q 68,226 72,228 L 88,228 Q 92,226 90,220" fill="#888" stroke="#111" stroke-width="2"/>
+    <path d="M 110,220 Q 108,226 112,228 L 128,228 Q 132,226 130,220" fill="#888" stroke="#111" stroke-width="2"/>
+  </svg>
+  <h3>Professor Frink</h3>
+  <div class="sub">Tall thin head · huge glasses · buck teeth · lab coat</div>
+</div>
+
+</div>
+
+<!-- MCBAIN / RAINIER WOLFCASTLE -->
+<h1 style="margin-top:32px">McBain (Hero)</h1>
+<div class="row">
+
+<!-- Reference image -->
+<div class="card">
+  <img src="https://static.simpsonswiki.com/images/c/c5/Rainier_Wolfcastle.png" width="200" height="200" style="object-fit:contain; background:#1a1a2e; border-radius:6px;"/>
+  <h3>Reference</h3>
+  <div class="sub">Source: Wikisimpsons</div>
+</div>
+
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="200">
+    <!-- Body — MASSIVE, muscular, grey polo tight over bulk -->
+    <!-- McBain is WIDE — shoulders extend past the head -->
+    <path d="M 28,160 L 172,160 L 176,220 L 24,220 Z" fill="#A0A8B0" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Polo collar — prominent, flipped up, defining -->
+    <path d="M 74,156 L 74,166 L 100,176 L 126,166 L 126,156" fill="#A0A8B0" stroke="#111" stroke-width="2.5"/>
+    <!-- Collar flaps -->
+    <path d="M 74,156 Q 86,160 100,158 Q 114,160 126,156" fill="#B8C0C8" stroke="#111" stroke-width="2"/>
+    <!-- Chest muscle definition (tight shirt) -->
+    <path d="M 100,164 L 100,200" fill="none" stroke="#8a9098" stroke-width="1.5" opacity="0.3"/>
+    <path d="M 70,172 Q 100,180 130,172" fill="none" stroke="#8a9098" stroke-width="1.5" opacity="0.25"/>
+    <!-- Short sleeves — tight around massive biceps -->
+    <path d="M 28,160 L 28,174" stroke="#111" stroke-width="2"/>
+    <path d="M 172,160 L 172,174" stroke="#111" stroke-width="2"/>
+    <!-- Brown belt -->
+    <rect x="28" y="200" width="144" height="6" fill="#8B6914" stroke="#111" stroke-width="2"/>
+    <rect x="92" y="198" width="16" height="10" rx="2" fill="#C9A227" stroke="#111" stroke-width="1.5"/>
+    <!-- Blue pants -->
+    <path d="M 26,206 L 174,206 L 176,220 L 24,220 Z" fill="#2B6CB0" stroke="#111" stroke-width="2"/>
+
+    <!-- MASSIVE bare arms — big biceps, hands on hips -->
+    <!-- Left arm — thick, bowed out, hand resting on hip -->
+    <path d="M 28,162 Q 6,170 4,186 Q 2,200 12,206" fill="#FCD34D" stroke="#111" stroke-width="3.5"/>
+    <!-- Hand on hip (fist shape tucked against waist) -->
+    <path d="M 10,204 Q 6,200 8,194 Q 14,192 16,198 L 26,202" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- Right arm — equally massive -->
+    <path d="M 172,162 Q 194,170 196,186 Q 198,200 188,206" fill="#FCD34D" stroke="#111" stroke-width="3.5"/>
+    <!-- Hand on hip -->
+    <path d="M 190,204 Q 194,200 192,194 Q 186,192 184,198 L 174,202" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- Watch on right wrist -->
+    <rect x="186" y="196" width="6" height="8" rx="1" fill="#C9A227" stroke="#111" stroke-width="1.5"/>
+
+    <!-- HEAD — SQUARED, RECTANGULAR, angular (NOT Homer's oval!) -->
+    <!-- Flat on top, angular sides, WIDE squared jaw -->
+    <path d="M 66,132 Q 66,152 100,158 Q 134,152 134,132 L 136,60 Q 136,42 132,36 L 130,32 Q 120,26 100,24 Q 80,26 70,32 L 68,36 Q 64,42 64,60 Z" fill="#FCD34D" stroke="#111" stroke-width="3"/>
+    <!-- The jaw is ANGULAR — squared off, not rounded -->
+    <!-- Jaw definition lines -->
+    <path d="M 68,124 Q 68,140 80,148" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+    <path d="M 132,124 Q 132,140 120,148" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+
+    <!-- Thick neck — McBain has a BULL NECK -->
+    <rect x="80" y="150" width="40" height="12" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- Ears — proportional to big head -->
+    <ellipse cx="60" cy="90" rx="6" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="140" cy="90" rx="6" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- BLOND SWEPT-BACK HAIR — short, slicked, 80s action hero -->
+    <path d="M 66,56 Q 64,34 80,26 Q 100,20 120,26 Q 136,34 134,56 C 128,36 72,36 66,56 Z" fill="#D8C070" stroke="#111" stroke-width="3"/>
+    <!-- Slicked-back lines -->
+    <path d="M 78,30 Q 100,24 122,30" fill="none" stroke="#E0D088" stroke-width="1.5" opacity="0.3"/>
+    <path d="M 72,36 Q 100,28 128,36" fill="none" stroke="#E0D088" stroke-width="1.5" opacity="0.3"/>
+
+    <!-- HEAVY BROW RIDGE — overhanging, stern, action-star intensity -->
+    <!-- This is a THICK angular shelf over the eyes -->
+    <path d="M 68,74 L 98,70 L 100,72 L 102,70 L 132,74 L 132,80 Q 120,76 100,78 Q 80,76 68,80 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- EYES — NARROW, rectangular slits (NOT round!) -->
+    <!-- McBain has a stern squint, not wide Springfield circles -->
+    <!-- Left eye — horizontal narrow slit -->
+    <rect x="74" y="84" width="22" height="10" rx="2" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <circle cx="86" cy="89" r="2.5" fill="#111"/>
+    <!-- Right eye -->
+    <rect x="104" y="84" width="22" height="10" rx="2" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <circle cx="114" cy="89" r="2.5" fill="#111"/>
+
+    <!-- NOSE — large, angular, blocky (action star nose) -->
+    <path d="M 96,88 L 94,104 Q 94,110 100,112 Q 106,110 106,104 L 104,88" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- Nostrils -->
+    <circle cx="96" cy="108" r="1.5" fill="#E8B820" opacity="0.3"/>
+    <circle cx="104" cy="108" r="1.5" fill="#E8B820" opacity="0.3"/>
+
+    <!-- MOUTH — stern, tight-lipped, strong (no smile, no overbite) -->
+    <line x1="86" y1="122" x2="114" y2="122" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Slight downturn — stern -->
+    <path d="M 84" fill="none"/>
+    <!-- Strong SQUARE CHIN below -->
+    <path d="M 86,128 Q 100,136 114,128" fill="none" stroke="#111" stroke-width="2"/>
+    <!-- Chin cleft -->
+    <line x1="100" y1="130" x2="100" y2="136" stroke="#E8B820" stroke-width="1.5" opacity="0.25"/>
+
+    <!-- Feet — black shoes -->
+    <path d="M 40,220 Q 38,228 44,230 L 72,230 Q 76,228 74,220" fill="#222" stroke="#111" stroke-width="2"/>
+    <path d="M 126,220 Q 124,228 130,230 L 158,230 Q 162,228 160,220" fill="#222" stroke="#111" stroke-width="2"/>
+  </svg>
+  <h3>McBain / Wolfcastle</h3>
+  <div class="sub">Square head · heavy brow · massive body · arms akimbo</div>
+</div>
+
+</div>
+
+<!-- SNAKE JAILBIRD -->
+<h1 style="margin-top:32px">Snake Jailbird (Rebel)</h1>
+<div class="row">
+
+<!-- Reference image -->
+<div class="card">
+  <img src="https://static.simpsonswiki.com/images/thumb/b/be/Snake_Jailbird.png/200px-Snake_Jailbird.png" width="200" height="200" style="object-fit:contain; background:#1a1a2e; border-radius:6px;"/>
+  <h3>Reference</h3>
+  <div class="sub">Source: Wikisimpsons</div>
+</div>
+
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+    <!-- Body — THIN, wiry (Snake is lean, not fat) -->
+    <!-- White t-shirt -->
+    <path d="M 72,162 L 128,162 L 132,220 L 68,220 Z" fill="#E8E4DC" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Blue denim vest — Snake's SIGNATURE, covers most of torso -->
+    <!-- Full vest body (open front) -->
+    <path d="M 58,156 L 68,156 L 70,214 L 58,218 Z" fill="#4A5CA8" stroke="#111" stroke-width="2.5"/>
+    <path d="M 132,156 L 142,156 L 142,218 L 130,214 Z" fill="#4A5CA8" stroke="#111" stroke-width="2.5"/>
+    <!-- Vest front panels — wider, showing pockets -->
+    <path d="M 68,156 L 90,156 L 88,210 L 70,214 Z" fill="#4A5CA8" stroke="#111" stroke-width="2"/>
+    <path d="M 132,156 L 110,156 L 112,210 L 130,214 Z" fill="#4A5CA8" stroke="#111" stroke-width="2"/>
+    <!-- Vest collar/lapels -->
+    <path d="M 68,156 L 76,144 L 90,156" fill="#4A5CA8" stroke="#111" stroke-width="2.5"/>
+    <path d="M 132,156 L 124,144 L 110,156" fill="#4A5CA8" stroke="#111" stroke-width="2.5"/>
+    <!-- POCKETS — chest pocket left -->
+    <rect x="72" y="170" width="12" height="10" rx="1" fill="none" stroke="#3A4A8A" stroke-width="1.5"/>
+    <!-- Pocket flap -->
+    <path d="M 72,170 L 84,170" stroke="#3A4A8A" stroke-width="2"/>
+    <!-- Lower pocket right -->
+    <rect x="114" y="188" width="14" height="12" rx="1" fill="none" stroke="#3A4A8A" stroke-width="1.5"/>
+    <path d="M 114,188 L 128,188" stroke="#3A4A8A" stroke-width="2"/>
+
+    <!-- Left arm — hanging, wiry -->
+    <path d="M 62,162 Q 44,168 36,182 Q 30,196 34,208" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <path d="M 32,206 Q 28,202 30,196 Q 34,194 36,198 L 36,208 Z" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+    <!-- Right arm — POINTING (finger gun — Snake's cocky gesture) -->
+    <path d="M 138,162 Q 156,160 168,152 Q 176,146 180,138" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- Pointing hand — finger gun -->
+    <path d="M 178,136 Q 184,132 188,128" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 178,136 L 182,140 Q 180,144 176,142 L 178,136 Z" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+    <!-- Thumb up -->
+    <path d="M 176,134 Q 174,128 178,126" fill="none" stroke="#FCD34D" stroke-width="3"/>
+    <path d="M 176,134 Q 174,128 178,126" fill="none" stroke="#111" stroke-width="1.5"/>
+
+    <!-- HEAD — ANGULAR, elongated, pentagonal (NOT round!) -->
+    <!-- Snake's head is narrow at cranium, widens at cheeks, angular chin -->
+    <path d="M 82,130 Q 76,140 78,150 Q 84,160 100,164 Q 116,160 122,150 Q 124,140 118,130 C 126,114 128,86 124,64 C 120,42 112,32 100,30 C 88,32 80,42 76,64 C 72,86 74,114 82,130 Z" fill="#FCD34D" stroke="#111" stroke-width="3"/>
+    <!-- Angular jaw definition -->
+    <path d="M 78,136 Q 76,144 82,152" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+    <path d="M 122,136 Q 124,144 118,152" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+
+    <!-- Thin neck -->
+    <rect x="88" y="156" width="24" height="8" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+
+    <!-- Ears — partially hidden by mullet -->
+    <ellipse cx="68" cy="94" rx="6" ry="8" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="132" cy="94" rx="6" ry="8" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- MULLET — short on top, LONG flowing in back -->
+    <!-- HAIR + SIDEBURNS — one continuous piece -->
+    <!-- Single path: left sideburn → up over head → right sideburn → inner edge back -->
+    <path d="M 70,110 L 70,72 C 68,52 74,36 86,28 Q 100,22 114,28 C 126,36 132,52 130,72 L 130,110 L 128,108 L 124,104 L 124,72 C 120,46 80,46 76,72 L 76,104 L 74,108 Z" fill="#8B6830" stroke="#111" stroke-width="3"/>
+    <!-- Hair highlight -->
+    <path d="M 86,32 Q 100,24 114,32" fill="none" stroke="#A07838" stroke-width="2" opacity="0.3"/>
+    <!-- MULLET — barely visible, just peeks behind shoulders in front view -->
+    <path d="M 72,150 Q 66,156 64,164" fill="#8B6830" stroke="#111" stroke-width="3"/>
+    <path d="M 128,150 Q 134,156 136,164" fill="#8B6830" stroke="#111" stroke-width="3"/>
+
+    <!-- BIG POINTED NOSE — protruding, angular (Snake's beak) -->
+    <path d="M 96,88 L 92,106 Q 88,114 96,118 Q 100,120 104,118 Q 112,114 108,106 L 104,88" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- EYES — straight top, curved bottom, slanting DOWN outward (sneering) -->
+    <!-- Left eye: straight top edge, ellipse bottom, slopes down to the left -->
+    <path d="M 78,82 L 96,82 Q 96,92 87,92 Q 78,92 78,82 Z" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <circle cx="88" cy="86" r="2.5" fill="#111"/>
+    <!-- Right eye: straight top, ellipse bottom, slopes down to the right -->
+    <path d="M 104,82 L 122,82 Q 122,92 113,92 Q 104,92 104,82 Z" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <circle cx="112" cy="86" r="2.5" fill="#111"/>
+
+    <!-- Brows — slanting DOWN outward (angry/sneering) -->
+    <path d="M 78,76 L 96,80" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 104,80 L 122,76" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- MOUTH — sneering, one corner up -->
+    <path d="M 88,126 Q 100,122 114,128" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- WHISKERS — black, above AND below mouth -->
+    <!-- Above mouth (upper lip area) -->
+    <line x1="90" y1="120" x2="90" y2="124" stroke="#111" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
+    <line x1="94" y1="120" x2="94" y2="124" stroke="#111" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <line x1="106" y1="120" x2="106" y2="124" stroke="#111" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <line x1="110" y1="120" x2="110" y2="124" stroke="#111" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
+    <!-- Below mouth (chin area) -->
+    <line x1="90" y1="130" x2="90" y2="134" stroke="#111" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
+    <line x1="96" y1="132" x2="96" y2="136" stroke="#111" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <line x1="100" y1="132" x2="100" y2="136" stroke="#111" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
+    <line x1="104" y1="132" x2="104" y2="136" stroke="#111" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <line x1="110" y1="130" x2="110" y2="134" stroke="#111" stroke-width="1" opacity="0.4" stroke-linecap="round"/>
+    <!-- Sides of mouth -->
+    <line x1="84" y1="124" x2="84" y2="128" stroke="#111" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <line x1="80" y1="126" x2="80" y2="130" stroke="#111" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <line x1="116" y1="124" x2="116" y2="128" stroke="#111" stroke-width="1" opacity="0.35" stroke-linecap="round"/>
+    <line x1="120" y1="126" x2="120" y2="130" stroke="#111" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <!-- Along jaw -->
+    <line x1="82" y1="134" x2="82" y2="138" stroke="#111" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+    <line x1="118" y1="134" x2="118" y2="138" stroke="#111" stroke-width="1" opacity="0.3" stroke-linecap="round"/>
+
+    <!-- Jeans -->
+    <path d="M 70,210 L 130,210 L 132,220 L 68,220 Z" fill="#4A5CA8" stroke="#111" stroke-width="2"/>
+    <!-- Boots -->
+    <path d="M 72,220 Q 70,226 74,228 L 90,228 Q 94,226 92,220" fill="#5A3A1A" stroke="#111" stroke-width="2"/>
+    <path d="M 108,220 Q 106,226 110,228 L 126,228 Q 130,226 128,220" fill="#5A3A1A" stroke="#111" stroke-width="2"/>
+  </svg>
+  <h3>Snake Jailbird</h3>
+  <div class="sub">Angular head · mullet · sneering eyes · denim vest · finger gun</div>
+</div>
+
+</div>
+
+<!-- MAYOR QUIMBY -->
+<h1 style="margin-top:32px">Mayor Quimby (Sovereign)</h1>
+<div class="row">
+
+<!-- Reference image -->
+<div class="card">
+  <img src="https://static.simpsonswiki.com/images/b/b7/Joe_Quimby.png" width="200" height="200" style="object-fit:contain; background:#1a1a2e; border-radius:6px;"/>
+  <h3>Reference</h3>
+  <div class="sub">Source: Wikisimpsons</div>
+</div>
+
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+    <!-- Body — BLUE SUIT, starts at jaw level so collar wraps neck -->
+    <path d="M 38,156 L 66,156 Q 82,160 100,162 Q 118,160 134,156 L 162,156 L 168,220 L 32,220 Z" fill="#2B4C8C" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Collar triangles sitting ON TOP of shoulders, pointing up to neck -->
+    <!-- Left collar triangle -->
+    <path d="M 38,156 L 66,140 L 84,156" fill="#2B4C8C" stroke="#111" stroke-width="2.5"/>
+    <!-- Right collar triangle -->
+    <path d="M 162,156 L 134,140 L 116,156" fill="#2B4C8C" stroke="#111" stroke-width="2.5"/>
+    <!-- Lapels — visible fold-back shapes in lighter blue -->
+    <path d="M 66,140 L 86,160 L 82,180 L 58,156 Z" fill="#3A6CB0" stroke="#111" stroke-width="2.5"/>
+    <path d="M 134,140 L 114,160 L 118,180 L 142,156 Z" fill="#3A6CB0" stroke="#111" stroke-width="2.5"/>
+    <!-- White shirt V showing between lapels -->
+    <path d="M 86,160 L 100,190 L 114,160" fill="#FFF" stroke="#111" stroke-width="2"/>
+    <!-- Buttons -->
+    <circle cx="100" cy="196" r="2.5" fill="#888" stroke="#111" stroke-width="1.5"/>
+    <circle cx="100" cy="208" r="2.5" fill="#888" stroke="#111" stroke-width="1.5"/>
+    <!-- Pocket square (red) -->
+    <path d="M 68,170 L 72,168 L 76,172 L 72,174 Z" fill="#E53E3E" stroke="#111" stroke-width="1"/>
+    <!-- Suit buttons -->
+    <circle cx="100" cy="188" r="3" fill="#888" stroke="#111" stroke-width="1.5"/>
+    <circle cx="100" cy="202" r="3" fill="#888" stroke="#111" stroke-width="1.5"/>
+    <!-- MAYOR SASH — white, diagonal across chest -->
+    <path d="M 48,162 L 142,216" stroke="#FFF" stroke-width="14" stroke-linecap="round"/>
+    <path d="M 48,162 L 142,216" stroke="#E8E4DC" stroke-width="11" stroke-linecap="round"/>
+    <!-- MAYOR text aligned to sash angle -->
+    <text x="72" y="190" font-size="11" font-weight="bold" fill="#333" transform="rotate(26 95 187)" font-family="sans-serif" letter-spacing="1">MAYOR</text>
+
+    <!-- Arms — stocky, at sides -->
+    <path d="M 38,166 Q 20,172 14,186 Q 8,200 14,212" fill="#2B4C8C" stroke="#111" stroke-width="3"/>
+    <path d="M 12,210 Q 8,206 10,200 Q 14,198 16,202 L 16,212 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <path d="M 162,166 Q 180,172 186,186 Q 192,200 186,212" fill="#2B4C8C" stroke="#111" stroke-width="3"/>
+    <path d="M 184,210 Q 188,206 190,200 Q 186,198 184,202 L 184,212 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HEAD — WIDE JAW, Kennedy-style (jaw is widest part) -->
+    <!-- Narrow at temples, WIDE at jaw, strong chin -->
+    <path d="M 76,126 Q 68,136 66,148 Q 66,158 80,164 Q 92,168 100,168 Q 108,168 120,164 Q 134,158 134,148 Q 132,136 124,126 C 132,110 134,82 130,60 C 126,40 116,32 100,30 C 84,32 74,40 70,60 C 66,82 68,110 76,126 Z" fill="#FCD34D" stroke="#111" stroke-width="3"/>
+    <!-- Neck/collar — suit wraps up to meet the jaw, no gap -->
+    <!-- Skin fills just the center neck area -->
+    <rect x="84" y="156" width="32" height="8" fill="#FCD34D" stroke="none"/>
+
+    <!-- Ears -->
+    <ellipse cx="62" cy="96" rx="8" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="138" cy="96" rx="8" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HAIR — solid cap, shifted down 8px -->
+    <!-- BIG SIDE -->
+    <path d="M 112,36
+             Q 98,28 80,28
+             Q 64,32 60,48
+             Q 56,60 60,72
+             Q 66,60 76,52
+             Q 82,56 80,62
+             Q 88,50 98,42
+             Q 106,36 112,36
+             Z" fill="#8B5A2B" stroke="#111" stroke-width="2.5"/>
+    <!-- SMALL SIDE — flat tip at bottom, part goes low to high -->
+    <path d="M 112,36
+             Q 120,30 130,32
+             Q 136,42 134,58
+             Q 132,66 130,68
+             L 126,68
+             Q 120,56 116,46
+             Q 112,38 112,36
+             Z" fill="#8B5A2B" stroke="#111" stroke-width="2.5"/>
+    <!-- Part line -->
+    <line x1="112" y1="30" x2="112" y2="40" stroke="#111" stroke-width="1.5"/>
+
+    <!-- EYES — heavy-lidded, SMUG (not alert — sleazy politician) -->
+    <!-- Straight top, curved bottom like Snake but smugger -->
+    <path d="M 78,86 L 96,86 Q 96,96 87,96 Q 78,96 78,86 Z" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <circle cx="88" cy="90" r="2.5" fill="#111"/>
+    <path d="M 104,86 L 122,86 Q 122,96 113,96 Q 104,96 104,86 Z" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <circle cx="112" cy="90" r="2.5" fill="#111"/>
+    <!-- Heavy lids drooping (smug, half-closed) -->
+    <path d="M 78,86 Q 87,80 96,86" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+    <path d="M 104,86 Q 113,80 122,86" fill="#FCD34D" stroke="#111" stroke-width="2"/>
+
+    <!-- Brows — arched, confident/smug -->
+    <path d="M 76,78 Q 87,72 98,78" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 102,78 Q 113,72 124,78" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- NOSE — big, bulbous, prominent (politician's drinking nose) -->
+    <path d="M 94,90 C 88,102 86,110 94,116 Q 100,120 106,116 C 114,110 112,102 106,90" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- Nose highlight -->
+    <path d="M 98,96 Q 100,94 102,96" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+
+    <!-- Cheek dimple/nasolabial lines — from nose to mouth corners -->
+    <path d="M 88,112 Q 82,120 82,128" fill="none" stroke="#E8B820" stroke-width="2" opacity="0.35"/>
+    <path d="M 112,112 Q 118,120 118,128" fill="none" stroke="#E8B820" stroke-width="2" opacity="0.35"/>
+    <!-- MOUTH — smug grin, one corner slightly up -->
+    <path d="M 84,128 Q 100,136 116,126" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Slight overbite hint -->
+    <path d="M 88,128 Q 100,132 112,128" fill="#D2B48C" stroke="#111" stroke-width="2"/>
+
+    <!-- STRONG CHIN — wide, squared, Kennedy jaw -->
+    <path d="M 80,142 Q 100,152 120,142" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+
+    <!-- Jowl lines (age, weight) -->
+    <path d="M 74,108 Q 70,120 72,134" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+    <path d="M 126,108 Q 130,120 128,134" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+
+    <!-- Feet — dark shoes -->
+    <path d="M 46,220 Q 44,228 50,230 L 78,230 Q 82,228 80,220" fill="#222" stroke="#111" stroke-width="2"/>
+    <path d="M 120,220 Q 118,228 124,230 L 152,230 Q 156,228 154,220" fill="#222" stroke="#111" stroke-width="2"/>
+  </svg>
+  <h3>Mayor Quimby</h3>
+  <div class="sub">Wide Kennedy jaw · swept hair · mayor sash · smug eyes · blue suit</div>
+</div>
+
+</div>
+
+<!-- PRINCIPAL SKINNER -->
+<h1 style="margin-top:32px">Principal Skinner (Sage)</h1>
+<div class="row">
+
+<!-- Reference image -->
+<div class="card">
+  <img src="https://static.simpsonswiki.com/images/3/3a/Seymour_Skinner.png" width="200" height="200" style="object-fit:contain; background:#1a1a2e; border-radius:6px;"/>
+  <h3>Reference</h3>
+  <div class="sub">Source: Wikisimpsons</div>
+</div>
+
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+    <!-- Body — blue suit, similar build to Quimby but slightly thinner -->
+    <path d="M 42,156 L 68,156 Q 84,160 100,162 Q 116,160 132,156 L 158,156 L 164,220 L 36,220 Z" fill="#2B4C8C" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Collar triangles ON TOP of shoulders -->
+    <path d="M 42,156 L 68,140 L 86,156" fill="#2B4C8C" stroke="#111" stroke-width="2.5"/>
+    <path d="M 158,156 L 132,140 L 114,156" fill="#2B4C8C" stroke="#111" stroke-width="2.5"/>
+    <!-- Lapels — lighter blue fold-back -->
+    <path d="M 68,140 L 86,156 L 84,178 L 46,156 Z" fill="#3A6CB0" stroke="#111" stroke-width="2.5"/>
+    <path d="M 132,140 L 114,156 L 116,178 L 154,156 Z" fill="#3A6CB0" stroke="#111" stroke-width="2.5"/>
+    <!-- White shirt V -->
+    <path d="M 86,156 L 100,188 L 114,156" fill="#FFF" stroke="#111" stroke-width="2"/>
+    <!-- Tie — burgundy, straight, conservative -->
+    <path d="M 97,156 L 95,192 L 100,196 L 105,192 L 103,156" fill="#8B2252" stroke="#111" stroke-width="1.5"/>
+    <!-- Tie knot -->
+    <path d="M 97,156 L 100,152 L 103,156" fill="#8B2252" stroke="#111" stroke-width="1.5"/>
+    <!-- Suit buttons -->
+    <circle cx="100" cy="196" r="2.5" fill="#888" stroke="#111" stroke-width="1.5"/>
+    <circle cx="100" cy="208" r="2.5" fill="#888" stroke="#111" stroke-width="1.5"/>
+
+    <!-- Arms — at sides, stiff posture -->
+    <path d="M 42,166 Q 24,172 18,186 Q 12,200 18,212" fill="#2B4C8C" stroke="#111" stroke-width="3"/>
+    <path d="M 16,210 Q 12,206 14,200 Q 18,198 20,202 L 20,212 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <path d="M 158,166 Q 176,172 182,186 Q 188,200 182,212" fill="#2B4C8C" stroke="#111" stroke-width="3"/>
+    <path d="M 180,210 Q 184,206 186,200 Q 182,198 180,202 L 180,212 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HEAD — similar shape to Quimby, slightly narrower -->
+    <!-- Normal Simpsons oval, not a pencil -->
+    <path d="M 78,128 Q 72,138 70,148 Q 70,158 82,164 Q 92,168 100,168 Q 108,168 118,164 Q 130,158 130,148 Q 128,138 122,128 C 130,112 132,84 128,62 C 124,42 116,32 100,30 C 84,32 76,42 72,62 C 68,84 70,112 78,128 Z" fill="#FCD34D" stroke="#111" stroke-width="3"/>
+
+    <!-- Neck — no outline, hidden behind collar -->
+    <rect x="88" y="156" width="24" height="8" fill="#FCD34D" stroke="none"/>
+
+    <!-- Ears -->
+    <ellipse cx="64" cy="96" rx="8" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="136" cy="96" rx="8" ry="10" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HAIR — same structure as Quimby's, just grey -->
+    <!-- BIG SIDE -->
+    <path d="M 112,36
+             Q 98,28 80,28
+             Q 64,32 60,48
+             Q 56,60 60,72
+             Q 66,60 76,52
+             Q 82,56 80,62
+             Q 88,50 98,42
+             Q 106,36 112,36
+             Z" fill="#808890" stroke="#111" stroke-width="2.5"/>
+    <!-- SMALL SIDE -->
+    <path d="M 112,36
+             Q 120,30 130,32
+             Q 136,42 134,58
+             Q 132,66 130,68
+             L 126,68
+             Q 120,56 116,46
+             Q 112,38 112,36
+             Z" fill="#808890" stroke="#111" stroke-width="2.5"/>
+    <!-- Part line -->
+    <line x1="112" y1="30" x2="112" y2="40" stroke="#111" stroke-width="1.5"/>
+
+    <!-- EYES — round, slightly smaller than Homer's -->
+    <circle cx="86" cy="92" r="12" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <circle cx="87" cy="94" r="2.5" fill="#111"/>
+    <circle cx="114" cy="92" r="12" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <circle cx="113" cy="94" r="2.5" fill="#111"/>
+    <!-- Brows — mostly straight, outer tips turn UP (Skinner's stern/annoyed look) -->
+    <path d="M 96,80 Q 82,76 74,78 L 70,74" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 104,80 Q 118,76 126,78 L 130,74" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- NOSE — long and thin, Skinner's defining feature -->
+    <path d="M 96,92 C 92,102 90,110 96,116 Q 100,120 104,116 C 110,110 108,102 104,92" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- MOUTH — thin stern line, slightly downturned (NO overbite muzzle!) -->
+    <path d="M 84,128 Q 92,124 100,124 Q 108,124 116,128" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Downturn at corners — worried/stern -->
+    <path d="M 82,128 Q 80,130 80,132" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+    <path d="M 118,128 Q 120,130 120,132" fill="none" stroke="#111" stroke-width="1.5" stroke-linecap="round"/>
+
+    <!-- Chin line -->
+    <path d="M 84,138 Q 100,144 116,138" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.2"/>
+
+    <!-- Nasolabial lines — stress/age -->
+    <path d="M 92,114 Q 86,122 84,128" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.25"/>
+    <path d="M 108,114 Q 114,122 116,128" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.25"/>
+
+    <!-- Feet — dark shoes -->
+    <path d="M 50,220 Q 48,228 54,230 L 80,230 Q 84,228 82,220" fill="#222" stroke="#111" stroke-width="2"/>
+    <path d="M 118,220 Q 116,228 122,230 L 148,230 Q 152,228 150,220" fill="#222" stroke="#111" stroke-width="2"/>
+  </svg>
+  <h3>Principal Skinner</h3>
+  <div class="sub">Grey hair · round eyes · long nose · stern mouth · blue suit · tie</div>
+</div>
+
+</div>
+
+<!-- DR. HIBBERT -->
+<h1 style="margin-top:32px">Dr. Hibbert (Caregiver)</h1>
+<div class="row">
+
+<!-- Reference image -->
+<div class="card">
+  <img src="https://static.simpsonswiki.com/images/9/9c/Julius_Hibbert.png" width="200" height="200" style="object-fit:contain; background:#1a1a2e; border-radius:6px;"/>
+  <h3>Reference</h3>
+  <div class="sub">Source: Wikisimpsons</div>
+</div>
+
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+    <!-- Body — white doctor's coat over shirt -->
+    <path d="M 42,156 L 68,156 Q 84,160 100,162 Q 116,160 132,156 L 158,156 L 164,220 L 36,220 Z" fill="#F0F0F0" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Collar triangles on shoulders -->
+    <path d="M 42,156 L 68,140 L 86,156" fill="#F0F0F0" stroke="#111" stroke-width="2.5"/>
+    <path d="M 158,156 L 132,140 L 114,156" fill="#F0F0F0" stroke="#111" stroke-width="2.5"/>
+    <!-- Lapels — slight fold-back -->
+    <path d="M 68,140 L 86,156 L 84,178 L 46,156 Z" fill="#E8E8E8" stroke="#111" stroke-width="2"/>
+    <path d="M 132,140 L 114,156 L 116,178 L 154,156 Z" fill="#E8E8E8" stroke="#111" stroke-width="2"/>
+    <!-- Green shirt underneath -->
+    <path d="M 86,156 L 100,188 L 114,156" fill="#5A8A5A" stroke="#111" stroke-width="2"/>
+    <!-- Tie — dark red -->
+    <path d="M 97,156 L 95,192 L 100,196 L 105,192 L 103,156" fill="#8B2222" stroke="#111" stroke-width="1.5"/>
+    <path d="M 97,156 L 100,152 L 103,156" fill="#8B2222" stroke="#111" stroke-width="1.5"/>
+    <!-- Coat pocket -->
+    <rect x="52" y="178" width="14" height="12" rx="2" fill="none" stroke="#ddd" stroke-width="1.5"/>
+    <!-- Stethoscope — draped around neck -->
+    <path d="M 82,148 Q 78,156 80,168 Q 82,180 78,188" fill="none" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 118,148 Q 122,156 120,168 Q 118,180 122,188" fill="none" stroke="#555" stroke-width="3" stroke-linecap="round"/>
+    <!-- Stethoscope chest piece (left side) -->
+    <circle cx="78" cy="190" r="5" fill="#888" stroke="#555" stroke-width="2"/>
+    <circle cx="78" cy="190" r="2" fill="#666"/>
+    <!-- Coat buttons -->
+    <circle cx="100" cy="196" r="2.5" fill="#888" stroke="#111" stroke-width="1"/>
+    <circle cx="100" cy="208" r="2.5" fill="#888" stroke="#111" stroke-width="1"/>
+
+    <!-- Arms — at sides, relaxed -->
+    <path d="M 42,166 Q 24,172 18,186 Q 12,200 18,212" fill="#F0F0F0" stroke="#111" stroke-width="3"/>
+    <path d="M 16,210 Q 12,206 14,200 Q 18,198 20,202 L 20,212 Z" fill="#D3B980" stroke="#111" stroke-width="2.5"/>
+    <path d="M 158,166 Q 176,172 182,186 Q 188,200 182,212" fill="#F0F0F0" stroke="#111" stroke-width="3"/>
+    <path d="M 180,210 Q 184,206 186,200 Q 182,198 180,202 L 180,212 Z" fill="#D3B980" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HEAD — same shape as Quimby/Skinner, brown skin -->
+    <path d="M 78,128 Q 72,138 70,148 Q 70,158 82,164 Q 92,168 100,168 Q 108,168 118,164 Q 130,158 130,148 Q 128,138 122,128 C 130,112 132,84 128,62 C 124,42 116,32 100,30 C 84,32 76,42 72,62 C 68,84 70,112 78,128 Z" fill="#D3B980" stroke="#111" stroke-width="3"/>
+
+    <!-- Neck — brown skin, hidden behind collar -->
+    <rect x="88" y="156" width="24" height="8" fill="#D3B980" stroke="none"/>
+
+    <!-- Ears -->
+    <ellipse cx="64" cy="96" rx="8" ry="10" fill="#D3B980" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="136" cy="96" rx="8" ry="10" fill="#D3B980" stroke="#111" stroke-width="2.5"/>
+
+    <!-- HAIR — curly, made of overlapping circles (afro texture) -->
+    <circle cx="82" cy="38" r="10" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="96" cy="30" r="10" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="110" cy="32" r="10" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="122" cy="42" r="10" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="74" cy="48" r="9" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="126" cy="54" r="8" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="88" cy="26" r="8" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="104" cy="24" r="8" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="116" cy="28" r="8" fill="#222" stroke="#111" stroke-width="1.5"/>
+    <circle cx="78" cy="30" r="7" fill="#222" stroke="#111" stroke-width="1.5"/>
+
+    <!-- EYES — squinted from laughing, straight top + curved bottom -->
+    <!-- Left eye -->
+    <path d="M 74,90 L 98,90 Q 98,100 86,100 Q 74,100 74,90 Z" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <circle cx="87" cy="94" r="2.5" fill="#111"/>
+    <!-- Right eye -->
+    <path d="M 102,90 L 126,90 Q 126,100 114,100 Q 102,100 102,90 Z" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <circle cx="113" cy="94" r="2.5" fill="#111"/>
+    <!-- Warm friendly brows — gentle arch -->
+    <path d="M 74,82 Q 86,78 98,84" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 102,84 Q 114,78 126,82" fill="none" stroke="#111" stroke-width="2.5" stroke-linecap="round"/>
+    <!-- Brow wrinkles — horizontal lines across forehead, visible -->
+    <path d="M 80,68 Q 100,64 120,68" fill="none" stroke="#111" stroke-width="1.5" opacity="0.4" stroke-linecap="round"/>
+    <path d="M 82,62 Q 100,58 118,62" fill="none" stroke="#111" stroke-width="1.5" opacity="0.35" stroke-linecap="round"/>
+    <path d="M 84,56 Q 100,53 116,56" fill="none" stroke="#111" stroke-width="1.5" opacity="0.3" stroke-linecap="round"/>
+
+    <!-- NOSE — similar to Quimby's bulbous nose -->
+    <path d="M 94,90 C 88,102 86,110 94,116 Q 100,120 106,116 C 114,110 112,102 106,90" fill="#D3B980" stroke="#111" stroke-width="2.5"/>
+
+    <!-- MOUTH — curved smile sausage, white fill, vertical tooth lines -->
+    <path d="M 82,120 Q 84,117 90,118 Q 100,126 110,118 Q 116,117 118,120 Q 120,123 114,126 Q 100,134 86,126 Q 80,123 82,120 Z" fill="#FFF" stroke="#111" stroke-width="2.5"/>
+    <!-- Vertical tooth divider lines — thin black -->
+    <line x1="88" y1="118" x2="87" y2="126" stroke="#111" stroke-width="0.8"/>
+    <line x1="93" y1="120" x2="92" y2="128" stroke="#111" stroke-width="0.8"/>
+    <line x1="98" y1="123" x2="98" y2="131" stroke="#111" stroke-width="0.8"/>
+    <line x1="103" y1="123" x2="103" y2="131" stroke="#111" stroke-width="0.8"/>
+    <line x1="108" y1="120" x2="109" y2="128" stroke="#111" stroke-width="0.8"/>
+    <line x1="113" y1="118" x2="114" y2="126" stroke="#111" stroke-width="0.8"/>
+    <!-- Dimples at the smile corners — visible -->
+    <path d="M 80,116 Q 76,120 76,124" fill="none" stroke="#111" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+    <path d="M 120,116 Q 124,120 124,124" fill="none" stroke="#111" stroke-width="1.5" opacity="0.5" stroke-linecap="round"/>
+
+    <!-- Chin line -->
+    <path d="M 84,148 Q 100,154 116,148" fill="none" stroke="#A09060" stroke-width="1.5" opacity="0.2"/>
+
+    <!-- Laugh lines — from nose to mouth corners -->
+    <path d="M 90,114 Q 84,122 82,128" fill="none" stroke="#A09060" stroke-width="1.5" opacity="0.25"/>
+    <path d="M 110,114 Q 116,122 118,128" fill="none" stroke="#A09060" stroke-width="1.5" opacity="0.25"/>
+
+    <!-- Feet — dark shoes -->
+    <path d="M 50,220 Q 48,228 54,230 L 80,230 Q 84,228 82,220" fill="#222" stroke="#111" stroke-width="2"/>
+    <path d="M 118,220 Q 116,228 122,230 L 148,230 Q 152,228 150,220" fill="#222" stroke="#111" stroke-width="2"/>
+  </svg>
+  <h3>Dr. Hibbert</h3>
+  <div class="sub">Brown skin · curly hair · laughing · brow wrinkles · white coat</div>
+</div>
+
+</div>
+
+</body>
+</html>

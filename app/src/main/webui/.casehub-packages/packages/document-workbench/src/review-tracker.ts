@@ -1,0 +1,349 @@
+import { LitElement, html, css, nothing } from 'lit';
+import { customElement, property, state } from 'lit/decorators.js';
+import { onPagesEvent } from '@casehubio/pages-data';
+import { selectedHighlightStyles } from '@casehubio/mosaic-core';
+import type { DebateStreamEntry } from './types.js';
+
+interface DerivedPoint {
+  pointId: string;
+  status: string;
+  summary: string;
+  location: string | undefined;
+  round: number;
+  raiseRound: number | null;
+  fixRound: number | null;
+  verifyRound: number | null;
+  trail: string;
+  isQualifyActive: boolean;
+}
+
+const ENTRY_TO_STATUS: Record<string, string> = {
+  RAISE: 'OPEN', AGREE: 'AGREED', COUNTER: 'ACTIVE', DISPUTE: 'DISPUTED',
+  QUALIFY: 'ACTIVE', FLAG_HUMAN: 'PENDING_HUMAN', DECLINED: 'DECLINED',
+  VERIFIED: 'VERIFIED', DEFERRED: 'DEFERRED', HUMAN_OVERRIDE: 'HUMAN_OVERRIDE',
+};
+
+const STATUS_ORDER: Record<string, number> = {
+  OPEN: 0, PENDING_HUMAN: 1, ACTIVE: 2, DISPUTED: 3, AGREED: 4,
+  DECLINED: 5, VERIFIED: 6, DEFERRED: 7, HUMAN_OVERRIDE: 8,
+};
+
+const STATUS_ICON: Record<string, string> = {
+  OPEN: '○', ACTIVE: '⟳', AGREED: '✓', PENDING_HUMAN: '⚑',
+  DECLINED: '✓', DISPUTED: '✕', VERIFIED: '✓✓', DEFERRED: '⏸', HUMAN_OVERRIDE: '👤',
+};
+
+const AGENT_SHORT: Record<string, string> = { REV: 'REV', IMP: 'IMP', HUMAN: 'HUM', SUPERVISOR: 'SUP', MODERATOR: 'MOD', SELECTOR: 'SEL' };
+const ACTION_SHORT: Record<string, string> = {
+  RAISE: 'raised', AGREE: 'agreed', COUNTER: 'countered', DISPUTE: 'disputed',
+  QUALIFY: 'qualified', FLAG_HUMAN: 'flagged', DECLINED: 'declined',
+  COMMENT: 'commented', HUMAN_OVERRIDE: 'overrode', REPRIORITISE: 'reprioritised',
+};
+
+const RESOLVED_STATUSES = new Set(['AGREED', 'DECLINED', 'VERIFIED', 'DEFERRED', 'HUMAN_OVERRIDE']);
+
+@customElement('review-tracker')
+export class ReviewTracker extends LitElement {
+  @property({ type: String }) apiBaseUrl = '';
+
+  @state() _entries: DebateStreamEntry[] = [];
+  @state() private _hideResolved = false;
+  @state() private _selectedPointId: string | null = null;
+  @state() private _commentingPointId: string | null = null;
+  @state() private _overridingPointId: string | null = null;
+  @state() private _debateSessionId: string | null = null;
+
+  private _configured = false;
+  private _cleanups: (() => void)[] = [];
+
+  configure(props: Record<string, unknown>): void {
+    this._configured = true;
+    if (props.debateSessionId !== undefined) {
+      this._debateSessionId = props.debateSessionId as string;
+      this._entries = [];
+    }
+  }
+
+  override connectedCallback(): void {
+    super.connectedCallback();
+    this.setAttribute('role', 'log');
+    this.setAttribute('aria-label', 'Review tracker');
+    this.setAttribute('aria-live', 'polite');
+    this._cleanups.push(
+      onPagesEvent<DebateStreamEntry[]>(document, 'debate-entries', (payload) => {
+        this._entries = [...this._entries, ...payload];
+      }),
+      onPagesEvent(document, 'reconnected', () => {
+        this._entries = [];
+      }),
+    );
+  }
+
+  override disconnectedCallback(): void {
+    super.disconnectedCallback();
+    this._cleanups.forEach(fn => fn());
+    this._cleanups = [];
+  }
+
+  private _derivePoints(): DerivedPoint[] {
+    const statusEntries = this._entries.filter(e => e.pointId && ENTRY_TO_STATUS[e.entryType]);
+    const byPointId = new Map<string, DebateStreamEntry[]>();
+    for (const entry of statusEntries) {
+      if (!byPointId.has(entry.pointId!)) byPointId.set(entry.pointId!, []);
+      byPointId.get(entry.pointId!)!.push(entry);
+    }
+
+    const points: DerivedPoint[] = [];
+    for (const [pointId, entries] of byPointId) {
+      const lastEntry = entries[entries.length - 1]!;
+      const status = ENTRY_TO_STATUS[lastEntry.entryType]!;
+      const raiseEntry = entries.find(e => e.entryType === 'RAISE');
+      const summary = raiseEntry
+        ? raiseEntry.content.split('\n')[0]!.substring(0, 120)
+        : lastEntry.content.split('\n')[0]!.substring(0, 120);
+      const trail = this._buildAgentTrail(entries);
+      const isQualifyActive = lastEntry.entryType === 'QUALIFY';
+      const fixEntry = entries.find(e => e.entryType === 'QUALIFY' || e.entryType === 'COUNTER');
+      const verifyEntry = entries.find(e => e.entryType === 'VERIFIED' || e.entryType === 'AGREE');
+
+      points.push({
+        pointId, status, summary,
+        location: raiseEntry?.location || lastEntry.location,
+        round: lastEntry.round,
+        raiseRound: raiseEntry?.round ?? null,
+        fixRound: fixEntry?.round ?? null,
+        verifyRound: verifyEntry?.round ?? null,
+        trail, isQualifyActive,
+      });
+    }
+
+    points.sort((a, b) => (STATUS_ORDER[a.status] ?? 99) - (STATUS_ORDER[b.status] ?? 99));
+    return points;
+  }
+
+  private _buildAgentTrail(entries: DebateStreamEntry[]): string {
+    const segments: string[] = [];
+    let currentRound: number | null = null;
+    for (const entry of entries) {
+      if (entry.round !== currentRound) {
+        if (currentRound !== null) segments.push(`round ${entry.round}`);
+        currentRound = entry.round;
+      }
+      const agent = AGENT_SHORT[entry.agentRole] || entry.agentRole;
+      const action = ACTION_SHORT[entry.entryType] || entry.entryType;
+      segments.push(`${agent} ${action}`);
+    }
+    return segments.join(' → ');
+  }
+
+  private _onPointClick(point: DerivedPoint): void {
+    const wasSelected = this._selectedPointId === point.pointId;
+    this._selectedPointId = wasSelected ? null : point.pointId;
+    this.dispatchEvent(new CustomEvent(wasSelected ? 'point-deselected' : 'point-selected', {
+      bubbles: true,
+      detail: {
+        pointId: point.pointId, round: point.round,
+        raiseRound: point.raiseRound, fixRound: point.fixRound,
+        verifyRound: point.verifyRound, location: point.location,
+      },
+    }));
+  }
+
+  private _onFilterChange(e: Event): void {
+    this._hideResolved = (e.target as HTMLInputElement).checked;
+  }
+
+  static override styles = [selectedHighlightStyles, css`
+    :host { display: flex; flex-direction: column; height: 100%; overflow: hidden; }
+    .tracker-container { flex: 1; overflow-y: auto; display: flex; flex-direction: column; }
+    .placeholder { flex: 1; display: flex; align-items: center; justify-content: center; color: var(--pages-neutral-8, #9ca3af); font-size: 13px; text-align: center; padding: 40px; }
+    .progress-bar-container { padding: 12px 16px; background: var(--chrome, var(--pages-neutral-2, #f5f5f5)); border-bottom: 1px solid var(--pages-neutral-5, #d4d4d4); flex-shrink: 0; }
+    .progress-label { font-size: 11px; color: var(--pages-neutral-8, #9ca3af); margin-bottom: 6px; font-weight: 600; }
+    .progress-bar { height: 8px; background: var(--pages-neutral-4, #e5e7eb); border-radius: 4px; overflow: hidden; }
+    .progress-fill { height: 100%; background: var(--pages-success-9, #16a34a); transition: width 0.3s; }
+    .filter-bar { padding: 8px 16px; background: var(--pages-neutral-1, #fafafa); border-bottom: 1px solid var(--pages-neutral-4, #e5e7eb); flex-shrink: 0; }
+    .filter-toggle { display: flex; align-items: center; gap: 6px; font-size: 11px; color: var(--sepia, var(--pages-neutral-11, #6b7280)); cursor: pointer; user-select: none; }
+    .filter-toggle input[type="checkbox"] { cursor: pointer; }
+    .points-list { flex: 1; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .point-item { padding: 10px 12px; border: 1px solid var(--pages-neutral-4, #e5e7eb); border-radius: 3px; background: var(--pages-neutral-1, #fafafa); cursor: pointer; transition: all 0.15s; display: flex; flex-direction: column; gap: 6px; }
+    .point-item:hover:not(.selected) { border-color: var(--pages-accent-9, #6366f1); box-shadow: 0 1px 3px rgba(0,0,0,0.05); }
+    .point-header { display: flex; align-items: center; gap: 8px; }
+    .point-icon { font-size: 14px; width: 16px; text-align: center; flex-shrink: 0; }
+    .point-summary { flex: 1; font-size: 13px; color: var(--pages-neutral-12, #111); line-height: 1.4; overflow: hidden; text-overflow: ellipsis; display: -webkit-box; -webkit-line-clamp: 2; -webkit-box-orient: vertical; }
+    .point-location { font-size: 10px; color: var(--pages-neutral-8, #9ca3af); font-family: 'SFMono-Regular', Consolas, monospace; }
+    .point-trail { font-size: 10px; color: var(--pages-neutral-8, #9ca3af); margin-top: 2px; }
+    .point-item.status-open { border-left: 3px solid var(--pages-neutral-12, #111); }
+    .point-item.status-active { border-left: 3px solid var(--pages-warning-9, #d97706); }
+    .point-item.status-agreed { border-left: 3px solid var(--pages-success-9, #16a34a); opacity: 0.6; }
+    .point-item.status-agreed .point-summary { text-decoration: line-through; }
+    .point-item.status-pending_human { border: 2px solid var(--pages-warning-9, #d97706); background: var(--pages-warning-2, #fef3c7); }
+    .point-item.status-declined { border-left: 3px solid var(--pages-neutral-8, #9ca3af); opacity: 0.6; }
+    .point-item.status-declined .point-summary { text-decoration: line-through; }
+    .point-item.status-disputed { border-left: 3px solid var(--pages-error-9, #dc2626); }
+    .point-item.qualify-active { border-left: 3px solid var(--pages-accent-9, #6366f1); }
+    .point-item.selected { }
+    .point-item.status-human_override { border-left: 3px solid var(--human-badge, #e67e22); opacity: 0.6; }
+    .point-actions { display: flex; gap: 4px; margin-top: 4px; }
+    .action-btn { background: var(--pages-neutral-2, #f5f5f5); border: 1px solid var(--pages-neutral-5, #d4d4d4); color: var(--pages-neutral-8, #9ca3af); cursor: pointer; font-size: 12px; padding: 2px 6px; border-radius: 3px; }
+    .action-btn:hover { background: var(--pages-neutral-3, #e5e5e5); }
+    .priority-select { appearance: none; width: 32px; text-align: center; }
+    .batch-bar { display: flex; align-items: center; gap: 8px; padding: 6px 10px; background: var(--pages-neutral-1, #fafafa); border-bottom: 1px solid var(--pages-neutral-5, #d4d4d4); font-size: 12px; }
+    .batch-bar button { background: var(--pages-accent-9, #6366f1); color: #fff; border: none; padding: 3px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; }
+    .inline-input { display: flex; gap: 4px; margin-top: 4px; }
+    .comment-input, .override-input { flex: 1; padding: 4px; background: var(--pages-neutral-1, #fafafa); border: 1px solid var(--pages-neutral-5, #d4d4d4); color: var(--pages-neutral-12, #111); font-size: 12px; border-radius: 3px; }
+    .submit-btn { background: var(--pages-accent-9, #6366f1); color: #fff; border: none; padding: 4px 8px; border-radius: 3px; cursor: pointer; font-size: 11px; }
+  `];
+
+  override render() {
+    if (!this._configured) {
+      return html`<div class="placeholder"><div>Waiting for debate session…</div></div>`;
+    }
+
+    const points = this._derivePoints();
+    const resolvedCount = points.filter(p => RESOLVED_STATUSES.has(p.status)).length;
+    const total = points.length;
+    const pctWidth = total > 0 ? `${(resolvedCount / total) * 100}%` : '0%';
+    const visiblePoints = this._hideResolved ? points.filter(p => !RESOLVED_STATUSES.has(p.status)) : points;
+
+    return html`
+      <div class="tracker-container">
+        <div class="progress-bar-container">
+          <div class="progress-label">${resolvedCount} of ${total} resolved</div>
+          <div class="progress-bar"><div class="progress-fill" style="width:${pctWidth}"></div></div>
+        </div>
+        <div class="filter-bar">
+          <label class="filter-toggle">
+            <input type="checkbox" .checked=${this._hideResolved} @change=${this._onFilterChange}>
+            Hide resolved
+          </label>
+        </div>
+        ${this._batchEligibleCount(points) >= 2 && this._debateSessionId ? html`
+          <div class="batch-bar">
+            <span>${this._batchEligibleCount(points)} low-priority points open</span>
+            <button @click=${() => this._submitBatch('VERIFIED')}>Accept all</button>
+            <button @click=${() => this._submitBatch('DEFERRED')}>Defer all</button>
+          </div>
+        ` : nothing}
+        <div class="points-list">
+          ${visiblePoints.length === 0
+            ? html`<div class="placeholder">${total === 0 ? 'No review points yet' : 'All points resolved'}</div>`
+            : visiblePoints.map(point => this._renderPoint(point))}
+        </div>
+      </div>
+    `;
+  }
+
+  private _batchEligibleCount(points: DerivedPoint[]): number {
+    return this._batchEligiblePoints(points).length;
+  }
+
+  private _batchEligiblePoints(points: DerivedPoint[]): DerivedPoint[] {
+    return points.filter(p => {
+      if (RESOLVED_STATUSES.has(p.status)) return false;
+      const raiseEntry = this._entries.find(e => e.pointId === p.pointId && e.entryType === 'RAISE');
+      if (!raiseEntry) return false;
+      const priority = (raiseEntry as DebateStreamEntry & { priority?: string }).priority;
+      return priority?.toUpperCase()?.includes('LOW');
+    });
+  }
+
+  private _renderPoint(point: DerivedPoint) {
+    const statusClass = point.status.toLowerCase();
+    const classes = [`point-item`, `status-${statusClass}`];
+    if (point.isQualifyActive) classes.push('qualify-active');
+    if (this._selectedPointId === point.pointId) classes.push('selected');
+    const isResolved = RESOLVED_STATUSES.has(point.status);
+
+    return html`
+      <div class=${classes.join(' ')} @click=${() => this._onPointClick(point)}>
+        <div class="point-header">
+          <span class="point-icon">${STATUS_ICON[point.status] || '·'}</span>
+          <div class="point-summary">${point.summary}</div>
+        </div>
+        ${point.location ? html`<div class="point-location">${point.location}</div>` : nothing}
+        <div class="point-trail">${point.trail}</div>
+        ${!isResolved && this._debateSessionId ? html`
+          <div class="point-actions">
+            <button class="action-btn" title="Comment"
+              @click=${(e: Event) => { e.stopPropagation(); this._commentingPointId = this._commentingPointId === point.pointId ? null : point.pointId; this._overridingPointId = null; }}>💬</button>
+            <button class="action-btn" title="Override"
+              @click=${(e: Event) => { e.stopPropagation(); this._overridingPointId = this._overridingPointId === point.pointId ? null : point.pointId; this._commentingPointId = null; }}>👤</button>
+            <select class="action-btn priority-select" title="Priority"
+              @change=${(e: Event) => { e.stopPropagation(); this._onPriorityChange(point, e); }}>
+              <option value="">↕</option>
+              <option value="P1">P1</option>
+              <option value="P2">P2</option>
+              <option value="P3">P3</option>
+            </select>
+          </div>
+          ${this._commentingPointId === point.pointId ? html`
+            <div class="inline-input">
+              <input type="text" class="comment-input" placeholder="Add comment..."
+                @keydown=${(e: KeyboardEvent) => { if (e.key === 'Enter') this._submitComment(point.pointId, (e.target as HTMLInputElement).value); }}>
+              <button class="submit-btn" @click=${(e: Event) => {
+                const input = (e.target as HTMLElement).previousElementSibling as HTMLInputElement;
+                this._submitComment(point.pointId, input.value);
+              }}>Send</button>
+            </div>
+          ` : nothing}
+          ${this._overridingPointId === point.pointId ? html`
+            <div class="inline-input">
+              <input type="text" class="override-input" placeholder="Override reason..."
+                @keydown=${(e: KeyboardEvent) => { if (e.key === 'Enter') this._submitOverride(point.pointId, (e.target as HTMLInputElement).value); }}>
+              <button class="submit-btn" @click=${(e: Event) => {
+                const input = (e.target as HTMLElement).previousElementSibling as HTMLInputElement;
+                this._submitOverride(point.pointId, input.value);
+              }}>Override</button>
+            </div>
+          ` : nothing}
+        ` : nothing}
+      </div>
+    `;
+  }
+
+  private async _submitComment(pointId: string, content: string) {
+    if (!content.trim() || !this._debateSessionId) return;
+    await fetch(`${this.apiBaseUrl}/api/debate/${this._debateSessionId}/human/comment`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pointId, content: content.trim() }),
+    });
+    this._commentingPointId = null;
+  }
+
+  private async _submitOverride(pointId: string, reason: string) {
+    if (!reason.trim() || !this._debateSessionId) return;
+    await fetch(`${this.apiBaseUrl}/api/debate/${this._debateSessionId}/human/override`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pointId, reason: reason.trim() }),
+    });
+    this._overridingPointId = null;
+  }
+
+  private async _onPriorityChange(point: DerivedPoint, e: Event) {
+    const select = e.target as HTMLSelectElement;
+    const newPriority = select.value;
+    if (!newPriority || !this._debateSessionId) { select.value = ''; return; }
+    await fetch(`${this.apiBaseUrl}/api/debate/${this._debateSessionId}/human/prioritise`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pointId: point.pointId, newPriority }),
+    });
+    select.value = '';
+  }
+
+  private async _submitBatch(verdict: string) {
+    if (!this._debateSessionId) return;
+    const points = this._derivePoints();
+    const eligible = this._batchEligiblePoints(points).map(p => p.pointId);
+    if (eligible.length === 0) return;
+    await fetch(`${this.apiBaseUrl}/api/debate/${this._debateSessionId}/human/batch`, {
+      method: 'POST', headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ pointIds: eligible, verdict }),
+    });
+  }
+}
+
+declare global {
+  interface HTMLElementTagNameMap {
+    'review-tracker': ReviewTracker;
+  }
+}

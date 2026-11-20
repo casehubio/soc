@@ -1,0 +1,1 @@
+{"version":3,"file":"submit-button-types.d.ts","sourceRoot":"","sources":["../../src/model/submit-button-types.ts"],"names":[],"mappings":"AAAA,MAAM,WAAW,iBAAiB;IAChC,QAAQ,CAAC,KAAK,EAAE,MAAM,CAAC;IACvB,QAAQ,CAAC,KAAK,CAAC,EAAE,SAAS,GAAG,QAAQ,GAAG,WAAW,GAAG,OAAO,GAAG,SAAS,CAAC;IAC1E,QAAQ,CAAC,QAAQ,CAAC,EAAE,OAAO,CAAC;CAC7B"}

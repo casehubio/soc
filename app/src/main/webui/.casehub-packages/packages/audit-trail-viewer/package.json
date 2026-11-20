@@ -1,0 +1,29 @@
+{
+  "name": "@casehubio/mosaic-audit-trail-viewer",
+  "version": "0.2.2",
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsc --project tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "@esm-bundle/chai": "^4.3.4-fix.0",
+    "@open-wc/testing": "^4.0.0",
+    "@vitest/browser": "^2.1.8",
+    "jsdom": "^26.0.0",
+    "typescript": "~5.8.0",
+    "vite": "^6.0.3",
+    "vitest": "^2.1.8"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  }
+}

@@ -1,0 +1,1 @@
+{"version":3,"file":"preview-yaml-transform.d.ts","sourceRoot":"","sources":["../../src/data/preview-yaml-transform.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAsB,MAAM,2BAA2B,CAAC;AAC7E,OAAO,KAAK,EAAE,mBAAmB,EAAmB,MAAM,4BAA4B,CAAC;AAEvF,wBAAgB,uBAAuB,CACrC,IAAI,EAAE,MAAM,EACZ,GAAG,EAAE,YAAY,EACjB,QAAQ,EAAE,GAAG,CAAC,MAAM,EAAE,mBAAmB,CAAC,GACzC,MAAM,CAgCR"}

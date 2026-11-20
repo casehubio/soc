@@ -1,0 +1,77 @@
+# Matrix (Horling & Lesser)
+# Dual reporting lines — agents belong to both functional and project units.
+# Real-world: developer on both the platform team and the billing project.
+
+organization:
+  units:
+    - unitId: platform-team
+      name: Platform Engineering
+      kind: functional-team
+      tenancyId: archetype-matrix
+      members:
+        - agentId: platform-lead
+          role: team-lead
+        - agentId: dev-alice
+          role: engineer
+        - agentId: dev-bob
+          role: engineer
+      capabilities:
+        - name: platform-development
+
+    - unitId: billing-project
+      name: Billing Migration Project
+      kind: project-team
+      tenancyId: archetype-matrix
+      members:
+        - agentId: project-mgr
+          role: project-manager
+        - agentId: dev-alice
+          role: engineer
+        - agentId: analyst
+          role: business-analyst
+      capabilities:
+        - name: billing-migration
+      goals:
+        - name: migrate-billing
+          description: Complete billing system migration by Q4
+          priority: PRIMARY
+          visibility: PUBLIC
+
+    - unitId: search-project
+      name: Search Improvement Project
+      kind: project-team
+      tenancyId: archetype-matrix
+      members:
+        - agentId: project-mgr-2
+          role: project-manager
+        - agentId: dev-bob
+          role: engineer
+      capabilities:
+        - name: search-improvement
+
+  relationships:
+    # Functional reporting (permanent)
+    - sourceAgentId: platform-lead
+      targetAgentId: dev-alice
+      kind: SUPERVISES
+      tenancyId: archetype-matrix
+
+    - sourceAgentId: platform-lead
+      targetAgentId: dev-bob
+      kind: SUPERVISES
+      tenancyId: archetype-matrix
+
+    # Project reporting (temporary, scoped)
+    - sourceAgentId: dev-alice
+      targetAgentId: project-mgr
+      kind: REPORTS_TO
+      tenancyId: archetype-matrix
+      scope:
+        capabilityName: billing-migration
+
+    - sourceAgentId: dev-bob
+      targetAgentId: project-mgr-2
+      kind: REPORTS_TO
+      tenancyId: archetype-matrix
+      scope:
+        capabilityName: search-improvement

@@ -1,0 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Donut Creek Quality POC — Before/After/Combined</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, sans-serif; background: #2a2a3e; color: #e0e0e0; padding: 32px; }
+  h1 { text-align: center; color: #fff; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #888; margin-bottom: 32px; font-size: 14px; }
+  .row { display: flex; gap: 24px; justify-content: center; margin-bottom: 32px; }
+  .card { background: #1a1a2e; border-radius: 10px; padding: 16px; text-align: center; }
+  .card h3 { margin-top: 8px; font-size: 14px; }
+  .card .sub { font-size: 11px; color: #888; margin-top: 2px; }
+  svg { display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<h1>Donut Creek — Quality Comparison</h1>
+<p class="subtitle">Original head (clean) + improved body (hands, collar, shoes) = best of both</p>
+
+<div class="row">
+
+<!-- BEFORE — current simple preview -->
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+    <defs>
+      <style>
+        .sk { fill: #FCD34D; stroke: #111; stroke-width: 3; }
+        .eye { fill: #FFF; stroke: #111; stroke-width: 3; }
+        .pup { fill: #111; }
+        .ln { fill: none; stroke: #111; stroke-width: 3; stroke-linecap: round; }
+      </style>
+    </defs>
+    <path d="M 45,182 L 155,182 L 165,220 L 35,220 Z" fill="#805AD5" stroke="#111" stroke-width="3.5" stroke-linejoin="round" />
+    <path d="M 70,182 L 100,210 L 130,182" fill="#319795" stroke="#111" stroke-width="3" />
+    <circle cx="100" cy="200" r="6" fill="#E53E3E" stroke="#111" stroke-width="2" />
+    <path d="M 64,160 L 64,185 L 136,185 L 136,160 C 155,140 152,95 140,70 C 128,40 115,35 100,35 C 85,35 72,40 60,70 C 48,95 45,140 64,160 Z" class="sk" />
+    <path d="M 60,90 C 56,125 60,158 78,166 C 92,172 108,172 122,166 C 140,158 144,125 140,90 C 132,74 122,70 100,70 C 78,70 68,74 60,90 Z" fill="#FFF" stroke="#111" stroke-width="3.5" />
+    <path d="M 58,75 C 45,70 30,78 22,62 C 15,48 28,42 20,28 C 32,25 40,38 48,30 C 52,22 60,32 64,48 Z" fill="#319795" stroke="#111" stroke-width="3.5" />
+    <path d="M 142,75 C 155,70 170,78 178,62 C 185,48 172,42 180,28 C 168,25 160,38 152,30 C 148,22 140,32 136,48 Z" fill="#319795" stroke="#111" stroke-width="3.5" />
+    <circle cx="83" cy="92" r="18" class="eye" /><circle cx="85" cy="92" r="3.5" class="pup" />
+    <circle cx="117" cy="92" r="18" class="eye" /><circle cx="115" cy="92" r="3.5" class="pup" />
+    <path d="M 65,92 C 65,82 83,74 101,84 L 65,84 Z" class="sk" />
+    <path d="M 99,84 C 117,74 135,82 135,92 L 99,84 Z" class="sk" />
+    <circle cx="100" cy="102" r="10" fill="#E53E3E" stroke="#111" stroke-width="3" />
+    <path d="M 76,125 C 76,150 124,150 124,125 Z" fill="#718096" stroke="#111" stroke-width="3" />
+    <path d="M 82,125 Q 100,135 118,125" class="ln" />
+  </svg>
+  <h3>Original</h3>
+  <div class="sub">Clean Springfield head, no body</div>
+</div>
+
+<!-- COMBINED — original head + new body -->
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+
+    <!-- === BODY — improved with arms, hands, detail === -->
+    <!-- Main body -->
+    <path d="M 42,184 Q 44,200 48,220 L 152,220 Q 156,200 158,184 Z" fill="#805AD5" stroke="#111" stroke-width="3" stroke-linejoin="round"/>
+    <!-- Teal V-front -->
+    <path d="M 72,184 L 100,212 L 128,184" fill="#319795" stroke="#111" stroke-width="2.5"/>
+    <!-- Big red button -->
+    <circle cx="100" cy="202" r="6" fill="#E53E3E" stroke="#111" stroke-width="2"/>
+    <circle cx="99" cy="200" r="2" fill="#FF6B6B" opacity="0.35"/>
+
+    <!-- LEFT ARM with hand -->
+    <path d="M 42,184 Q 28,188 18,198 Q 10,210 16,218" fill="#805AD5" stroke="#111" stroke-width="3"/>
+    <path d="M 14,216 Q 8,212 6,218 Q 4,224 10,224 L 18,222 Q 22,220 18,216 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <path d="M 6,218 Q 2,216 4,212" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+    <path d="M 8,216 Q 6,210 8,208" fill="none" stroke="#111" stroke-width="2" stroke-linecap="round"/>
+
+    <!-- RIGHT ARM with hand and horn -->
+    <path d="M 158,184 Q 170,186 178,194 Q 184,204 180,214" fill="#805AD5" stroke="#111" stroke-width="3"/>
+    <path d="M 178,212 Q 184,210 188,216 Q 190,222 184,224 L 176,222 Q 172,220 176,214 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <!-- Squeezy horn -->
+    <path d="M 186,206 Q 192,196 190,188 Q 188,182 192,178" fill="none" stroke="#111" stroke-width="3"/>
+    <circle cx="192" cy="176" r="5" fill="#E53E3E" stroke="#111" stroke-width="2"/>
+    <path d="M 186,206 Q 184,202 186,198" fill="#C9A227" stroke="#111" stroke-width="2"/>
+
+    <!-- === HEAD — ORIGINAL clean Springfield style, elliptical base === -->
+    <path d="M 64,160 Q 64,186 100,186 Q 136,186 136,160 C 155,140 152,95 140,70 C 128,40 115,35 100,35 C 85,35 72,40 60,70 C 48,95 45,140 64,160 Z" fill="#FCD34D" stroke="#111" stroke-width="3"/>
+
+    <!-- Ears (new — from the improved version) -->
+    <ellipse cx="54" cy="112" rx="10" ry="12" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <ellipse cx="54" cy="112" rx="5" ry="7" fill="#E8B820" opacity="0.2"/>
+    <ellipse cx="146" cy="112" rx="10" ry="12" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <path d="M 142,108 Q 146,112 142,116" fill="none" stroke="#E8B820" stroke-width="1.5" opacity="0.3"/>
+
+    <!-- White face paint zone — ORIGINAL clean version -->
+    <path d="M 60,90 C 56,125 60,158 78,166 C 92,172 108,172 122,166 C 140,158 144,125 140,90 C 132,74 122,70 100,70 C 78,70 68,74 60,90 Z" fill="#FFF" stroke="#111" stroke-width="3.5"/>
+
+    <!-- Cyan side hair tufts — ORIGINAL -->
+    <path d="M 58,75 C 45,70 30,78 22,62 C 15,48 28,42 20,28 C 32,25 40,38 48,30 C 52,22 60,32 64,48 Z" fill="#319795" stroke="#111" stroke-width="3.5"/>
+    <path d="M 142,75 C 155,70 170,78 178,62 C 185,48 172,42 180,28 C 168,25 160,38 152,30 C 148,22 140,32 136,48 Z" fill="#319795" stroke="#111" stroke-width="3.5"/>
+
+    <!-- Eyes — ORIGINAL clean Springfield -->
+    <circle cx="83" cy="92" r="18" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <circle cx="85" cy="92" r="3.5" fill="#111"/>
+    <circle cx="117" cy="92" r="18" fill="#FFF" stroke="#111" stroke-width="3"/>
+    <circle cx="115" cy="92" r="3.5" fill="#111"/>
+
+    <!-- Heavy lids — ORIGINAL -->
+    <path d="M 65,92 C 65,82 83,74 101,84 L 65,84 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+    <path d="M 99,84 C 117,74 135,82 135,92 L 99,84 Z" fill="#FCD34D" stroke="#111" stroke-width="2.5"/>
+
+    <!-- Brows — ORIGINAL clean -->
+    <path d="M 68,72 Q 82,64 98,72" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+    <path d="M 102,70 Q 118,62 134,72" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Red nose — ORIGINAL clean circle -->
+    <circle cx="100" cy="102" r="10" fill="#E53E3E" stroke="#111" stroke-width="3"/>
+
+    <!-- Wide laugh — ORIGINAL -->
+    <path d="M 76,125 C 76,150 124,150 124,125 Z" fill="#718096" stroke="#111" stroke-width="3"/>
+    <path d="M 82,125 Q 100,135 118,125" fill="none" stroke="#111" stroke-width="3" stroke-linecap="round"/>
+
+    <!-- Painted smile lines (subtle — just the extensions) -->
+    <path d="M 74,124 Q 70,120 66,118" fill="none" stroke="#E53E3E" stroke-width="2.5" stroke-linecap="round"/>
+    <path d="M 126,124 Q 130,120 134,118" fill="none" stroke="#E53E3E" stroke-width="2.5" stroke-linecap="round"/>
+
+    <!-- === COLLAR — ruffled teal (new) === -->
+    <path d="M 56,176 Q 66,168 78,172 Q 88,176 100,170 Q 112,176 122,172 Q 134,168 144,176 Q 138,186 100,186 Q 62,186 56,176 Z" fill="#319795" stroke="#111" stroke-width="2.5"/>
+
+    <!-- === FEET (new) === -->
+    <path d="M 60,220 Q 58,228 64,230 L 88,230 Q 92,228 90,220" fill="#805AD5" stroke="#111" stroke-width="2.5"/>
+    <path d="M 110,220 Q 108,228 114,230 L 138,230 Q 142,228 140,220" fill="#805AD5" stroke="#111" stroke-width="2.5"/>
+
+  </svg>
+  <h3>Combined</h3>
+  <div class="sub">Original clean head + improved body + ears</div>
+</div>
+
+</div>
+
+</body>
+</html>

@@ -1,0 +1,22 @@
+{
+  "$name": "default-dark",
+  "$description": "Pages generic dark theme",
+  "pipeline": [
+    { "transform": "dark-mode" },
+    {
+      "transform": "oklch-scale",
+      "params": {
+        "hues": {
+          "accent": 245,
+          "neutral": 220,
+          "success": 145,
+          "warning": 55,
+          "danger": 25,
+          "info": 210
+        },
+        "chroma": 0.12,
+        "contrast": 0.5
+      }
+    }
+  ]
+}

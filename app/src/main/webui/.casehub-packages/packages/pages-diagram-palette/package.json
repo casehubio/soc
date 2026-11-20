@@ -1,0 +1,62 @@
+{
+  "name": "@casehubio/pages-diagram-palette",
+  "version": "0.1.0",
+  "description": "Generic diagram palette and node chooser components",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-pages.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./palette": {
+      "types": "./dist/palette/index.d.ts",
+      "default": "./dist/palette/index.js"
+    },
+    "./chooser": {
+      "types": "./dist/chooser/index.d.ts",
+      "default": "./dist/chooser/index.js"
+    },
+    "./types": {
+      "types": "./dist/types.d.ts",
+      "default": "./dist/types.js"
+    }
+  },
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/palette/index.js",
+    "./dist/chooser/index.js",
+    "./src/index.ts",
+    "./src/palette/index.ts",
+    "./src/chooser/index.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist .typecheck"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

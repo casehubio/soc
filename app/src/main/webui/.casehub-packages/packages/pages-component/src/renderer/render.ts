@@ -1,0 +1,153 @@
+import type { Component, PermissionContext } from "../model/types.js";
+import { ALLOW_ALL } from "../model/types.js";
+import { generateId } from "./id.js";
+import { checkAccess } from "./access.js";
+import { applyGridPlacement } from "./grid.js";
+import { getSlotNames, getSlotChildren } from "./slots.js";
+import { isLayoutType, applyLayoutCSS } from "./layout.js";
+import { wireInteractivity } from "./interactive.js";
+
+// Subset of INTERACTIVE_TYPES (navigation.ts, runtime package). All lazy types
+// are interactive; accordion is interactive but not lazy (all sections start expanded).
+const LAZY_TYPES = new Set(["tabs", "pills", "sidebar", "carousel", "stack", "tree", "menu", "tiles", "deferred"]);
+
+export interface RenderOptions {
+  readonly permissions?: PermissionContext;
+  readonly document?: Document;
+  readonly onNode?: (el: HTMLElement, component: Component) => void;
+}
+
+export function renderComponent(
+  target: HTMLElement,
+  component: Component,
+  options?: RenderOptions,
+): void {
+  const doc = options?.document ?? globalThis.document;
+  const permissions = options?.permissions ?? ALLOW_ALL;
+  const onNode = options?.onNode;
+  target.innerHTML = "";
+  renderNode(target, component, undefined, undefined, undefined, permissions, doc, onNode);
+}
+
+function renderNode(
+  parent: HTMLElement,
+  component: Component,
+  parentId: string | undefined,
+  slotOrX: string | number | undefined,
+  indexOrY: number | undefined,
+  permissions: PermissionContext,
+  doc: Document,
+  onNode: ((el: HTMLElement, component: Component) => void) | undefined,
+): void {
+  // 1. Access control — skip if denied
+  if (!checkAccess(component.access, permissions)) return;
+
+  // 2. Create container with data attributes
+  const el = doc.createElement("div");
+  const id = component.id ?? generateId(parentId, slotOrX, indexOrY);
+  el.dataset.componentType = component.type;
+  el.dataset.componentId = id;
+  if (component.props) {
+    el.dataset.componentProps = JSON.stringify(component.props);
+  }
+
+  // 3. Apply layout CSS
+  if (isLayoutType(component.type)) {
+    applyLayoutCSS(el, component);
+  }
+
+  // 3b. Page-level padding, height propagation, and flex layout
+  if (component.type === "page") {
+    el.style.padding = "var(--pages-space-4, 16px)";
+    el.style.height = "100%";
+    el.style.boxSizing = "border-box";
+    el.style.display = "flex";
+    el.style.flexDirection = "column";
+  }
+
+  // 4. Apply Component.style — runs AFTER layout CSS so author overrides win
+  if (component.style) {
+    for (const [prop, value] of Object.entries(component.style)) {
+      el.style.setProperty(prop, value);
+    }
+  }
+
+  // 5. Panel title
+  if (component.type === "panel" && component.props) {
+    const { title } = component.props;
+    if (typeof title === "string" && title) {
+      const titleEl = doc.createElement("div");
+      titleEl.dataset.panelTitle = "";
+      titleEl.textContent = title;
+      titleEl.style.gridColumn = "1 / -1";
+      titleEl.style.fontWeight = "600";
+      titleEl.style.fontSize = "1.1em";
+      titleEl.style.padding = "8px 0";
+      el.appendChild(titleEl);
+    }
+  }
+
+  parent.appendChild(el);
+
+  // onNode fires after appendChild, before children
+
+  onNode?.(el, component);
+
+  // 6. Render children — items take precedence over slots
+  if (component.items && component.items.length > 0) {
+    el.style.display = "grid";
+    el.style.gridTemplateColumns = "repeat(12, 1fr)";
+    el.style.gridAutoRows = "min-content";
+    el.style.alignContent = "start";
+    el.style.gap = "var(--pages-space-3, 12px)";
+    for (const item of component.items) {
+      renderNode(el, item.component, id, item.placement.x, item.placement.y, permissions, doc, onNode);
+      const child = el.lastElementChild;
+      if (child instanceof HTMLElement) {
+        applyGridPlacement(child, item.placement);
+      }
+    }
+  } else if (component.slots) {
+    const slotNames = getSlotNames(component);
+    const panels = new Map<string, HTMLElement>();
+    const isLazy = LAZY_TYPES.has(component.type);
+
+    const isFlexColumn = el.style.flexDirection === "column";
+    for (const slotName of slotNames) {
+      const slotContainer = doc.createElement("div");
+      slotContainer.dataset.slot = slotName;
+      if (isFlexColumn) {
+        slotContainer.style.flex = "1";
+        slotContainer.style.minHeight = "0";
+        slotContainer.style.display = "flex";
+        slotContainer.style.flexDirection = "column";
+      }
+      el.appendChild(slotContainer);
+      panels.set(slotName, slotContainer);
+
+      if (!isLazy) {
+        const children = getSlotChildren(component, slotName);
+        for (let i = 0; i < children.length; i++) {
+          const child = children[i];
+          if (child === undefined) continue;
+          renderNode(slotContainer, child, id, slotName, i, permissions, doc, onNode);
+        }
+      }
+    }
+
+    wireInteractivity(el, component.type, slotNames, panels, doc,
+      isLazy
+        ? {
+            slotChildren: component.slots,
+            renderSlot: (parent: HTMLElement, children: readonly Component[], slot: string) => {
+              for (let i = 0; i < children.length; i++) {
+                const child = children[i];
+                if (child === undefined) continue;
+                renderNode(parent, child, id, slot, i, permissions, doc, onNode);
+              }
+            },
+          }
+        : undefined,
+    );
+  }
+}

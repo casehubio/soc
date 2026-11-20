@@ -1,0 +1,35 @@
+{
+  "name": "@casehubio/mosaic-swf-diagram",
+  "version": "0.1.0",
+  "description": "SWF workflow diagram viewer/editor component",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/swf-diagram.js",
+  "types": "dist/swf-diagram.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

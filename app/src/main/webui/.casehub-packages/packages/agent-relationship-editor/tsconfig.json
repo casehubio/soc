@@ -1,0 +1,16 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false
+  },
+  "include": ["src"],
+  "references": [
+    { "path": "../../packages/agent-avatar-2d" },
+    { "path": "../../packages/mosaic-core" },
+    { "path": "../../packages/graph-stencil-org" },
+    { "path": "../../components/org-diagram" }
+  ]
+}

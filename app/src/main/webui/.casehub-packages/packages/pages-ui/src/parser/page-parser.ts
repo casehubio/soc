@@ -1,0 +1,470 @@
+import type { Component, GridItem } from "../model/types.js";
+import { expand } from "@casehubio/yaml-core/expand";
+import { substituteProperties } from "./property-substitution.js";
+import { desugarComponent } from "./component-desugar.js";
+import { resolveNavigation, collectNavTreePageNames, collectNavTreeGroupIds } from "./nav-desugar.js";
+
+/**
+ * Main entry point for parsing raw YAML dashboard objects into the Component model.
+ *
+ * Orchestrates:
+ * 1. Property substitution (${name} → value)
+ * 2. Component desugaring (YAML shorthands → typed components)
+ * 3. Layout desugaring (components list / rows+columns → grid items)
+ * 4. Navigation resolution (navGroupId + navTree → slots)
+ * 5. Deterministic ID generation for grid items
+ *
+ * @param raw - A raw YAML object (output of yaml.load()). Does NOT import js-yaml itself.
+ * @returns A frozen root Component of type "page" containing the full dashboard tree.
+ */
+export function parsePage(raw: unknown): Component {
+  if (!raw || typeof raw !== "object") {
+    throw new Error("Invalid input: expected an object");
+  }
+
+  let input = raw as Record<string, unknown>;
+
+  // 0. yaml-core expansion (variables, modules, forEach, conditionals)
+  const YAML_CORE_KEYS = ['variables', 'modules', 'imports', 'iterations', 'data'];
+  if (YAML_CORE_KEYS.some(k => k in input)) {
+    // Resolve bare page properties first so they do not abort yaml-core's
+    // prefixed-variable expansion for the containing section.
+    const pageProperties = (input["properties"] ?? {}) as Record<string, string>;
+    input = expand(substituteProperties(input, pageProperties) as Record<string, unknown>, { strict: false }).map;
+  }
+
+  // 1. Extract properties for substitution
+  const properties = (input["properties"] ?? {}) as Record<string, string>;
+
+  // 2. Apply property substitution (skips metric template fields)
+  const substituted = substituteProperties(input, properties) as Record<string, unknown>;
+
+  // 3. Get pages array (accept both "pages" and "layoutTemplates")
+  const pagesRaw = (substituted["pages"] ?? substituted["layoutTemplates"]) as
+    | unknown[]
+    | undefined;
+  if (!pagesRaw || !Array.isArray(pagesRaw) || pagesRaw.length === 0) {
+    throw new Error("At least one page is required (pages or layoutTemplates)");
+  }
+
+  // 4. Get datasets, global settings, navTree
+  const datasets = substituted["datasets"] as unknown[] | undefined;
+  const global = substituted["global"] as Record<string, unknown> | undefined;
+  const navTree = substituted["navTree"];
+
+  // 5. Parse each page into a Component
+  const childPages: Component[] = pagesRaw.map((pageRaw, pageIndex) => {
+    const p = pageRaw as Record<string, unknown>;
+    const pageName = (p["name"] as string | undefined) ?? `Page ${String(pageIndex + 1)}`;
+
+    // Extract page-level properties as style
+    const pageProps = p["properties"] as Record<string, string> | undefined;
+    const pageStyle =
+      pageProps && typeof pageProps === "object" && Object.keys(pageProps).length > 0
+        ? pageProps
+        : undefined;
+
+    // Extract dataScope
+    const dataScope = p["dataScope"] as Record<string, unknown> | undefined;
+
+    // Extract save config
+    let save: Record<string, unknown> | undefined;
+    if (p["save"]) {
+      const rawSave = p["save"] as Record<string, unknown>;
+      const adapter = rawSave["adapter"] as string | undefined;
+      const adapterConfig = adapter && adapter in rawSave
+        ? rawSave[adapter] as Record<string, unknown>
+        : undefined;
+      save = {
+        ...(rawSave["trigger"] !== undefined && { trigger: rawSave["trigger"] }),
+        ...(rawSave["delay"] !== undefined && { delay: rawSave["delay"] }),
+        ...(adapter && { adapter }),
+        ...(adapterConfig && { adapterConfig }),
+      };
+    }
+
+    // Parse content — either "components" shorthand or "rows" explicit layout
+    const displayerDefaults = (global?.["displayer"] ?? global?.["settings"]) as Record<string, unknown> | undefined;
+    const layout = parsePageContent(p, pageIndex, displayerDefaults);
+
+    return {
+      type: "page" as const,
+      props: {
+        name: pageName,
+        ...(dataScope && { dataScope }),
+        ...(save && { save }),
+      },
+      ...(pageStyle ? { style: pageStyle } : {}),
+      ...layout,
+    };
+  });
+
+  // 6. Resolve navigation within each page's grid items
+  // Pre-scan: identify non-root pages with nav components referencing navTree groups.
+  // Must run BEFORE resolveNavigation strips navGroupId from resolved components.
+  // Skip the first page — it's the entry point and is expected to reference navTree groups.
+  const navTreeGroupIds = collectNavTreeGroupIds(navTree);
+  const navOrphanPageNames = new Set<string>();
+  for (let i = 1; i < childPages.length; i++) {
+    const page = childPages[i];
+    if (!page) continue;
+    const name = page.props?.["name"] as string | undefined;
+    if (name && containsNavGroupRef(page, navTreeGroupIds)) {
+      navOrphanPageNames.add(name);
+    }
+  }
+
+  // Track pages embedded via page-ref so they can be excluded from top-level
+  const embeddedPageNames = new Set<string>();
+  const resolvedPages = childPages.map((page) => {
+    if (page.items) {
+      // Collect embedded page names
+      for (const item of page.items) {
+        if (item.component.type === "page-ref" || item.component.type === "panel") {
+          const refName = item.component.props?.["name"] as string | undefined;
+          if (refName) embeddedPageNames.add(refName);
+        }
+      }
+
+      // Resolve all components together so targetDivId can find its slot-target
+      const allComponents = page.items.map(item => item.component);
+      const resolved = resolveNavigation(allComponents, childPages, navTree);
+
+      // Map resolved components back to grid items using the original placement.
+      // resolveNavigation can: transform (new object), remove (slot-target filter),
+      // or replace (slot-target → tabs). Track using a consumed-index approach:
+      // walk the original items and the resolved list together.
+      const resolvedItems: GridItem[] = [];
+      const removedIndices = new Set<number>();
+
+      // Identify which original items were removed (slot-targets that were either
+      // filtered or replaced)
+      for (let i = 0; i < page.items.length; i++) {
+        const origItem = page.items[i];
+        if (!origItem) continue;
+        const orig = origItem.component;
+        if (orig.type === "slot-target" && !resolved.includes(orig)) {
+          removedIndices.add(i);
+        }
+      }
+
+      // Walk resolved list, assigning placements from non-removed originals
+      let origIdx = 0;
+      for (const comp of resolved) {
+        // Skip removed originals to stay aligned
+        while (origIdx < page.items.length && removedIndices.has(origIdx)) {
+          origIdx++;
+        }
+        if (origIdx < page.items.length) {
+          const sourceItem = page.items[origIdx];
+          if (!sourceItem) break;
+          resolvedItems.push({ ...sourceItem, component: comp });
+          origIdx++;
+        } else {
+          resolvedItems.push({
+            placement: { x: 0, y: resolvedItems.length, w: 12, h: 1 },
+            component: comp,
+          });
+        }
+      }
+
+      return { ...page, items: resolvedItems };
+    }
+
+    return page;
+  });
+
+  // 6b. Replace unresolved page references in nav slots with resolved versions.
+  // resolveNavGroup uses childPages (unresolved) when creating slot values.
+  // Pages whose internal navigation was resolved in step 6 need their resolved
+  // versions propagated into any slot that references them.
+  const resolvedByName = new Map<string, Component>();
+  for (const p of resolvedPages) {
+    const name = p.props?.["name"] as string | undefined;
+    if (name) resolvedByName.set(name, p);
+  }
+  const patchedPages = resolvedPages.map((page) => patchSlotReferences(page, resolvedByName));
+
+  // 6c. Remove non-root pages from top-level when navTree is present.
+  // In navTree-based dashboards, only the first page is the entry point —
+  // all other pages are accessed via navigation components. Rendering them
+  // at the top level duplicates content (e.g. Carousel with navGroupId,
+  // orphaned Map/Forms pages).
+  const navTreePageNames = collectNavTreePageNames(navTree);
+  for (const name of navTreePageNames) {
+    embeddedPageNames.add(name);
+  }
+  let topLevelPages: Component[];
+  if (navTreePageNames.size > 0) {
+    const firstPage = patchedPages[0];
+    topLevelPages = firstPage ? [firstPage] : [];
+  } else if (embeddedPageNames.size > 0) {
+    topLevelPages = patchedPages.filter((p) => !embeddedPageNames.has(p.props?.["name"] as string));
+  } else {
+    topLevelPages = patchedPages;
+  }
+
+  // 7. Build root page with settings and datasets
+  const rootProps: Record<string, unknown> = { name: "root" };
+
+  // Merge global.dataset into the datasets array (DashBuilder allows defining
+  // a single dataset in global.dataset as well as in the datasets[] array)
+  const allDatasets = [...(datasets ?? [])];
+  if (global?.["dataset"] && typeof global["dataset"] === "object") {
+    allDatasets.push(global["dataset"]);
+  }
+  if (allDatasets.length > 0) {
+    rootProps["datasets"] = allDatasets;
+  }
+
+  if (global) {
+    const settings: Record<string, unknown> = {};
+    if (global["mode"]) settings["mode"] = (global["mode"] as string).toLowerCase();
+    if (global["allowUrlProperties"] !== undefined) {
+      const rawAllow = global["allowUrlProperties"];
+      settings["allowUrlProperties"] =
+        rawAllow === true || (typeof rawAllow === "string" && rawAllow.toLowerCase() === "true");
+    }
+    if (global["displayer"] || global["settings"]) {
+      settings["dataComponentDefaults"] = global["displayer"] ?? global["settings"];
+    }
+    if (global["dataset"]) {
+      settings["datasetDefaults"] = global["dataset"];
+    }
+    rootProps["settings"] = settings;
+  }
+
+  if (Object.keys(properties).length > 0) {
+    rootProps["properties"] = properties;
+  }
+
+  return Object.freeze({
+    type: "page",
+    props: rootProps,
+    slots: { content: topLevelPages },
+  });
+}
+
+/**
+ * Parses page content from one of two YAML formats into grid items.
+ *
+ * **1. `components` shorthand** — flat list; each component is placed full-width:
+ * ```yaml
+ * components:
+ *   - html: "Hello"
+ *   - displayer: { type: BARCHART }
+ * ```
+ * Each component becomes a grid item at (x:0, y:row, w:12, h:1).
+ *
+ * **2. `rows` explicit layout** — rows with columns and optional `span`:
+ * ```yaml
+ * rows:
+ *   - columns:
+ *       - span: 6
+ *         components:
+ *           - html: "left"
+ *       - span: 6
+ *         components:
+ *           - html: "right"
+ * ```
+ * Items are placed left-to-right within rows, top-to-bottom across rows.
+ */
+function parsePageContent(
+  pageRaw: Record<string, unknown>,
+  pageIndex: number,
+  displayerDefaults?: Record<string, unknown>,
+): { items?: readonly GridItem[] } | { slots?: Readonly<Record<string, readonly Component[]>> } {
+  const componentsRaw = pageRaw["components"] as unknown[] | undefined;
+  const rowsRaw = pageRaw["rows"] as unknown[] | undefined;
+
+  if (componentsRaw) {
+    const items: GridItem[] = componentsRaw.map((compRaw, i) => {
+      const component = desugarComponent(compRaw as Record<string, unknown>, displayerDefaults);
+      return {
+        placement: { x: 0, y: i, w: 12, h: 1 },
+        component: assignIdIfMissing(component, `grid_${String(pageIndex)}_0_${String(i)}`),
+      };
+    });
+    return { items };
+  }
+
+  if (rowsRaw) {
+    const items: GridItem[] = [];
+    let y = 0;
+    for (const rowRaw of rowsRaw) {
+      const row = rowRaw as Record<string, unknown>;
+      const columnsRaw = (row["columns"] ?? row["layoutColumns"]) as unknown[] | undefined;
+      if (!columnsRaw) {
+        y++;
+        continue;
+      }
+
+      const rowProps = row["properties"] as Record<string, string> | undefined;
+      const hasRowProps = rowProps && typeof rowProps === "object" && Object.keys(rowProps).length > 0;
+
+      // Collect this row's items
+      const rowItems: GridItem[] = [];
+      let x = 0;
+      let maxComponentsInColumn = 1;
+      for (const colRaw of columnsRaw) {
+        const col = colRaw as Record<string, unknown>;
+        const span = Number(col["span"] ?? 12);
+        const colComponents = (col["components"] ?? col["layoutComponents"]) as
+          | unknown[]
+          | undefined;
+        const colRows = col["rows"] as unknown[] | undefined;
+
+        if (colComponents) {
+          if (colComponents.length > maxComponentsInColumn) {
+            maxComponentsInColumn = colComponents.length;
+          }
+          for (let ci = 0; ci < colComponents.length; ci++) {
+            const component = desugarComponent(colComponents[ci] as Record<string, unknown>, displayerDefaults);
+            const placed: GridItem = {
+              placement: hasRowProps
+                ? { x, y: ci, w: span, h: 1 }
+                : { x, y: y + ci, w: span, h: 1 },
+              component: assignIdIfMissing(component, `grid_${String(pageIndex)}_${String(x)}_${String(y + ci)}`),
+            };
+
+            const colProps = col["properties"] as Record<string, string> | undefined;
+            if (colProps && typeof colProps === "object" && Object.keys(colProps).length > 0) {
+              rowItems.push({
+                ...placed,
+                component: {
+                  ...placed.component,
+                  style: { ...placed.component.style, ...colProps },
+                },
+              });
+            } else {
+              rowItems.push(placed);
+            }
+          }
+        } else if (colRows) {
+          const subPageIndex = pageIndex * 100 + x * 10 + y;
+          const subPage = { rows: colRows } as Record<string, unknown>;
+          const subResult = parsePageContent(subPage, subPageIndex, displayerDefaults);
+          if ("items" in subResult && subResult.items.length > 0) {
+            const colProps = col["properties"] as Record<string, string> | undefined;
+            const subContainer: Component = {
+              type: "grid",
+              id: `nested_${String(pageIndex)}_${String(x)}_${String(y)}`,
+              items: subResult.items,
+              ...(colProps && typeof colProps === "object" && Object.keys(colProps).length > 0
+                ? { style: colProps }
+                : {}),
+            };
+            const placed: GridItem = {
+              placement: hasRowProps
+                ? { x, y: 0, w: span, h: 1 }
+                : { x, y, w: span, h: 1 },
+              component: subContainer,
+            };
+            rowItems.push(placed);
+          }
+        }
+
+        x += span;
+      }
+
+      if (hasRowProps && rowItems.length > 0) {
+        // Wrap row items in a grid container with the row's CSS properties
+        const rowComponent: Component = {
+          type: "grid",
+          id: `row_${String(pageIndex)}_${String(y)}`,
+          style: rowProps,
+          items: rowItems,
+        };
+        items.push({
+          placement: { x: 0, y, w: 12, h: 1 },
+          component: rowComponent,
+        });
+      } else {
+        for (const item of rowItems) {
+          items.push(item);
+        }
+      }
+
+      y += hasRowProps ? 1 : maxComponentsInColumn;
+    }
+    return { items };
+  }
+
+  // No content — return empty items
+  return { items: [] };
+}
+
+/**
+ * Assigns a deterministic ID to a component if it doesn't already have one.
+ */
+function assignIdIfMissing(component: Component, defaultId: string): Component {
+  if (component.id) return component;
+  return { ...component, id: defaultId };
+}
+
+function patchSlotReferences(
+  component: Component,
+  resolved: Map<string, Component>,
+): Component {
+  let newItems = component.items;
+  let newSlots = component.slots;
+  let itemsChanged = false;
+  let slotsChanged = false;
+
+  if (component.items) {
+    const patched = component.items.map((item) => {
+      const patchedChild = patchSlotReferences(item.component, resolved);
+      if (patchedChild !== item.component) {
+        return { ...item, component: patchedChild };
+      }
+      return item;
+    });
+    itemsChanged = patched.some((item, i) => item !== component.items?.[i]);
+    if (itemsChanged) newItems = patched;
+  }
+
+  if (component.slots) {
+    const patchedSlots: Record<string, Component[]> = {};
+    for (const [name, children] of Object.entries(component.slots)) {
+      patchedSlots[name] = children.map((child) => {
+        if (child.type === "page" && child.props?.["name"]) {
+          const resolvedVersion = resolved.get(child.props["name"] as string);
+          if (resolvedVersion && resolvedVersion !== child) {
+            return patchSlotReferences(resolvedVersion, resolved);
+          }
+        }
+        return patchSlotReferences(child, resolved);
+      });
+    }
+    slotsChanged = Object.entries(patchedSlots).some(([name, children]) => {
+      const original = component.slots?.[name];
+      return !original || children.some((child, i) => child !== original[i]);
+    });
+    if (slotsChanged) newSlots = patchedSlots;
+  }
+
+  if (!itemsChanged && !slotsChanged) return component;
+  return { ...component, ...(itemsChanged ? { items: newItems } : {}), ...(slotsChanged ? { slots: newSlots } : {}) };
+}
+
+function containsNavGroupRef(page: Component, navTreeGroupIds: Set<string>): boolean {
+  if (navTreeGroupIds.size === 0) return false;
+  const check = (comp: Component): boolean => {
+    const groupId = comp.props?.["navGroupId"] as string | undefined;
+    if (groupId && navTreeGroupIds.has(groupId)) return true;
+    if (comp.items) {
+      for (const item of comp.items) {
+        if (check(item.component)) return true;
+      }
+    }
+    if (comp.slots) {
+      for (const slotComps of Object.values(comp.slots)) {
+        for (const sc of slotComps) {
+          if (check(sc)) return true;
+        }
+      }
+    }
+    return false;
+  };
+  return check(page);
+}

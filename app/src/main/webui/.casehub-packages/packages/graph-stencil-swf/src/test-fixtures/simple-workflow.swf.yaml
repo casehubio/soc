@@ -1,0 +1,28 @@
+document:
+  dsl: "1.0.0"
+  namespace: test
+  name: simple
+  version: "1.0.0"
+do:
+  - 
+  - fetchData:
+      call: http
+      with:
+        method: GET
+        endpoint:
+          uri: https://api.example.com/data
+  - transformResult:
+      set:
+        output: "${ .fetchData.body }"
+  - checkCondition:
+      switch:
+        - caseA:
+            when: "${ .output.status == 'ok' }"
+            then: continue
+        - default:
+            then: raiseError
+  - raiseError:
+      raise:
+        error:
+          type: https://example.com/errors/processing
+          title: Processing failed

@@ -1,0 +1,203 @@
+import type {
+  ScenarioScope, OrcSemaphore, OrcLatch, OrcSignal, OrcChannel,
+  OrcStateMachine, StepResultStore,
+} from './types.js';
+import { DefaultOrcSemaphore } from './semaphore.js';
+import { DefaultOrcLatch } from './latch.js';
+import { DefaultOrcSignal } from './signal.js';
+import { DefaultOrcChannel } from './channel.js';
+import { StateMachineBuilder } from './state-machine.js';
+import { DefaultStepResultStore } from './step-result-store.js';
+import { DefaultOrcCounter } from './counter.js';
+import { DefaultOrcGauge } from './gauge.js';
+import { DefaultOrcFlag } from './flag.js';
+import { DefaultOrcAccumulator } from './accumulator.js';
+import { DefaultOrcMap } from './orc-map.js';
+import { DefaultSpawnedTask } from './spawned-task.js';
+import { DefaultConsumerHandle } from './consumer-handle.js';
+import type { SpeedMultiplier } from './speed-multiplier.js';
+import { DefaultSpeedMultiplier } from './speed-multiplier.js';
+import type { OrcNumericPrimitive } from './numeric-primitive.js';
+import type { PriorityOrcSemaphore } from './priority-semaphore.js';
+import { DefaultPriorityOrcSemaphore } from './priority-semaphore.js';
+
+export class DefaultScenarioScope implements ScenarioScope {
+  private readonly _primitives = new Map<string, unknown>();
+  private _resultStore?: DefaultStepResultStore;
+  private readonly _speedMultiplier: SpeedMultiplier;
+
+  constructor(parent?: DefaultScenarioScope, sm?: SpeedMultiplier);
+  constructor(parent?: DefaultScenarioScope, sm?: SpeedMultiplier) {
+    this._parent = parent;
+    this._speedMultiplier = sm ?? parent?._speedMultiplier ?? new DefaultSpeedMultiplier();
+  }
+
+  private readonly _parent: DefaultScenarioScope | undefined;
+  private _deadlineMs?: number;
+  private _deadlineStart?: number;
+  private _deadlineExpired = false;
+  private _deadlineTimer?: ReturnType<typeof setTimeout>;
+
+  semaphore(name: string, permits: number): OrcSemaphore {
+    return this._getOrCreate(name, () => new DefaultOrcSemaphore(permits));
+  }
+
+  latch(name: string, count: number): OrcLatch {
+    return this._getOrCreate(name, () => new DefaultOrcLatch(count));
+  }
+
+  signal(name: string): OrcSignal {
+    return this._getOrCreate(name, () => new DefaultOrcSignal());
+  }
+
+  channel<T>(name: string, capacity?: number): OrcChannel<T> {
+    return this._getOrCreate(name, () => new DefaultOrcChannel<T>(capacity));
+  }
+
+  stateMachine<S extends string>(
+    name: string, states: readonly S[], initial: S,
+  ): OrcStateMachine<S> {
+    return this._getOrCreate(name, () => {
+      const builder = new StateMachineBuilder<S>(name, initial);
+      for (let i = 0; i < states.length - 1; i++) {
+        for (let j = i + 1; j < states.length; j++) {
+          builder.transition(states[i]!, states[j]!);
+          builder.transition(states[j]!, states[i]!);
+        }
+      }
+      return builder.build();
+    });
+  }
+
+  primitive<T>(name: string, type: new (...args: unknown[]) => T): T {
+    return this._getOrCreate(name, () => new type());
+  }
+
+  resultStore(): StepResultStore {
+    if (!this._resultStore) this._resultStore = new DefaultStepResultStore();
+    return this._resultStore;
+  }
+
+  counter(name: string): import('./counter.js').OrcCounter {
+    return this._getOrCreate(name, () => new DefaultOrcCounter());
+  }
+
+  gauge<T>(name: string, initial: T): import('./gauge.js').OrcGauge<T> {
+    return this._getOrCreate(name, () => new DefaultOrcGauge<T>(initial));
+  }
+
+  flag(name: string): import('./flag.js').OrcFlag {
+    return this._getOrCreate(name, () => new DefaultOrcFlag());
+  }
+
+  accumulator(name: string, op: (a: number, b: number) => number, identity: number): import('./accumulator.js').OrcAccumulator {
+    return this._getOrCreate(name, () => new DefaultOrcAccumulator(op, identity));
+  }
+
+  map<K, V>(name: string): import('./orc-map.js').OrcMap<K, V> {
+    return this._getOrCreate(name, () => new DefaultOrcMap<K, V>());
+  }
+
+  spawn(name: string, task: (signal: AbortSignal) => Promise<void>): import('./spawned-task.js').SpawnedTask {
+    return this._getOrCreate(name, () => new DefaultSpawnedTask(name, task));
+  }
+
+  consumer(name: string): import('./consumer-handle.js').ConsumerHandle {
+    return this._getOrCreate(name, () => new DefaultConsumerHandle(name));
+  }
+
+  numericPrimitive(name: string): OrcNumericPrimitive {
+    const existing = this._primitives.get(name);
+    if (existing === undefined) {
+      if (this._parent) {
+        const parentVal = this._parent._primitives.get(name);
+        if (parentVal !== undefined && typeof (parentVal as Record<string, unknown>).doubleValue === 'function') {
+          return parentVal as OrcNumericPrimitive;
+        }
+      }
+      throw new Error(`No primitive named '${name}' exists`);
+    }
+    if (typeof (existing as Record<string, unknown>).doubleValue === 'function') {
+      return existing as OrcNumericPrimitive;
+    }
+    throw new Error(`Primitive '${name}' is not a numeric primitive`);
+  }
+
+  prioritySemaphore(name: string, permits: number): PriorityOrcSemaphore {
+    return this._getOrCreate(name, () => new DefaultPriorityOrcSemaphore(permits));
+  }
+
+  childScope(name: string): ScenarioScope {
+    return this._getOrCreate(name, () => new DefaultScenarioScope(this, this._speedMultiplier));
+  }
+
+  withDeadline(deadlineMs: number, onDeadline?: () => void): ScenarioScope {
+    const child = new DefaultScenarioScope(undefined, this._speedMultiplier);
+    child._deadlineMs = deadlineMs;
+    child._deadlineStart = Date.now();
+    if (onDeadline) {
+      child._deadlineTimer = setTimeout(() => {
+        child._deadlineExpired = true;
+        onDeadline();
+      }, deadlineMs);
+    }
+    return child;
+  }
+
+  isDeadlineExpired(): boolean {
+    if (this._deadlineExpired) return true;
+    if (this._deadlineMs === undefined || this._deadlineStart === undefined) return false;
+    return Date.now() - this._deadlineStart >= this._deadlineMs;
+  }
+
+  remainingTime(): number | undefined {
+    if (this._deadlineMs === undefined || this._deadlineStart === undefined) return undefined;
+    const remaining = this._deadlineMs - (Date.now() - this._deadlineStart);
+    return remaining > 0 ? remaining : 0;
+  }
+
+  speedMultiplier(): SpeedMultiplier {
+    return this._speedMultiplier;
+  }
+
+  close(): void {
+    if (this._deadlineTimer) clearTimeout(this._deadlineTimer);
+    const tasks: Array<{ joinWithTimeout(ms: number): Promise<boolean> }> = [];
+    for (const [, prim] of this._primitives) {
+      if (prim && typeof prim === 'object') {
+        if (prim instanceof DefaultScenarioScope) {
+          prim.close();
+        } else if ('joinWithTimeout' in prim && typeof (prim as Record<string, unknown>).joinWithTimeout === 'function') {
+          if ('cancel' in prim && typeof (prim as Record<string, unknown>).cancel === 'function') {
+            (prim as { cancel(): void }).cancel();
+          }
+          tasks.push(prim as { joinWithTimeout(ms: number): Promise<boolean> });
+        } else if ('close' in prim && typeof (prim as Record<string, unknown>).close === 'function') {
+          (prim as { close(): void }).close();
+        } else if ('signal' in prim && typeof (prim as Record<string, unknown>).signal === 'function') {
+          (prim as OrcSignal).signal();
+        }
+      }
+    }
+    if (tasks.length > 0) {
+      void Promise.allSettled(tasks.map(t => t.joinWithTimeout(5000)));
+    }
+    this._primitives.clear();
+  }
+
+  registerPrimitive(name: string, instance: unknown): void {
+    this._primitives.set(name, instance);
+  }
+
+  private _getOrCreate<T>(name: string, factory: () => T): T {
+    let existing = this._primitives.get(name) as T | undefined;
+    if (existing !== undefined) return existing;
+    if (this._parent) {
+      const parentVal = this._parent._primitives.get(name) as T | undefined;
+      if (parentVal !== undefined) return parentVal;
+    }
+    existing = factory();
+    this._primitives.set(name, existing);
+    return existing;
+  }
+}

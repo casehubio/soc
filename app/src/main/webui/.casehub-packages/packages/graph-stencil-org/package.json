@@ -1,0 +1,32 @@
+{
+  "name": "@casehubio/mosaic-graph-stencil-org",
+  "version": "0.1.0",
+  "description": "Eidos org domain adapter and stencils for graph editor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "lit-html": "^3.3.0",
+    "yaml": "^2.7.0"
+  },
+  "license": "Apache-2.0"
+}

@@ -1,0 +1,86 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "type": "object",
+  "required": ["scenario", "steps"],
+  "properties": {
+    "scenario": { "type": "string" },
+    "steps": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "oneOf": [
+          {
+            "required": ["navigate"],
+            "properties": { "navigate": { "type": "string" } }
+          },
+          {
+            "required": ["click"],
+            "properties": { "click": { "$ref": "#/$defs/ariaTarget" } }
+          },
+          {
+            "required": ["fill"],
+            "properties": {
+              "fill": {
+                "allOf": [{ "$ref": "#/$defs/ariaTarget" }],
+                "required": ["value"],
+                "properties": { "value": { "type": "string" } }
+              }
+            }
+          },
+          {
+            "required": ["select"],
+            "properties": {
+              "select": {
+                "allOf": [{ "$ref": "#/$defs/ariaTarget" }],
+                "required": ["value"],
+                "properties": { "value": { "type": "string" } }
+              }
+            }
+          },
+          {
+            "required": ["expand"],
+            "properties": { "expand": { "$ref": "#/$defs/ariaTarget" } }
+          },
+          {
+            "required": ["collapse"],
+            "properties": { "collapse": { "$ref": "#/$defs/ariaTarget" } }
+          },
+          {
+            "required": ["assert"],
+            "properties": {
+              "assert": {
+                "allOf": [{ "$ref": "#/$defs/ariaTarget" }],
+                "required": ["state"],
+                "properties": { "state": { "type": "object" } }
+              }
+            }
+          },
+          {
+            "required": ["wait"],
+            "properties": {
+              "wait": {
+                "allOf": [{ "$ref": "#/$defs/ariaTarget" }],
+                "required": ["state"],
+                "properties": {
+                  "state": { "type": "object" },
+                  "timeout": { "type": "integer", "default": 5000 }
+                }
+              }
+            }
+          }
+        ]
+      }
+    }
+  },
+  "$defs": {
+    "ariaTarget": {
+      "type": "object",
+      "required": ["role", "name"],
+      "properties": {
+        "role": { "type": "string" },
+        "name": { "type": "string" },
+        "within": { "$ref": "#/$defs/ariaTarget" }
+      }
+    }
+  }
+}

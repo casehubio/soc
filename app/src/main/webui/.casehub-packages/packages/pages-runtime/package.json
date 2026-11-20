@@ -1,0 +1,38 @@
+{
+  "name": "@casehubio/pages-runtime",
+  "version": "0.2.3",
+  "description": "CaseHub Pages Runtime \u2014 site loading, data pipeline, navigation, cross-filtering",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-pages.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist .typecheck"
+  },
+  "dependencies": {
+    "js-yaml": "^4.1.0",
+    "marked": "^15.0.0"
+  },
+  "devDependencies": {
+    "@types/js-yaml": "^4.0.9",
+    "happy-dom": "^20.10.6",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

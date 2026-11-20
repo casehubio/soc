@@ -1,0 +1,47 @@
+import { type TemplateResult } from "lit";
+import type { TypedDataSet, TypedRow, ColumnId } from "@casehubio/pages-data";
+import type { GroupedViewProps, ColumnRenderer } from "@casehubio/pages-component";
+import { PagesElement } from "../../base/PagesElement.js";
+export declare class PagesGroupedView extends PagesElement<GroupedViewProps> {
+    static styles: import("lit").CSSResult;
+    private _expandState;
+    private _selectedKeys;
+    private _hiddenColumnIds;
+    private _pickerOpen;
+    private _columnRenderers;
+    private _getRowKey;
+    private _getRowDetail;
+    private _getRowClass;
+    private _instanceId;
+    private _getRowAccent;
+    setColumnRenderers(value: ReadonlyMap<ColumnId, ColumnRenderer> | undefined): void;
+    setGetRowKey(value: ((row: TypedRow) => string) | undefined): void;
+    setGetRowDetail(value: ((row: TypedRow) => unknown) | undefined): void;
+    setGetRowClass(value: ((row: TypedRow) => string) | undefined): void;
+    connectedCallback(): void;
+    protected renderContent(props: GroupedViewProps, dataset: TypedDataSet): TemplateResult;
+    private _renderHeaderBar;
+    private _renderListHeader;
+    private _renderColumnPicker;
+    private _renderBoundarySection;
+    private _renderTreeNode;
+    private _renderGroupTable;
+    private _renderContentList;
+    private _handleToggle;
+    private _handleHeaderSort;
+    private _handleChildSelectionChange;
+    private _handleSelectAll;
+    private _togglePicker;
+    private _toggleColumnVisibility;
+    private _isExpanded;
+    private _summaryText;
+    private _spreadsheetLabel;
+    private _sortClass;
+    private _ariaSort;
+    private _selectAllChecked;
+    private _selectAllIndeterminate;
+    private _buildColumnConfig;
+    private _sliceDataset;
+    private _nodeKey;
+}
+//# sourceMappingURL=PagesGroupedView.d.ts.map

@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style id="theme-vars">
+    :root {
+      --pages-surface-color: #ffffff;
+      --pages-border-color: #d1d5db;
+      --pages-text-color: #1f2937;
+      --pages-accent-color: #3b82f6;
+      --pages-muted-color: #6b7280;
+    }
+  </style>
+  <style>
+    html, body { margin: 0; padding: 0; overflow: hidden; background: var(--pages-surface-color); width: 100%; height: 100%; }
+    #diagram-root { width: 100%; height: 100%; }
+    #diagram-root > * { display: block; width: 100%; height: 100%; }
+    .react-flow__nodesselection-rect { display: none !important; }
+    .stencil-decoration-wrapper { height: auto !important; }
+  </style>
+</head>
+<body>
+  <div id="diagram-root"></div>
+  <script src="diagram-panel.bundle.js"></script>
+</body>
+</html>

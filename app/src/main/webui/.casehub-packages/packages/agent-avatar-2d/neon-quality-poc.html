@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Neon Collection — Quality POC</title>
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body { font-family: -apple-system, sans-serif; background: #0a0a14; color: #e0e0e0; padding: 32px; }
+  h1 { text-align: center; color: #fff; margin-bottom: 4px; }
+  .subtitle { text-align: center; color: #666; margin-bottom: 32px; font-size: 14px; }
+  .row { display: flex; gap: 24px; justify-content: center; margin-bottom: 32px; }
+  .card { background: #0e0e1a; border: 1px solid #1a1a2e; border-radius: 10px; padding: 16px; text-align: center; }
+  .card h3 { margin-top: 8px; font-size: 14px; color: #ff44aa; }
+  .card .sub { font-size: 11px; color: #666; margin-top: 2px; }
+  svg { display: block; margin: 0 auto; }
+</style>
+</head>
+<body>
+<h1 style="color:#ff44aa">Neon Collection — Quality POC</h1>
+<p class="subtitle">Cyberpunk wireframe characters — glowing outlines, dark fills, circuit detail</p>
+
+<div class="row">
+
+<!-- JESTER/CLOWN — Neon style -->
+<div class="card">
+  <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 200 240" width="200" height="240">
+    <defs>
+      <filter id="glow-pink">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+      </filter>
+      <filter id="glow-cyan">
+        <feGaussianBlur stdDeviation="3" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+      </filter>
+      <filter id="glow-soft">
+        <feGaussianBlur stdDeviation="2" result="blur"/>
+        <feComposite in="SourceGraphic" in2="blur" operator="over"/>
+      </filter>
+    </defs>
+
+    <!-- === BODY — wireframe costume with circuit lines === -->
+    <!-- Body outline (glowing) -->
+    <path d="M 46,184 Q 48,200 52,220 L 148,220 Q 152,200 154,184 Z" fill="#0a0814" fill-opacity="0.6" stroke="#ff44aa" stroke-width="2" filter="url(#glow-pink)"/>
+    <!-- Internal circuit lines -->
+    <line x1="100" y1="186" x2="100" y2="218" stroke="#ff44aa" stroke-width="0.8" opacity="0.4"/>
+    <line x1="70" y1="196" x2="130" y2="196" stroke="#ff44aa" stroke-width="0.8" opacity="0.3"/>
+    <line x1="76" y1="208" x2="124" y2="208" stroke="#ff44aa" stroke-width="0.8" opacity="0.3"/>
+    <!-- Circuit nodes at intersections -->
+    <circle cx="100" cy="196" r="2" fill="#ff44aa" opacity="0.6"/>
+    <circle cx="100" cy="208" r="2" fill="#ff44aa" opacity="0.4"/>
+    <circle cx="76" cy="196" r="1.5" fill="#ff44aa" opacity="0.3"/>
+    <circle cx="124" cy="196" r="1.5" fill="#ff44aa" opacity="0.3"/>
+    <!-- V-front accent -->
+    <path d="M 78,184 L 100,206 L 122,184" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.6" filter="url(#glow-cyan)"/>
+    <!-- Button node -->
+    <circle cx="100" cy="200" r="3" fill="#ff0044" stroke="#ff44aa" stroke-width="1.5" filter="url(#glow-pink)"/>
+
+    <!-- === LEFT ARM — wireframe with glow === -->
+    <path d="M 46,184 Q 30,186 20,196 Q 14,206 18,216" fill="none" stroke="#ff44aa" stroke-width="2" filter="url(#glow-pink)"/>
+    <!-- Hand wireframe -->
+    <path d="M 16,214 Q 10,210 8,216 Q 6,222 12,222 L 20,220" fill="none" stroke="#00e5ff" stroke-width="1.5" filter="url(#glow-cyan)"/>
+    <!-- Finger lines -->
+    <path d="M 8,216 Q 4,214 6,210" fill="none" stroke="#00e5ff" stroke-width="1" opacity="0.6"/>
+    <path d="M 10,214 Q 8,208 10,206" fill="none" stroke="#00e5ff" stroke-width="1" opacity="0.5"/>
+    <!-- Joint nodes -->
+    <circle cx="30" cy="190" r="2" fill="#ff44aa" opacity="0.5"/>
+    <circle cx="18" cy="216" r="2" fill="#00e5ff" opacity="0.6"/>
+
+    <!-- === RIGHT ARM + horn prop === -->
+    <path d="M 154,184 Q 168,186 176,194 Q 182,204 178,214" fill="none" stroke="#ff44aa" stroke-width="2" filter="url(#glow-pink)"/>
+    <path d="M 176,212 Q 182,208 186,214 Q 188,220 182,222 L 174,220" fill="none" stroke="#00e5ff" stroke-width="1.5" filter="url(#glow-cyan)"/>
+    <!-- Horn wireframe -->
+    <path d="M 184,206 Q 190,196 188,186 Q 186,180 190,176" fill="none" stroke="#ffaa00" stroke-width="1.5" opacity="0.6"/>
+    <circle cx="190" cy="174" r="4" fill="none" stroke="#ff0044" stroke-width="1.5" filter="url(#glow-pink)"/>
+    <circle cx="190" cy="174" r="1.5" fill="#ff0044"/>
+    <circle cx="170" cy="190" r="2" fill="#ff44aa" opacity="0.5"/>
+
+    <!-- === HEAD — geometric wireframe, round-wide === -->
+    <!-- Head shape — dark fill, glowing outline -->
+    <ellipse cx="100" cy="100" rx="48" ry="44" fill="#0a0814" fill-opacity="0.7" stroke="#ff44aa" stroke-width="2.5" filter="url(#glow-pink)"/>
+    <!-- Internal face grid lines (holographic HUD feel) -->
+    <line x1="100" y1="60" x2="100" y2="140" stroke="#ff44aa" stroke-width="0.5" opacity="0.15"/>
+    <line x1="56" y1="100" x2="144" y2="100" stroke="#ff44aa" stroke-width="0.5" opacity="0.15"/>
+    <!-- Diagonal scan lines -->
+    <line x1="68" y1="66" x2="132" y2="134" stroke="#ff44aa" stroke-width="0.3" opacity="0.1"/>
+    <line x1="132" y1="66" x2="68" y2="134" stroke="#ff44aa" stroke-width="0.3" opacity="0.1"/>
+
+    <!-- White face paint zone — rendered as glowing wireframe overlay -->
+    <path d="M 64,88 C 60,110 62,130 78,136 Q 90,140 100,140 Q 110,140 122,136 C 138,130 140,110 136,88 C 130,76 120,72 100,72 C 80,72 70,76 64,88 Z" fill="#1a1a2e" fill-opacity="0.5" stroke="#ffffff" stroke-width="1.5" opacity="0.6" filter="url(#glow-soft)"/>
+
+    <!-- Ears — circuit nodes -->
+    <circle cx="52" cy="100" r="6" fill="#0a0814" fill-opacity="0.5" stroke="#ff44aa" stroke-width="1.5"/>
+    <circle cx="52" cy="100" r="2" fill="#ff44aa" opacity="0.4"/>
+    <circle cx="148" cy="100" r="6" fill="#0a0814" fill-opacity="0.5" stroke="#ff44aa" stroke-width="1.5"/>
+    <circle cx="148" cy="100" r="2" fill="#ff44aa" opacity="0.4"/>
+
+    <!-- === JESTER HAT — neon wireframe spikes === -->
+    <!-- Left spike -->
+    <path d="M 62,72 L 48,52 L 36,38 L 28,24" fill="none" stroke="#ff44aa" stroke-width="2" filter="url(#glow-pink)"/>
+    <circle cx="26" cy="20" r="4" fill="none" stroke="#ffaa00" stroke-width="1.5" filter="url(#glow-soft)"/>
+    <circle cx="26" cy="20" r="1.5" fill="#ffaa00"/>
+    <!-- Center spike -->
+    <path d="M 100,58 L 100,34 L 100,16" fill="none" stroke="#00e5ff" stroke-width="2" filter="url(#glow-cyan)"/>
+    <circle cx="100" cy="12" r="4" fill="none" stroke="#ffaa00" stroke-width="1.5" filter="url(#glow-soft)"/>
+    <circle cx="100" cy="12" r="1.5" fill="#ffaa00"/>
+    <!-- Right spike -->
+    <path d="M 138,72 L 152,52 L 164,38 L 172,24" fill="none" stroke="#ff44aa" stroke-width="2" filter="url(#glow-pink)"/>
+    <circle cx="174" cy="20" r="4" fill="none" stroke="#ffaa00" stroke-width="1.5" filter="url(#glow-soft)"/>
+    <circle cx="174" cy="20" r="1.5" fill="#ffaa00"/>
+    <!-- Hat band — neon ring -->
+    <ellipse cx="100" cy="62" rx="42" ry="6" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.6"/>
+    <!-- Band nodes -->
+    <circle cx="80" cy="62" r="2" fill="#00e5ff" opacity="0.5"/>
+    <circle cx="100" cy="58" r="2" fill="#00e5ff" opacity="0.5"/>
+    <circle cx="120" cy="62" r="2" fill="#00e5ff" opacity="0.5"/>
+
+    <!-- === CLOWN NOSE — glowing red orb === -->
+    <circle cx="100" cy="106" r="8" fill="#ff0044" fill-opacity="0.3" stroke="#ff0044" stroke-width="2" filter="url(#glow-pink)"/>
+    <circle cx="100" cy="106" r="4" fill="#ff0044" opacity="0.6"/>
+    <circle cx="98" cy="104" r="2" fill="#ff4466" opacity="0.5"/>
+
+    <!-- === EYES — concentric neon rings (Max's manic energy) === -->
+    <!-- Left eye — double ring -->
+    <circle cx="82" cy="90" r="12" fill="none" stroke="#00e5ff" stroke-width="2" filter="url(#glow-cyan)"/>
+    <circle cx="82" cy="90" r="6" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+    <circle cx="82" cy="90" r="2" fill="#00e5ff"/>
+    <!-- Right eye -->
+    <circle cx="118" cy="90" r="12" fill="none" stroke="#00e5ff" stroke-width="2" filter="url(#glow-cyan)"/>
+    <circle cx="118" cy="90" r="6" fill="none" stroke="#00e5ff" stroke-width="1.5"/>
+    <circle cx="118" cy="90" r="2" fill="#00e5ff"/>
+    <!-- Eye scan lines -->
+    <line x1="76" y1="90" x2="70" y2="90" stroke="#00e5ff" stroke-width="0.8" opacity="0.4"/>
+    <line x1="124" y1="90" x2="130" y2="90" stroke="#00e5ff" stroke-width="0.8" opacity="0.4"/>
+
+    <!-- === BROWS — angular neon arcs === -->
+    <path d="M 70,76 L 80,72 L 94,76" fill="none" stroke="#ff44aa" stroke-width="1.5" opacity="0.6"/>
+    <path d="M 106,76 L 120,72 L 130,76" fill="none" stroke="#ff44aa" stroke-width="1.5" opacity="0.6"/>
+
+    <!-- === GRIN — wide glowing arc with segment markers === -->
+    <path d="M 76,122 Q 100,140 124,122" fill="none" stroke="#ff44aa" stroke-width="2" filter="url(#glow-pink)"/>
+    <!-- Teeth segments — vertical glow bars -->
+    <line x1="84" y1="122" x2="84" y2="130" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+    <line x1="92" y1="123" x2="92" y2="133" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+    <line x1="100" y1="124" x2="100" y2="134" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+    <line x1="108" y1="123" x2="108" y2="133" stroke="#ffffff" stroke-width="1" opacity="0.5"/>
+    <line x1="116" y1="122" x2="116" y2="130" stroke="#ffffff" stroke-width="1" opacity="0.4"/>
+    <!-- Grin corner extensions (Krusty-style) -->
+    <path d="M 74,120 L 68,116" fill="none" stroke="#ff0044" stroke-width="1.5" opacity="0.5"/>
+    <path d="M 126,120 L 132,116" fill="none" stroke="#ff0044" stroke-width="1.5" opacity="0.5"/>
+
+    <!-- Rosy cheek glow spots -->
+    <circle cx="66" cy="108" r="6" fill="#ff0044" opacity="0.08" filter="url(#glow-pink)"/>
+    <circle cx="134" cy="108" r="6" fill="#ff0044" opacity="0.08" filter="url(#glow-pink)"/>
+
+    <!-- === COLLAR — neon scallop wire === -->
+    <path d="M 58,152 Q 68,144 80,148 Q 90,152 100,146 Q 110,152 120,148 Q 132,144 142,152" fill="none" stroke="#00e5ff" stroke-width="1.5" opacity="0.6" filter="url(#glow-cyan)"/>
+    <!-- Collar nodes -->
+    <circle cx="80" cy="148" r="1.5" fill="#00e5ff" opacity="0.5"/>
+    <circle cx="100" cy="146" r="1.5" fill="#00e5ff" opacity="0.5"/>
+    <circle cx="120" cy="148" r="1.5" fill="#00e5ff" opacity="0.5"/>
+
+    <!-- Neck wire -->
+    <line x1="90" y1="142" x2="90" y2="152" stroke="#ff44aa" stroke-width="1" opacity="0.3"/>
+    <line x1="110" y1="142" x2="110" y2="152" stroke="#ff44aa" stroke-width="1" opacity="0.3"/>
+
+    <!-- === FEET — wireframe shoes === -->
+    <path d="M 62,220 Q 60,228 66,230 L 86,230 Q 90,228 88,220" fill="none" stroke="#ff44aa" stroke-width="1.5"/>
+    <path d="M 112,220 Q 110,228 116,230 L 136,230 Q 140,228 138,220" fill="none" stroke="#ff44aa" stroke-width="1.5"/>
+    <!-- Shoe glow dots -->
+    <circle cx="76" cy="226" r="1.5" fill="#ff44aa" opacity="0.4"/>
+    <circle cx="126" cy="226" r="1.5" fill="#ff44aa" opacity="0.4"/>
+
+    <!-- === AMBIENT PARTICLES (floating data fragments) === -->
+    <rect x="40" y="70" width="3" height="3" fill="#ff44aa" opacity="0.15" transform="rotate(45 41.5 71.5)"/>
+    <rect x="156" y="130" width="2" height="2" fill="#00e5ff" opacity="0.12" transform="rotate(45 157 131)"/>
+    <rect x="30" y="180" width="2" height="2" fill="#ffaa00" opacity="0.1" transform="rotate(45 31 181)"/>
+    <rect x="168" y="60" width="2" height="2" fill="#ff0044" opacity="0.1" transform="rotate(45 169 61)"/>
+
+  </svg>
+  <h3>Clown</h3>
+  <div class="sub">Concentric eye rings · glowing grin · circuit wireframe</div>
+</div>
+
+</div>
+</body>
+</html>

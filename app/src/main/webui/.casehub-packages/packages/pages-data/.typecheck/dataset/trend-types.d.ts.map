@@ -1,0 +1,1 @@
+{"version":3,"file":"trend-types.d.ts","sourceRoot":"","sources":["../../src/dataset/trend-types.ts"],"names":[],"mappings":"AACA,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,YAAY,CAAC;AAE/C,MAAM,WAAW,UAAU;IACzB,QAAQ,CAAC,SAAS,EAAE,MAAM,CAAC;IAC3B,QAAQ,CAAC,KAAK,EAAE,MAAM,CAAC;CACxB;AAED,wBAAgB,kBAAkB,CAAC,OAAO,EAAE,YAAY,GAAG,UAAU,EAAE,CActE"}

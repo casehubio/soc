@@ -1,0 +1,1 @@
+{"version":3,"file":"column-lookup.d.ts","sourceRoot":"","sources":["../../src/dataset/column-lookup.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,MAAM,EAAE,QAAQ,EAAE,MAAM,YAAY,CAAC;AAEnD,wBAAgB,UAAU,CAAC,OAAO,EAAE,SAAS,MAAM,EAAE,EAAE,EAAE,EAAE,QAAQ,GAAG,MAAM,GAAG,SAAS,CAKvF;AAED,wBAAgB,eAAe,CAAC,OAAO,EAAE,SAAS,MAAM,EAAE,EAAE,EAAE,EAAE,QAAQ,GAAG,MAAM,CAMhF"}

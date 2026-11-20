@@ -1,0 +1,1735 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Agent Viewer — Component Gallery</title>
+<style>
+  :root {
+    --bg: #1e1e2e;
+    --surface: #282a3a;
+    --surface-hover: #313348;
+    --border: #3b3d52;
+    --text: #cdd6f4;
+    --text-dim: #7f849c;
+    --text-bright: #f0f4ff;
+
+    --blue: #89b4fa;
+    --green: #a6e3a1;
+    --red: #f38ba8;
+    --amber: #f9e2af;
+    --purple: #cba6f7;
+    --teal: #94e2d5;
+    --peach: #fab387;
+    --pink: #f5c2e7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 8px;
+  }
+  p.subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  /* ─── Tab Panel ─── */
+  .tab-panel {
+    margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .tab-bar {
+    display: flex;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+  }
+  .tab-content {
+    display: none;
+    padding: 12px;
+    background: var(--surface);
+  }
+  .tab-content.active { display: block; }
+  .tab-content.yaml-tab {
+    padding: 0;
+  }
+  .tab-content.yaml-tab pre {
+    margin: 0;
+    padding: 16px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .yaml-key { color: var(--blue); }
+  .yaml-str { color: var(--green); }
+  .yaml-num { color: var(--peach); }
+  .yaml-comment { color: var(--text-dim); font-style: italic; }
+</style>
+</head>
+<body>
+
+<h1>Agent Viewer — Component Gallery</h1>
+<p class="subtitle">Pattern and agent descriptor rendering from agency YAML. Each section shows the component and the YAML source.</p>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>1. Eidos — Agent Identity View</h2>
+<h3>standalone agent descriptor — disposition bars, capabilities, goals, and briefing</h3>
+<div id="eidos-section"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>2. Agent Viewer — Composition Shell</h2>
+<h3>the primary component apps embed — composes Eidos, Pattern, and Steps tabs into a single drill-down view</h3>
+
+<h3>2a. With Deliberation/Debate Pattern</h3>
+<div id="viewer-section"></div>
+
+<h3>2b. With Deliberation/Voting Pattern</h3>
+<div id="viewer-voting-section"></div>
+
+<h3>2c. With Governance/Oversight (Base Pattern View)</h3>
+<div id="viewer-base-section"></div>
+
+<h3>2d. With Playbook/Sequence Spec</h3>
+<div id="viewer-playbook-section"></div>
+
+<h3>2e. With Orchestration/Supervisor</h3>
+<div id="viewer-supervisor-section"></div>
+
+<h3>2f. With Orchestration/Choreography</h3>
+<div id="viewer-choreography-section"></div>
+
+<h3>2g. With Orchestration/Saga</h3>
+<div id="viewer-saga-section"></div>
+
+<h3>2h. With Orchestration/Decomposition</h3>
+<div id="viewer-decomposition-section"></div>
+
+<h3>2i. With Deliberation/Negotiation</h3>
+<div id="viewer-negotiation-section"></div>
+
+<h3>2j. With Deliberation/Coalition</h3>
+<div id="viewer-coalition-section"></div>
+
+<h3>2k. With Deliberation/Normative</h3>
+<div id="viewer-normative-section"></div>
+
+<h3>2l. With Governance/Judgment</h3>
+<div id="viewer-judgment-section"></div>
+
+<h3>2m. With Perception/Summarisation</h3>
+<div id="viewer-summarisation-section"></div>
+
+<h3>2n. With Perception/Observation</h3>
+<div id="viewer-observation-section"></div>
+
+<h3>2o. With Optimisation/Prompt</h3>
+<div id="viewer-prompt-opt-section"></div>
+
+<h3>2p. With Social/Cognition</h3>
+<div id="viewer-cognition-section"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>3. Pattern Views — Internal Sub-Components</h2>
+<h3>these are the views agent-viewer dispatches internally via its exhaustive switch. shown in isolation for development and review.</h3>
+
+<h3>3a. Voting — Multi-Agent Convergence</h3>
+<div id="voting-section"></div>
+
+<h3>3b. Debate — Turn-Based Deliberation</h3>
+<div id="debate-section"></div>
+
+<h3>3c. Base Pattern View — Thin Capability Types</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Shared view for 5 types with no category-specific fields: governance/oversight, governance/attestation, governance/trust, communication/channel-execution, communication/channel-summary</p>
+<div id="base-pattern-section"></div>
+
+<h3>3d. Playbook Spec View — Step Orchestration Descriptor</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Thin spec descriptor for playbook types. Rich pipeline rendering is in coordination-pipeline-view (Steps tab).</p>
+<div id="playbook-section"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>3e–3h. Deliberation + Governance Pattern Views</h2>
+
+<h3>3e. Negotiation — Proposal Exchange</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Agents negotiate through proposals and counter-proposals with acceptance/deadlock outcomes</p>
+<div id="negotiation-section"></div>
+
+<h3>3f. Coalition — Capability Coverage</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Forms a coalition covering all required capabilities across multiple agents</p>
+<div id="coalition-section"></div>
+
+<h3>3g. Normative — Rule Arbitration</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Resolves conflicts between competing rules through structured arbitration with an arbiter</p>
+<div id="normative-section"></div>
+
+<h3>3h. Judgment — Governance Gate</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Multi-level judgment gate with escalation chain for governance decisions</p>
+<div id="judgment-section"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>4. Orchestration Pattern Views</h2>
+<h3>category-specific views for the four orchestration patterns</h3>
+
+<h3>4a. Supervisor — Hub-and-Spoke Routing</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Central supervisor routes tasks to specialist workers via configurable routing strategy</p>
+<div id="supervisor-section"></div>
+
+<h3>4b. Choreography — Reactive Blackboard</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Agents react to shared blackboard state changes — no central controller</p>
+<div id="choreography-section"></div>
+
+<h3>4c. Saga — Forward Path + Compensation</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Sequential execution with compensating rollback on failure</p>
+<div id="saga-section"></div>
+
+<h3>4d. Decomposition — HTN Task Breakdown</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Decomposes complex tasks into specialist sub-tasks via LLM or heuristic strategies</p>
+<div id="decomposition-section"></div>
+
+<h3>4e. Routing Strategy — Agent Selection Visualization</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Routing strategy layouts showing how agents are selected: first-match, round-robin, sequential, select-all, llm-selected, cbr-agent, disposition-aware</p>
+<div id="routing-first-match-section"></div>
+<div id="routing-round-robin-section"></div>
+<div id="routing-select-all-section"></div>
+<div id="routing-llm-section"></div>
+<div id="routing-cbr-section"></div>
+<div id="routing-disposition-section"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>5. Perception, Optimisation & Social Pattern Views</h2>
+<h3>grounded views matching real Java YAML types (issue #288)</h3>
+
+<h3>5a. Summarisation — Multi-Level Pipeline</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">PipelineDefinition: source event → levels with grouping/summariser → emit events</p>
+<div id="summarisation-section"></div>
+
+<h3>5b. Observation — World Definition</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">WorldDefinition: actions, sections, renderer with verbatim/grouped/summarised tier thresholds</p>
+<div id="observation-section"></div>
+
+<h3>5c. Narrative — Decision Pipeline</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">L0 signals → L1 step summaries → L2 decision narratives</p>
+<div id="narrative-section"></div>
+
+<h3>5d. Prompt Optimisation — Pipeline Configuration</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">PromptOptimisationDefinition: named pipelines with signature, optimiser, safety guardrails</p>
+<div id="prompt-optimisation-section"></div>
+
+<h3>5e. Cognition — Cognitive Module Grid</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">CognitionDefinition: 13 optional config sections with ON/OFF status and config keys</p>
+<div id="cognition-section"></div>
+
+<h3>5f. Memory Hygiene — Retention Scoring</h3>
+<p style="font-size:12px;color:#7f849c;margin-bottom:12px;">Retention config: threshold and weighted scoring (confidence/recency/scope/trust)</p>
+<div id="memory-hygiene-section"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>6. Coordination Pipeline — Swim Lane + Graph View</h2>
+<h3>KYC verification pipeline with Lanes/Graph toggle (auto-detects graph for fan-out/fan-in). Coordination views exist alongside but separate from the 4 orchestration pattern views above.</h3>
+<div id="coordination-section"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>7. Agent Drill-Down — Project View</h2>
+<h3>drill-down from pipeline with breadcrumb, eidos, pattern and steps tabs</h3>
+<div id="drilldown-section"></div>
+
+
+<script type="module">
+  import './src/eidos-view.ts';
+  import './src/views/deliberation/voting-view.ts';
+  import './src/views/deliberation/debate-view.ts';
+  import './src/views/base-pattern-view.ts';
+  import './src/views/playbook-spec-view.ts';
+  import './src/views/orchestration/supervisor-view.ts';
+  import './src/views/orchestration/routing-strategy-view.ts';
+  import './src/views/orchestration/choreography-view.ts';
+  import './src/views/orchestration/saga-view.ts';
+  import './src/views/orchestration/decomposition-view.ts';
+  import './src/views/deliberation/negotiation-view.ts';
+  import './src/views/deliberation/coalition-view.ts';
+  import './src/views/deliberation/normative-view.ts';
+  import './src/views/governance/judgment-view.ts';
+  import './src/views/perception/summarisation-view.ts';
+  import './src/views/perception/observation-view.ts';
+  import './src/views/perception/narrative-view.ts';
+  import './src/views/optimisation/prompt-optimisation-view.ts';
+  import './src/views/social/cognition-view.ts';
+  import './src/views/social/memory-hygiene-view.ts';
+  import './src/agent-viewer.ts';
+  import './src/coordination-pipeline-view.ts';
+  import { parse } from 'yaml';
+
+  // ── Syntax highlighting for YAML source ──
+  function highlightYaml(text) {
+    return text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/(#.*)$/gm, '<span class="yaml-comment">$1</span>')
+      .replace(/^(\s*)([\w-]+)(:)/gm, '$1<span class="yaml-key">$2</span>$3')
+      .replace(/:\s*(".*?")/g, ': <span class="yaml-str">$1</span>')
+      .replace(/:\s*(\d+)(\s|$)/g, ': <span class="yaml-num">$1</span>$2');
+  }
+
+  // ── Tab Panel Builder ──
+  let panelId = 0;
+  function renderComponentSection(containerId, yamlText, createEl) {
+    const id = panelId++;
+    const container = document.getElementById(containerId);
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    panel.innerHTML = `
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="rendered-${id}">Rendered</button>
+        <button class="tab-btn" data-tab="yaml-${id}">YAML</button>
+      </div>
+      <div class="tab-content active" id="rendered-${id}"></div>
+      <div class="tab-content yaml-tab" id="yaml-${id}">
+        <pre>${highlightYaml(yamlText.trim())}</pre>
+      </div>
+    `;
+    container.appendChild(panel);
+    panel.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        panel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        panel.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+    const el = createEl(parse(yamlText));
+    document.getElementById(`rendered-${id}`).appendChild(el);
+  }
+
+  // ═══════════════════════════════════════════════
+  // 1. Eidos — Agent Identity View
+  // ═══════════════════════════════════════════════
+  const eidosYaml = `
+name: leonardo
+description: "Leonardo da Vinci — Renaissance polymath. Painter, engineer, anatomist, inventor."
+archetype: polymath
+provider: anthropic
+modelFamily: claude
+modelVersion: opus-5
+slot: plant
+slotVocabulary: "urn:casehub:vocab:belbin"
+dispositionVocabulary: "urn:casehub:vocab:jungian"
+disposition:
+  mbtiType: INFP
+  enneagramType: investigator
+  socialOrient:
+    - term: collaborative
+      weight: 0.8
+    - term: independent
+      weight: 0.2
+  ruleFollowing: flexible
+  riskAppetite:
+    - term: bold
+      weight: 0.9
+    - term: cautious
+      weight: 0.1
+  autonomy:
+    - term: autonomous
+      weight: 0.85
+    - term: guided
+      weight: 0.15
+  conflictMode: accommodating
+  delegation: false
+briefing: |
+  You are Leonardo da Vinci, aged fifty-four, seated in a reading room outside of time.
+  You have spent your life observing the world with unrelenting curiosity — water flowing
+  over stones, the way muscles attach to bone, the geometry of a bird's wing mid-turn.
+  You draw before you write. You think in pictures.
+capabilities:
+  - name: art-and-design
+    tags: [visual, creative]
+    qualityHint: 0.95
+  - name: mechanical-engineering
+    tags: [engineering, invention]
+    qualityHint: 0.90
+  - name: anatomical-study
+    tags: [science, observation]
+    qualityHint: 0.85
+  - name: natural-philosophy
+    tags: [science, perception]
+    qualityHint: 0.80
+  - name: hydrodynamics
+    tags: [engineering, observation]
+    qualityHint: 0.75
+goals:
+  - name: understand-electromagnetic-force
+    description: "Understand what Tesla means by alternating current — the invisible force that can illuminate cities."
+    priority: PRIMARY
+    visibility: PUBLIC
+  - name: find-art-in-engineering
+    description: "Discover whether Tesla's machines have beauty — the same elegance Leonardo sees in the spiral of a shell."
+    priority: PRIMARY
+    visibility: PUBLIC
+  - name: understand-the-cost
+    description: "Learn what this man has sacrificed for his vision. Leonardo knows the loneliness of seeing what others cannot."
+    priority: SECONDARY
+    visibility: PRIVATE
+constraints:
+  - name: observation-before-theory
+    description: "Always ground understanding in direct observation and analogy. Resist abstract formalism."
+    visibility: PUBLIC
+    severity: HARD
+  - name: beauty-matters
+    description: "A solution that works but is ugly is incomplete. Elegance is not decoration."
+    visibility: PUBLIC
+    severity: SOFT
+`;
+
+  renderComponentSection('eidos-section', eidosYaml, (data) => {
+    const el = document.createElement('eidos-view');
+    el.agent = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 2. Voting — Multi-Agent Convergence
+  // ═══════════════════════════════════════════════
+  const votingYaml = `
+category: deliberation
+type: voting
+name: proposal-evaluation
+description: "Three evaluators assess proposals across technical, financial, and strategic dimensions"
+task: evaluation
+aggregation:
+  type: majority-vote
+termination:
+  - type: single-pass
+  - type: max-iterations
+    iterations: 3
+judgment:
+  trigger:
+    type: confidence-threshold
+    threshold: 0.7
+    extractor: "result.confidence"
+  caller:
+    type: fan-out
+    callerNames:
+      - senior-reviewer
+      - domain-lead
+    agreement:
+      type: majority
+failurePolicy:
+  onRoutingFailure: FAIL
+  onDeadlock: ESCALATE
+agents:
+  - type: worker
+    name: quantitative-scorer
+    description: "Applies statistical risk models and quantitative analysis to score proposals"
+    capabilities: [risk-modelling, quantitative-analysis]
+    model: claude-opus-5
+  - type: worker
+    name: qualitative-reviewer
+    description: "Evaluates contextual factors, stakeholder impact, and strategic alignment"
+    capabilities: [contextual-analysis, stakeholder-assessment]
+    model: claude-sonnet-5
+  - type: human
+    name: regulatory-checker
+    description: "Verifies proposals against compliance rules and regulatory frameworks"
+    capabilities: [compliance-checking, regulatory-review]
+`;
+
+  renderComponentSection('voting-section', votingYaml, (data) => {
+    const el = document.createElement('agency-deliberation-voting-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 3. Debate — Turn-Based Deliberation
+  // ═══════════════════════════════════════════════
+  const debateYaml = `
+category: deliberation
+type: debate
+name: adversarial-review
+description: "Structured adversarial debate between proponent and opponent with arbiter judgment"
+task: deliberation
+maxRounds: 7
+judge:
+  type: worker
+  name: arbiter
+  description: "Evaluates arguments from both sides and renders a final verdict"
+  capabilities: [argument-evaluation, verdict-rendering]
+  model: claude-opus-5
+termination:
+  - type: all-agreed
+    resolvedStatuses: [RESOLVED, ACCEPTED]
+  - type: max-iterations
+    iterations: 14
+failurePolicy:
+  onRoutingFailure: FAIL
+  onDeadlock: ESCALATE
+agents:
+  - type: worker
+    name: proponent
+    description: "Argues in favour of the proposed position with supporting evidence"
+    capabilities: [argumentation, evidence-gathering]
+  - type: worker
+    name: opponent
+    description: "Challenges the proposed position and identifies weaknesses"
+    capabilities: [critical-analysis, counter-argumentation]
+`;
+
+  renderComponentSection('debate-section', debateYaml, (data) => {
+    const el = document.createElement('agency-deliberation-debate-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 5. Base Pattern View — Thin Capability Types
+  // ═══════════════════════════════════════════════
+  const oversightYaml = `
+category: governance
+type: oversight
+name: deployment-gate
+description: "Reviews deployment readiness before production release"
+agents:
+  - type: worker
+    name: compliance-checker
+    description: "Verifies compliance rules and regulatory frameworks"
+    capabilities: [compliance-checking, regulatory-review]
+  - type: human
+    name: release-manager
+    description: "Final human approval for production deployments"
+    capabilities: [deployment-approval]
+`;
+
+  renderComponentSection('base-pattern-section', oversightYaml, (data) => {
+    const el = document.createElement('agency-base-pattern-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 6. Playbook Spec View — Step Orchestration
+  // ═══════════════════════════════════════════════
+  const playbookYaml = `
+category: playbook
+type: sequence
+name: deploy-pipeline
+description: "Sequential deployment pipeline: build → test → stage → canary → promote"
+`;
+
+  renderComponentSection('playbook-section', playbookYaml, (data) => {
+    const el = document.createElement('agency-playbook-spec-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 3e. Negotiation — Proposal Exchange
+  // ═══════════════════════════════════════════════
+  const negotiationYaml = `
+category: deliberation
+type: negotiation
+name: contract-terms
+description: "Agents negotiate contract terms through proposals and counter-proposals"
+maxRounds: 5
+aggregation:
+  type: majority-vote
+termination:
+  - type: all-agreed
+  - type: max-iterations
+failurePolicy:
+  onRoutingFailure: FAIL
+  onDeadlock: ESCALATE
+agents:
+  - type: worker
+    name: buyer-agent
+    description: "Represents buyer interests and budget constraints"
+    capabilities: [negotiation, cost-analysis]
+    model: claude-opus-5
+  - type: worker
+    name: seller-agent
+    description: "Represents seller interests and margin targets"
+    capabilities: [negotiation, pricing]
+    model: claude-opus-5
+`;
+
+  renderComponentSection('negotiation-section', negotiationYaml, (data) => {
+    const el = document.createElement('agency-deliberation-negotiation-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 3f. Coalition — Capability Coverage
+  // ═══════════════════════════════════════════════
+  const coalitionYaml = `
+category: deliberation
+type: coalition
+name: incident-response-team
+description: "Forms a coalition covering all required capabilities for incident response"
+aggregation:
+  type: collect-all
+termination:
+  - type: goal-reached
+failurePolicy:
+  onRoutingFailure: RETRY_BROADER
+  onDeadlock: ESCALATE
+agents:
+  - type: worker
+    name: security-analyst
+    description: "Threat analysis and digital forensics"
+    capabilities: [threat-analysis, forensics, malware-detection]
+    model: claude-opus-5
+  - type: worker
+    name: network-engineer
+    description: "Network isolation and infrastructure recovery"
+    capabilities: [networking, firewall, dns]
+    model: claude-sonnet-5
+  - type: worker
+    name: comms-lead
+    description: "Stakeholder communication and incident reporting"
+    capabilities: [communication, reporting, executive-briefing]
+    model: claude-sonnet-5
+`;
+
+  renderComponentSection('coalition-section', coalitionYaml, (data) => {
+    const el = document.createElement('agency-deliberation-coalition-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 3g. Normative — Rule Arbitration
+  // ═══════════════════════════════════════════════
+  const normativeYaml = `
+category: deliberation
+type: normative
+name: policy-arbitration
+description: "Resolves conflicts between competing policy rules through structured arbitration"
+maxRounds: 3
+judge:
+  type: worker
+  name: policy-arbiter
+  description: "Evaluates rule priorities and renders binding decisions"
+  capabilities: [rule-evaluation, precedent-analysis]
+  model: claude-opus-5
+termination:
+  - type: all-agreed
+  - type: max-iterations
+failurePolicy:
+  onRoutingFailure: FAIL
+  onDeadlock: ESCALATE
+agents:
+  - type: worker
+    name: compliance-advocate
+    description: "Argues for regulatory compliance requirements"
+    capabilities: [compliance, regulatory-review]
+  - type: worker
+    name: efficiency-advocate
+    description: "Argues for operational efficiency and throughput"
+    capabilities: [optimisation, process-analysis]
+`;
+
+  renderComponentSection('normative-section', normativeYaml, (data) => {
+    const el = document.createElement('agency-deliberation-normative-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 3h. Judgment — Governance Gate
+  // ═══════════════════════════════════════════════
+  const judgmentYaml = `
+category: governance
+type: judgment
+name: deployment-approval
+description: "Multi-level judgment gate for production deployments with escalation chain"
+agents:
+  - type: worker
+    name: risk-assessor
+    description: "Evaluates deployment risk based on change scope and blast radius"
+    capabilities: [risk-assessment, change-analysis]
+    model: claude-opus-5
+  - type: worker
+    name: security-reviewer
+    description: "Reviews security posture and vulnerability exposure"
+    capabilities: [security-review, vulnerability-scan]
+    model: claude-sonnet-5
+  - type: human
+    name: release-authority
+    description: "Final human approval authority for production releases"
+failurePolicy:
+  onRoutingFailure: FAIL
+  onDeadlock: ESCALATE
+`;
+
+  renderComponentSection('judgment-section', judgmentYaml, (data) => {
+    const el = document.createElement('agency-governance-judgment-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 4. Orchestration Pattern Views
+  // ═══════════════════════════════════════════════
+  const supervisorYaml = `
+category: orchestration
+type: supervisor
+name: kyc-supervisor
+description: "Central supervisor routes verification tasks to specialist workers based on document type"
+routing:
+  type: llm-selected
+aggregation:
+  type: collect-all
+termination:
+  - type: goal-reached
+  - type: max-iterations
+failurePolicy:
+  onRoutingFailure: RETRY_BROADER
+  onDeadlock: ESCALATE
+agents:
+  - type: worker
+    name: identity-verifier
+    description: "Verifies identity documents against government databases"
+    capabilities: [identity-verification, document-analysis]
+    model: claude-opus-5
+  - type: worker
+    name: financial-checker
+    description: "Checks financial records and transaction patterns"
+    capabilities: [financial-analysis, aml-screening]
+    model: claude-sonnet-5
+  - type: human
+    name: senior-reviewer
+    description: "Escalation target for edge cases requiring human judgment"
+    capabilities: [compliance-review]
+`;
+
+  renderComponentSection('supervisor-section', supervisorYaml, (data) => {
+    const el = document.createElement('agency-orchestration-supervisor-view');
+    el.spec = data;
+    return el;
+  });
+
+  const choreographyYaml = `
+category: orchestration
+type: choreography
+name: incident-blackboard
+description: "Agents react to shared blackboard state changes — no central controller"
+activation:
+  type: on-dispatch
+aggregation:
+  type: collect-all
+termination:
+  - type: convergence
+  - type: max-iterations
+failurePolicy:
+  onRoutingFailure: FAIL
+  onDeadlock: ESCALATE
+agents:
+  - type: worker
+    name: threat-detector
+    description: "Monitors event stream for security threat indicators"
+    capabilities: [threat-detection, anomaly-detection]
+    model: claude-sonnet-5
+  - type: worker
+    name: impact-assessor
+    description: "Assesses blast radius and affected systems"
+    capabilities: [impact-analysis, dependency-mapping]
+    model: claude-opus-5
+  - type: worker
+    name: remediation-planner
+    description: "Plans and prioritises remediation steps"
+    capabilities: [remediation, incident-response]
+    model: claude-opus-5
+`;
+
+  renderComponentSection('choreography-section', choreographyYaml, (data) => {
+    const el = document.createElement('agency-orchestration-choreography-view');
+    el.spec = data;
+    return el;
+  });
+
+  const sagaYaml = `
+category: orchestration
+type: saga
+name: order-fulfilment
+description: "Forward execution with compensating rollback on failure"
+routing:
+  type: sequential
+termination:
+  - type: terminal-outcome
+failurePolicy:
+  onRoutingFailure: FAIL
+  onDeadlock: FAIL
+  agentRetry:
+    maxRetries: 2
+    backoffStrategy: EXPONENTIAL
+    onExhausted: ESCALATE
+agents:
+  - type: worker
+    name: reserve-inventory
+    description: "Reserves inventory for the order"
+    capabilities: [inventory-management]
+  - type: worker
+    name: charge-payment
+    description: "Charges the customer payment method"
+    capabilities: [payment-processing]
+  - type: worker
+    name: ship-order
+    description: "Initiates shipping and tracking"
+    capabilities: [logistics, shipping]
+`;
+
+  renderComponentSection('saga-section', sagaYaml, (data) => {
+    const el = document.createElement('agency-orchestration-saga-view');
+    el.spec = data;
+    return el;
+  });
+
+  const decompositionYaml = `
+category: orchestration
+type: decomposition
+name: research-planner
+description: "Decomposes complex research tasks into specialist sub-tasks"
+decomposition:
+  type: llm
+routing:
+  type: llm-selected
+aggregation:
+  type: collect-all
+termination:
+  - type: goal-reached
+failurePolicy:
+  onRoutingFailure: RETRY_BROADER
+  onDeadlock: ESCALATE
+  replanPolicy:
+    maxReplans: 3
+    fallbackAction: ESCALATE
+agents:
+  - type: worker
+    name: literature-reviewer
+    description: "Reviews academic literature and extracts key findings"
+    capabilities: [literature-review, citation-analysis]
+    model: claude-opus-5
+  - type: worker
+    name: data-analyst
+    description: "Analyses datasets and produces statistical summaries"
+    capabilities: [data-analysis, statistics]
+    model: claude-sonnet-5
+  - type: worker
+    name: synthesis-writer
+    description: "Synthesises findings into coherent narrative"
+    capabilities: [writing, synthesis]
+    model: claude-opus-5
+`;
+
+  renderComponentSection('decomposition-section', decompositionYaml, (data) => {
+    const el = document.createElement('agency-orchestration-decomposition-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 4e. Routing Strategy — Agent Selection
+  // ═══════════════════════════════════════════════
+  const routingAgents = [
+    { type: 'worker', name: 'risk-analyst', description: 'Evaluates financial risk', capabilities: ['risk-assessment', 'quantitative-analysis'] },
+    { type: 'worker', name: 'compliance-check', description: 'Regulatory compliance', capabilities: ['compliance', 'audit'] },
+    { type: 'human', name: 'senior-reviewer', description: 'Escalation target for edge cases' },
+  ];
+
+  function renderRoutingSection(containerId, routing, governance) {
+    const container = document.getElementById(containerId);
+    if (!container) return;
+    const el = document.createElement('agency-routing-strategy-view');
+    el.routing = routing;
+    el.agents = routingAgents;
+    if (governance) el.governance = governance;
+    container.appendChild(el);
+  }
+
+  renderRoutingSection('routing-first-match-section',
+    { type: 'first-match', guard: 'hasCapability("risk-assessment")' });
+
+  renderRoutingSection('routing-round-robin-section',
+    { type: 'round-robin' });
+
+  renderRoutingSection('routing-select-all-section',
+    { type: 'select-all' });
+
+  renderRoutingSection('routing-llm-section',
+    { type: 'llm-selected', model: 'claude-sonnet-5-5', prompt: 'Select the agent best suited for this financial risk assessment task' });
+
+  renderRoutingSection('routing-cbr-section',
+    { type: 'cbr-agent', similarityThreshold: 0.85 },
+    { cbrRouting: { successWeight: 1.0, gateExpiredWeight: 0.5, gateRejectedWeight: -0.5, failureWeight: -1.0 } });
+
+  renderRoutingSection('routing-disposition-section',
+    { type: 'disposition-aware', axes: [
+      { axis: 'openness', weight: 0.8 },
+      { axis: 'conscientiousness', weight: 0.6 },
+      { axis: 'analytical', weight: 0.9 },
+      { axis: 'risk-tolerance', weight: 0.3 },
+    ]},
+    { trustRouting: { threshold: 0.7, borderlineMargin: 0.1, blendFactor: 0.6, minimumObservations: 5 } });
+
+  // ═══════════════════════════════════════════════
+  // 5. Perception, Optimisation & Social Pattern Views
+  // ═══════════════════════════════════════════════
+
+  // 5a. Summarisation
+  const summarisationYaml = `
+category: perception
+type: summarisation
+name: document-summariser
+description: "Multi-level document summarisation pipeline for case evidence"
+pipeline:
+  source: case.document.updated
+  levels:
+    - grouping: windowed
+      summariser:
+        type: extractive
+        config:
+          maxSentences: 5
+      emit: summary.l1
+    - grouping: keyed
+      summariser:
+        type: llm
+        config:
+          model: claude-sonnet-5
+      emit: summary.l2
+    - grouping: keyed
+      summariser:
+        type: abstractive
+      emit: summary.l3
+`;
+
+  renderComponentSection('summarisation-section', summarisationYaml, (data) => {
+    const el = document.createElement('agency-perception-summarisation-view');
+    el.spec = data;
+    return el;
+  });
+
+  // 5b. Observation
+  const observationYaml = `
+category: perception
+type: observation
+name: case-world-observer
+description: "Observes case entities with tiered rendering based on item count"
+world:
+  actions:
+    - inspect
+    - query
+    - monitor
+    - annotate
+  entities:
+    claim:
+      fields: [amount, status, category]
+    policy:
+      fields: [coverage, exclusions]
+  sections:
+    - type: entity-group
+      requiredTags: [active, priority]
+    - type: text
+    - type: item-list
+      resolutions: [auto, manual, escalated]
+  pipeline:
+    - extract
+    - filter
+    - rank
+    - deduplicate
+  renderer:
+    verbatimThreshold: 5
+    groupedThreshold: 20
+`;
+
+  renderComponentSection('observation-section', observationYaml, (data) => {
+    const el = document.createElement('agency-perception-observation-view');
+    el.spec = data;
+    return el;
+  });
+
+  // 5c. Narrative
+  const narrativeYaml = `
+category: perception
+type: narrative
+name: risk-narrative
+description: "Signals to step summaries to decision narratives for risk assessment"
+pipeline:
+  source: step.decision.completed
+  levels:
+    - grouping: windowed
+      summariser:
+        type: signal-collector
+      emit: signals.l0
+    - grouping: keyed
+      summariser:
+        type: step-summariser
+      emit: summary.l1
+    - grouping: keyed
+      summariser:
+        type: narrative-generator
+      emit: narrative.l2
+`;
+
+  renderComponentSection('narrative-section', narrativeYaml, (data) => {
+    const el = document.createElement('agency-perception-narrative-view');
+    el.spec = data;
+    return el;
+  });
+
+  // 5d. Prompt Optimisation
+  const promptOptYaml = `
+category: optimisation
+type: prompt-optimisation
+name: risk-prompt-tuning
+description: "Optimises prompts for risk assessment and triage tasks"
+pipelines:
+  risk-assessment:
+    signature:
+      id: risk-v1
+      baseSystemPrompt: "Assess risk factors for the given insurance case, considering policy terms, claim history, and external signals."
+    optimiser:
+      type: few-shot
+      diversityStrategy: max-marginal
+    config:
+      maxExamples: 10
+      minQualityThreshold: 0.7
+      minOutcomeCount: 50
+    safety:
+      qualityFloor: 0.5
+      maxExperimentCycles: 100
+      circuitBreakerThreshold: 0.3
+    confidenceScorer:
+      type: composite
+    examples:
+      - input: "claim-1234"
+        output: "high-risk"
+        outcome: correct
+        qualityScore: 0.92
+      - input: "claim-5678"
+        output: "low-risk"
+        outcome: correct
+        qualityScore: 0.88
+      - input: "claim-9012"
+        output: "medium-risk"
+        outcome: incorrect
+        qualityScore: 0.45
+  triage:
+    signature:
+      id: triage-v2
+    optimiser:
+      type: instruction
+`;
+
+  renderComponentSection('prompt-optimisation-section', promptOptYaml, (data) => {
+    const el = document.createElement('agency-optimisation-prompt-view');
+    el.spec = data;
+    return el;
+  });
+
+  // 5e. Cognition
+  const cognitionYaml = `
+category: social
+type: cognition
+name: autonomous-agent-cognition
+description: "Full cognitive configuration for an autonomous agent with learning and self-regulation"
+cognition:
+  drive:
+    axisWeights:
+      curiosity: 0.8
+      affiliation: 0.6
+      autonomy: 0.7
+    changeThreshold: 0.1
+    moodPleasureModulation: 0.3
+    moodArousalModulation: 0.2
+    maxIntensity: 1.0
+    minIntensity: 0.0
+    affiliationDecayThreshold: 0.3
+    affiliationStaleDuration: PT72H
+    autonomyConfidenceFloor: 0.4
+  mood:
+    baseline:
+      pleasure: 0.0
+      arousal: 0.0
+      dominance: 0.0
+    decayTimeConstant: PT4H
+    maxDisplacement: 1.0
+    moodInfluence: 0.5
+    staleStateTimeout: PT24H
+  retention:
+    retentionThreshold: 0.6
+    confidenceWeight: 0.4
+    recencyWeight: 0.25
+    scopeWeight: 0.2
+    trustWeight: 0.15
+  mentalModel:
+    beliefHalfLife: PT48H
+    desireHalfLife: PT24H
+    intentionHalfLife: PT12H
+    confidenceFloor: 0.3
+    projectionFloor: 0.2
+    minSignalsForInference: 3
+    inferenceCooldown: PT5M
+    maxSignalsInPrompt: 10
+  narrative:
+    synthesisGate:
+      minNewReflections: 3
+      noveltyThreshold: 0.4
+      quietPeriodBypass: PT1H
+    maxEpisodes: 20
+    maxThemes: 5
+    themeSalienceFloor: 0.3
+`;
+
+  renderComponentSection('cognition-section', cognitionYaml, (data) => {
+    const el = document.createElement('agency-social-cognition-view');
+    el.spec = data;
+    return el;
+  });
+
+  // 5f. Memory Hygiene
+  const memoryHygieneYaml = `
+category: social
+type: memory-hygiene
+name: memory-cleanup
+description: "Confidence-weighted memory eviction with balanced scoring"
+retention:
+  retentionThreshold: 0.5
+  confidenceWeight: 0.3
+  recencyWeight: 0.3
+  scopeWeight: 0.2
+  trustWeight: 0.2
+`;
+
+  renderComponentSection('memory-hygiene-section', memoryHygieneYaml, (data) => {
+    const el = document.createElement('agency-social-memory-hygiene-view');
+    el.spec = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // Agent Viewer — Drill-Down with Tabs
+  // ═══════════════════════════════════════════════
+  const viewerDescriptorYaml = `
+name: leonardo
+description: "Leonardo da Vinci — Renaissance polymath"
+archetype: polymath
+modelFamily: claude
+modelVersion: opus-5
+slot: plant
+disposition:
+  socialOrient:
+    - term: collaborative
+      weight: 0.8
+    - term: independent
+      weight: 0.2
+  ruleFollowing: flexible
+  riskAppetite:
+    - term: bold
+      weight: 0.9
+    - term: cautious
+      weight: 0.1
+  autonomy:
+    - term: autonomous
+      weight: 0.85
+    - term: guided
+      weight: 0.15
+  conflictMode: accommodating
+capabilities:
+  - name: art-and-design
+    tags: [visual, creative]
+    qualityHint: 0.95
+  - name: mechanical-engineering
+    tags: [engineering, invention]
+    qualityHint: 0.90
+goals:
+  - name: understand-electromagnetic-force
+    description: "Understand alternating current through analogy"
+    priority: PRIMARY
+    visibility: PUBLIC
+constraints:
+  - name: observation-before-theory
+    description: "Ground understanding in direct observation"
+    severity: HARD
+    visibility: PUBLIC
+briefing: |
+  Leonardo da Vinci, aged fifty-four, seated in a reading room outside of time.
+`;
+
+  const viewerPatternYaml = `
+category: deliberation
+type: debate
+name: adversarial-review
+description: "Structured adversarial debate"
+maxRounds: 7
+judge:
+  type: worker
+  name: arbiter
+  description: "Evaluates arguments"
+  capabilities: [argument-evaluation]
+termination:
+  - type: all-agreed
+    resolvedStatuses: [RESOLVED, ACCEPTED]
+agents:
+  - type: worker
+    name: proponent
+    description: "Argues in favour"
+    capabilities: [argumentation]
+  - type: worker
+    name: opponent
+    description: "Challenges the position"
+    capabilities: [critical-analysis]
+`;
+
+  const combinedYaml = `# --- descriptor (eidos) ---\n${viewerDescriptorYaml.trim()}\n\n# --- pattern (agency) ---\n${viewerPatternYaml.trim()}`;
+  const viewerContainer = document.getElementById('viewer-section');
+  const viewerPanel = document.createElement('div');
+  viewerPanel.className = 'tab-panel';
+  const vpId = panelId++;
+  viewerPanel.innerHTML = `
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="rendered-${vpId}">Rendered</button>
+      <button class="tab-btn" data-tab="yaml-${vpId}">YAML</button>
+    </div>
+    <div class="tab-content active" id="rendered-${vpId}"></div>
+    <div class="tab-content yaml-tab" id="yaml-${vpId}">
+      <pre>${highlightYaml(combinedYaml)}</pre>
+    </div>
+  `;
+  viewerContainer.appendChild(viewerPanel);
+  viewerPanel.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      viewerPanel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      viewerPanel.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+  const descriptor = parse(viewerDescriptorYaml);
+  const pattern = parse(viewerPatternYaml);
+  const agentViewer = document.createElement('agent-viewer');
+  agentViewer.data = {
+    agent: descriptor,
+    spec: pattern,
+    breadcrumb: [pattern.name ?? 'Pattern', descriptor.name],
+  };
+  document.getElementById(`rendered-${vpId}`).appendChild(agentViewer);
+
+  // ═══════════════════════════════════════════════
+  // 2b. Agent Viewer — with Voting Pattern
+  // ═══════════════════════════════════════════════
+  const votingData = parse(votingYaml);
+  const viewerVoting = document.createElement('agent-viewer');
+  viewerVoting.data = {
+    agent: descriptor,
+    spec: votingData,
+    breadcrumb: [votingData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-voting-section',
+    `# agent-viewer with deliberation/voting\n${votingYaml.trim()}`,
+    () => viewerVoting);
+
+  // ═══════════════════════════════════════════════
+  // 2c. Agent Viewer — with Governance/Oversight
+  // ═══════════════════════════════════════════════
+  const oversightData = parse(oversightYaml);
+  const viewerBase = document.createElement('agent-viewer');
+  viewerBase.data = {
+    agent: descriptor,
+    spec: oversightData,
+    breadcrumb: [oversightData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-base-section',
+    `# agent-viewer with governance/oversight\n${oversightYaml.trim()}`,
+    () => viewerBase);
+
+  // ═══════════════════════════════════════════════
+  // 2d. Agent Viewer — with Playbook/Sequence
+  // ═══════════════════════════════════════════════
+  const playbookData = parse(playbookYaml);
+  const viewerPlaybook = document.createElement('agent-viewer');
+  viewerPlaybook.data = {
+    agent: descriptor,
+    spec: playbookData,
+    breadcrumb: [playbookData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-playbook-section',
+    `# agent-viewer with playbook/sequence\n${playbookYaml.trim()}`,
+    () => viewerPlaybook);
+
+  // ═══════════════════════════════════════════════
+  // 2e–2h. Agent Viewer — with Orchestration Patterns
+  // ═══════════════════════════════════════════════
+  const supervisorViewerYaml = `
+category: orchestration
+type: supervisor
+name: kyc-supervisor
+description: "Central supervisor routes verification tasks"
+routing:
+  type: llm-selected
+aggregation:
+  type: collect-all
+agents:
+  - type: worker
+    name: identity-verifier
+    description: "Verifies identity documents"
+    capabilities: [identity-verification]
+  - type: worker
+    name: financial-checker
+    description: "Checks financial records"
+    capabilities: [financial-analysis]
+`;
+  const supervisorViewerData = parse(supervisorViewerYaml);
+  const viewerSupervisor = document.createElement('agent-viewer');
+  viewerSupervisor.data = {
+    agent: descriptor,
+    spec: supervisorViewerData,
+    breadcrumb: [supervisorViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-supervisor-section',
+    `# agent-viewer with orchestration/supervisor\n${supervisorViewerYaml.trim()}`,
+    () => viewerSupervisor);
+
+  const choreographyViewerYaml = `
+category: orchestration
+type: choreography
+name: incident-blackboard
+description: "Agents react to shared blackboard state"
+activation:
+  type: on-dispatch
+agents:
+  - type: worker
+    name: threat-detector
+    description: "Monitors for security threats"
+    capabilities: [threat-detection]
+  - type: worker
+    name: impact-assessor
+    description: "Assesses blast radius"
+    capabilities: [impact-analysis]
+`;
+  const choreographyViewerData = parse(choreographyViewerYaml);
+  const viewerChoreography = document.createElement('agent-viewer');
+  viewerChoreography.data = {
+    agent: descriptor,
+    spec: choreographyViewerData,
+    breadcrumb: [choreographyViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-choreography-section',
+    `# agent-viewer with orchestration/choreography\n${choreographyViewerYaml.trim()}`,
+    () => viewerChoreography);
+
+  const sagaViewerYaml = `
+category: orchestration
+type: saga
+name: order-fulfilment
+description: "Forward execution with compensating rollback"
+routing:
+  type: sequential
+agents:
+  - type: worker
+    name: reserve-inventory
+    description: "Reserves inventory"
+    capabilities: [inventory]
+  - type: worker
+    name: charge-payment
+    description: "Charges payment"
+    capabilities: [payment]
+  - type: worker
+    name: ship-order
+    description: "Initiates shipping"
+    capabilities: [logistics]
+`;
+  const sagaViewerData = parse(sagaViewerYaml);
+  const viewerSaga = document.createElement('agent-viewer');
+  viewerSaga.data = {
+    agent: descriptor,
+    spec: sagaViewerData,
+    breadcrumb: [sagaViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-saga-section',
+    `# agent-viewer with orchestration/saga\n${sagaViewerYaml.trim()}`,
+    () => viewerSaga);
+
+  const decompositionViewerYaml = `
+category: orchestration
+type: decomposition
+name: research-planner
+description: "Decomposes complex tasks into sub-tasks"
+decomposition:
+  type: llm
+routing:
+  type: llm-selected
+agents:
+  - type: worker
+    name: literature-reviewer
+    description: "Reviews literature"
+    capabilities: [literature-review]
+  - type: worker
+    name: data-analyst
+    description: "Analyses datasets"
+    capabilities: [data-analysis]
+`;
+  const decompositionViewerData = parse(decompositionViewerYaml);
+  const viewerDecomposition = document.createElement('agent-viewer');
+  viewerDecomposition.data = {
+    agent: descriptor,
+    spec: decompositionViewerData,
+    breadcrumb: [decompositionViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-decomposition-section',
+    `# agent-viewer with orchestration/decomposition\n${decompositionViewerYaml.trim()}`,
+    () => viewerDecomposition);
+
+  // ═══════════════════════════════════════════════
+  // 2i–2l. Agent Viewer — with Deliberation + Governance
+  // ═══════════════════════════════════════════════
+  const negotiationViewerData = parse(negotiationYaml);
+  const viewerNegotiation = document.createElement('agent-viewer');
+  viewerNegotiation.data = {
+    agent: descriptor,
+    spec: negotiationViewerData,
+    breadcrumb: [negotiationViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-negotiation-section',
+    `# agent-viewer with deliberation/negotiation\n${negotiationYaml.trim()}`,
+    () => viewerNegotiation);
+
+  const coalitionViewerData = parse(coalitionYaml);
+  const viewerCoalition = document.createElement('agent-viewer');
+  viewerCoalition.data = {
+    agent: descriptor,
+    spec: coalitionViewerData,
+    breadcrumb: [coalitionViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-coalition-section',
+    `# agent-viewer with deliberation/coalition\n${coalitionYaml.trim()}`,
+    () => viewerCoalition);
+
+  const normativeViewerData = parse(normativeYaml);
+  const viewerNormative = document.createElement('agent-viewer');
+  viewerNormative.data = {
+    agent: descriptor,
+    spec: normativeViewerData,
+    breadcrumb: [normativeViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-normative-section',
+    `# agent-viewer with deliberation/normative\n${normativeYaml.trim()}`,
+    () => viewerNormative);
+
+  const judgmentViewerData = parse(judgmentYaml);
+  const viewerJudgment = document.createElement('agent-viewer');
+  viewerJudgment.data = {
+    agent: descriptor,
+    spec: judgmentViewerData,
+    breadcrumb: [judgmentViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-judgment-section',
+    `# agent-viewer with governance/judgment\n${judgmentYaml.trim()}`,
+    () => viewerJudgment);
+
+  // ── Viewer compositions for perception/optimisation/social ──
+  const summarisationViewerData = parse(summarisationYaml);
+  const viewerSummarisation = document.createElement('agent-viewer');
+  viewerSummarisation.data = {
+    agent: descriptor,
+    spec: summarisationViewerData,
+    breadcrumb: [summarisationViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-summarisation-section',
+    `# agent-viewer with perception/summarisation\n${summarisationYaml.trim()}`,
+    () => viewerSummarisation);
+
+  const observationViewerData = parse(observationYaml);
+  const viewerObservation = document.createElement('agent-viewer');
+  viewerObservation.data = {
+    agent: descriptor,
+    spec: observationViewerData,
+    breadcrumb: [observationViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-observation-section',
+    `# agent-viewer with perception/observation\n${observationYaml.trim()}`,
+    () => viewerObservation);
+
+  const promptOptViewerData = parse(promptOptYaml);
+  const viewerPromptOpt = document.createElement('agent-viewer');
+  viewerPromptOpt.data = {
+    agent: descriptor,
+    spec: promptOptViewerData,
+    breadcrumb: [promptOptViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-prompt-opt-section',
+    `# agent-viewer with optimisation/prompt-optimisation\n${promptOptYaml.trim()}`,
+    () => viewerPromptOpt);
+
+  const cognitionViewerData = parse(cognitionYaml);
+  const viewerCognition = document.createElement('agent-viewer');
+  viewerCognition.data = {
+    agent: descriptor,
+    spec: cognitionViewerData,
+    breadcrumb: [cognitionViewerData.name ?? 'Pattern', descriptor.name],
+  };
+  renderComponentSection('viewer-cognition-section',
+    `# agent-viewer with social/cognition\n${cognitionYaml.trim()}`,
+    () => viewerCognition);
+
+  // ═══════════════════════════════════════════════
+  // 6. Coordination Pipeline — Swim Lane View
+  // ═══════════════════════════════════════════════
+  const coordinationYaml = `
+name: kyc-verification
+description: "KYC verification pipeline: classify → extract → verify → decide"
+agentCount: 4
+barrierCount: 2
+channelCount: 1
+phases:
+  - type: step
+    action: agent-delegate
+    target: doc-classifier
+    model: claude-sonnet-5
+    outputFormat: structured
+    params:
+      descriptor: document-classifier
+      params.documents: "\${params.applicationDocs}"
+      params.taxonomy: kyc-v3
+  - type: signal
+    name: docs-classified
+    description: fan-out to extractors
+  - type: parallel
+    lanes:
+      identity-extractor:
+        - action: agent-delegate
+          model: claude-opus-5
+          outputFormat: structured
+          drillDown: true
+          params:
+            descriptor: kyc-identity
+            docs: "\${from.identity_docs}"
+        - action: graphql
+          target: sanctions / screenEntity
+      financial-extractor:
+        - action: agent-delegate
+          model: claude-opus-5
+          outputFormat: structured
+          drillDown: true
+          params:
+            descriptor: kyc-financials
+            docs: "\${from.financial_docs}"
+        - action: rest
+          target: POST /api/aml/check
+      address-verifier:
+        - action: agent-delegate
+          model: claude-sonnet-5
+          outputFormat: structured
+          drillDown: true
+          params:
+            descriptor: kyc-address
+            docs: "\${from.address_docs}"
+        - action: mcp-call
+          target: geo-verify
+  - type: quorum
+    name: extraction-complete
+    required: 2
+    of: 3
+  - type: step
+    action: agent-delegate
+    target: risk-assessor
+    model: claude-opus-5
+    outputFormat: structured
+    drillDown: true
+    params:
+      descriptor: kyc-risk-decision
+      params.identity: "\${identity-extractor.result}"
+      params.financials: "\${financial-extractor.result}"
+      params.address: "\${address-verifier.result}"
+      params.riskPolicy: "\${params.riskTier}"
+    routing:
+      expression: "\${ risk-assessor.result.decision }"
+      cases:
+        - pattern: approve
+          step:
+            action: rest
+            target: POST /api/kyc/approve
+            channel: notify-compliance
+            icon: "✓"
+            iconColor: green
+        - pattern: escalate
+          step:
+            action: agent-delegate
+            target: senior-reviewer
+            model: claude-opus-5
+            icon: "⚠"
+            iconColor: amber
+        - pattern: reject
+          step:
+            action: rest
+            target: POST /api/kyc/reject
+            channel: notify-applicant
+            icon: "✕"
+            iconColor: red
+`;
+
+  renderComponentSection('coordination-section', coordinationYaml, (data) => {
+    const el = document.createElement('coordination-pipeline-view');
+    el.pipeline = data;
+    return el;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 6. Agent Drill-Down — Project View
+  // ═══════════════════════════════════════════════
+  const drilldownSteps = [
+    { action: 'agent-delegate', model: 'claude-opus-5', outputFormat: 'structured', drillDown: true,
+      params: { descriptor: 'kyc-identity', docs: '${from.identity_docs}' } },
+    { action: 'graphql', target: 'sanctions / screenEntity' },
+  ];
+
+  const drilldownContainer = document.getElementById('drilldown-section');
+  const drilldownPanel = document.createElement('div');
+  drilldownPanel.className = 'tab-panel';
+  const ddId = panelId++;
+  drilldownPanel.innerHTML = `
+    <div class="tab-bar">
+      <button class="tab-btn active" data-tab="rendered-${ddId}">Rendered</button>
+      <button class="tab-btn" data-tab="yaml-${ddId}">Data</button>
+    </div>
+    <div class="tab-content active" id="rendered-${ddId}"></div>
+    <div class="tab-content yaml-tab" id="yaml-${ddId}">
+      <pre>${highlightYaml(JSON.stringify({ breadcrumb: ['KYC Pipeline', 'identity-extractor'], steps: drilldownSteps }, null, 2))}</pre>
+    </div>
+  `;
+  drilldownContainer.appendChild(drilldownPanel);
+  drilldownPanel.querySelectorAll('.tab-btn').forEach(btn => {
+    btn.addEventListener('click', () => {
+      drilldownPanel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+      drilldownPanel.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+      btn.classList.add('active');
+      document.getElementById(btn.dataset.tab).classList.add('active');
+    });
+  });
+  const drilldownViewer = document.createElement('agent-viewer');
+  drilldownViewer.data = {
+    agent: descriptor,
+    spec: pattern,
+    breadcrumb: ['KYC Pipeline', 'identity-extractor'],
+    steps: drilldownSteps,
+  };
+  document.getElementById(`rendered-${ddId}`).appendChild(drilldownViewer);
+</script>
+
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!-- Agent Diff — Coordination Level                               -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+
+<h2>Agent Diff — Coordination Level</h2>
+<p class="description">Shows what changed when agents are added, removed, or modified in a pipeline.
+  New PEP screening agent added, quorum tightened 2/3 → 3/4, risk-assessor receives PEP result.</p>
+
+<coordination-diff-view id="diff-demo"></coordination-diff-view>
+
+<script type="module">
+import './src/coordination-diff-view.js';
+
+const diffOld = {
+  name: 'KYC Pipeline',
+  phases: [
+    { type: 'step', action: 'agent-delegate', target: 'doc-classifier', model: 'sonnet-5' },
+    { type: 'signal', name: 'docs-classified', description: 'fan-out to extractors' },
+    {
+      type: 'parallel',
+      lanes: {
+        'identity': [{ action: 'agent-delegate', target: 'id-extract' }],
+        'financial': [{ action: 'agent-delegate', target: 'fin-extract' }],
+        'address': [{ action: 'agent-delegate', target: 'addr-extract' }],
+      },
+    },
+    { type: 'quorum', name: 'extraction-complete', required: 2, of: 3 },
+    {
+      type: 'step', action: 'agent-delegate', target: 'risk-assessor',
+      model: 'opus-5', params: { descriptor: 'kyc-risk-decision' },
+    },
+  ],
+};
+
+const diffNew = {
+  name: 'KYC Pipeline',
+  phases: [
+    { type: 'step', action: 'agent-delegate', target: 'doc-classifier', model: 'sonnet-5' },
+    { type: 'signal', name: 'docs-classified', description: 'fan-out to extractors' },
+    {
+      type: 'parallel',
+      lanes: {
+        'identity': [{ action: 'agent-delegate', target: 'id-extract' }],
+        'financial': [{ action: 'agent-delegate', target: 'fin-extract' }],
+        'address': [{ action: 'agent-delegate', target: 'addr-extract' }],
+        'pep-screener': [{ action: 'agent-delegate', target: 'pep-screen' }],
+      },
+    },
+    { type: 'quorum', name: 'extraction-complete', required: 3, of: 4 },
+    {
+      type: 'step', action: 'agent-delegate', target: 'risk-assessor',
+      model: 'opus-5',
+      params: {
+        descriptor: 'kyc-risk-decision',
+        'params.pepResult': '${pep-screener.result}',
+      },
+    },
+  ],
+};
+
+const diffEl = document.getElementById('diff-demo');
+diffEl.oldPipeline = diffOld;
+diffEl.newPipeline = diffNew;
+</script>
+
+</body>
+</html>

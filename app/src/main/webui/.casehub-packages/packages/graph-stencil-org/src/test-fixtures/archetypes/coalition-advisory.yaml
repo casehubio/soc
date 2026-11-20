@@ -1,0 +1,89 @@
+# Coalition (Horling & Lesser) / Advisory Board
+# Multiple agents independently assess the same problem; a judge synthesizes.
+# Real-world: architecture review board — 3 reviewers + 1 decision-maker.
+
+organization:
+  units:
+    - unitId: review-board
+      name: Architecture Review Board
+      kind: coalition
+      tenancyId: archetype-coalition
+      members:
+        - agentId: judge
+          role: decision-maker
+        - agentId: advisor-security
+          role: advisor
+        - agentId: advisor-perf
+          role: advisor
+        - agentId: advisor-maint
+          role: advisor
+      capabilities:
+        - name: architecture-decision
+          description: Evaluate and decide on architectural proposals
+      goals:
+        - name: sound-architecture
+          description: Ensure architectural decisions are well-reasoned
+          priority: PRIMARY
+          visibility: PUBLIC
+      constraints:
+        - name: independent-assessment
+          description: Advisors must assess independently before deliberation
+          severity: HARD
+          visibility: PUBLIC
+
+  relationships:
+    # Each advisor reports judgment to the decision-maker
+    - sourceAgentId: advisor-security
+      targetAgentId: judge
+      kind: REPORTS_TO
+      tenancyId: archetype-coalition
+      scope:
+        capabilityName: architecture-decision
+        domain: security
+
+    - sourceAgentId: advisor-perf
+      targetAgentId: judge
+      kind: REPORTS_TO
+      tenancyId: archetype-coalition
+      scope:
+        capabilityName: architecture-decision
+        domain: performance
+
+    - sourceAgentId: advisor-maint
+      targetAgentId: judge
+      kind: REPORTS_TO
+      tenancyId: archetype-coalition
+      scope:
+        capabilityName: architecture-decision
+        domain: maintainability
+
+    # Advisors can attest about the domain they cover
+    - sourceAgentId: advisor-security
+      targetAgentId: judge
+      kind: EXTENDED
+      extendedKind: advises
+      tenancyId: archetype-coalition
+      attestation:
+        dimensions: [security-posture]
+        capabilityScope: [architecture-decision]
+        signalTypes: [COMPLIANT, VIOLATED]
+
+    - sourceAgentId: advisor-perf
+      targetAgentId: judge
+      kind: EXTENDED
+      extendedKind: advises
+      tenancyId: archetype-coalition
+      attestation:
+        dimensions: [performance-impact]
+        capabilityScope: [architecture-decision]
+        signalTypes: [COMPLIANT, VIOLATED]
+
+    - sourceAgentId: advisor-maint
+      targetAgentId: judge
+      kind: EXTENDED
+      extendedKind: advises
+      tenancyId: archetype-coalition
+      attestation:
+        dimensions: [maintainability-impact]
+        capabilityScope: [architecture-decision]
+        signalTypes: [COMPLIANT, VIOLATED]

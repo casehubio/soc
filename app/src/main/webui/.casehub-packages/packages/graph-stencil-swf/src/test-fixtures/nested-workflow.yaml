@@ -1,0 +1,22 @@
+document:
+  dsl: "1.0.0"
+  namespace: test
+  name: nested
+  version: "1.0.0"
+do:
+  - tryBlock:
+      try:
+        - innerStep:
+            call: http
+            with:
+              method: POST
+              endpoint:
+                uri: https://api.example.com/process
+      catch:
+        errors:
+          with:
+            type: https://example.com/errors/*
+        do:
+          - handleError:
+              set:
+                errorHandled: true

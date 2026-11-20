@@ -1,0 +1,1 @@
+{"version":3,"file":"schema-types.d.ts","sourceRoot":"","sources":["../../src/form-inputs/schema-types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,YAAY,EAAU,MAAM,uBAAuB,CAAC;AAElE,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,4BAA4B,CAAC;AAE9D,wBAAgB,uBAAuB,CAAC,OAAO,EAAE,YAAY,GAAG,WAAW,CAM1E;AA2BD,wBAAgB,uBAAuB,CAAC,WAAW,EAAE,WAAW,GAAG,MAAM,CAsBxE;AAED,OAAO,EAAE,aAAa,EAAE,MAAM,4BAA4B,CAAC"}

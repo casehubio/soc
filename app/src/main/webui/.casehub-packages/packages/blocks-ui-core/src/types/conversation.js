@@ -1,0 +1,5 @@
+export const EPISTEMIC_STATUSES = ['ESTABLISHED', 'PENDING', 'DISPUTED'];
+export const CONVERGENCE_STATES = [
+    'PROGRESSING', 'CONVERGING', 'CONSENSUS', 'DEADLOCK', 'DIMINISHING_RETURNS',
+];
+//# sourceMappingURL=conversation.js.map

@@ -1,0 +1,23 @@
+import type { DataSetLookup } from "@casehubio/pages-data";
+import type { DataSetOp } from "@casehubio/pages-data";
+import type { FilterOp, CoreFunctionType } from "@casehubio/pages-data";
+import type { GroupOp, ResultColumn, FixedCalendarUnit } from "@casehubio/pages-data";
+import type { SortOp, SortOrder } from "@casehubio/pages-data";
+export declare function lookup(dataSetId: string, ...ops: DataSetOp[]): DataSetLookup;
+export declare function groupBy(source: string | null, ...resultColumns: ResultColumn[]): GroupOp;
+export declare function groupByCalendar(source: string, unit: FixedCalendarUnit, ...resultColumns: ResultColumn[]): GroupOp;
+export declare function filterBy(column: string, fn: CoreFunctionType, ...args: readonly (string | number | Date)[]): FilterOp;
+export declare function and(...filters: FilterOp[]): FilterOp;
+export declare function or(...filters: FilterOp[]): FilterOp;
+export declare function not(filter: FilterOp): FilterOp;
+export declare function sortBy(column: string, order?: SortOrder): SortOp;
+export declare function col(source: string, alias?: string): ResultColumn;
+export declare function sum(source: string, alias?: string): ResultColumn;
+export declare function avg(source: string, alias?: string): ResultColumn;
+export declare function count(source: string, alias?: string): ResultColumn;
+export declare function min(source: string, alias?: string): ResultColumn;
+export declare function max(source: string, alias?: string): ResultColumn;
+export declare function distinct(source: string, alias?: string): ResultColumn;
+export declare function join(source: string, separator?: string, alias?: string): ResultColumn;
+export declare function distinctJoin(source: string, separator?: string, alias?: string): ResultColumn;
+//# sourceMappingURL=lookup-helpers.d.ts.map

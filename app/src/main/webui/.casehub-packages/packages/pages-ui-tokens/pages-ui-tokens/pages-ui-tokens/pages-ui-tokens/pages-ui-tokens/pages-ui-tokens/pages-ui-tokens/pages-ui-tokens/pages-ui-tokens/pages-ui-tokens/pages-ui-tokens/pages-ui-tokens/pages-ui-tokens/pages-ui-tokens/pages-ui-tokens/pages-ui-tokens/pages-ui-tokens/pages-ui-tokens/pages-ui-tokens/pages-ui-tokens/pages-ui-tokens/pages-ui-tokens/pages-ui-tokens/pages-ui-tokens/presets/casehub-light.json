@@ -1,0 +1,28 @@
+{
+  "$name": "casehub-light",
+  "$description": "CaseHub brand light theme",
+  "$extends": "default-light",
+  "pipeline": [
+    {
+      "transform": "oklch-scale",
+      "params": {
+        "hues": { "violet": 270, "green": 160, "magenta": 320 }
+      }
+    },
+    {
+      "transform": "chroma-curve",
+      "params": { "curve": "gaussian", "neutral": 0.02 }
+    },
+    {
+      "transform": "semantic-hues",
+      "params": { "success": 175, "warning": 100 }
+    },
+    {
+      "transform": "semantic-map",
+      "params": {}
+    },
+    {
+      "transform": "gamut-clamp"
+    }
+  ]
+}

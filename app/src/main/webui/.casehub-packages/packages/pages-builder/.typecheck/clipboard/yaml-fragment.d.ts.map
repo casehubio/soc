@@ -1,0 +1,1 @@
+{"version":3,"file":"yaml-fragment.d.ts","sourceRoot":"","sources":["../../src/clipboard/yaml-fragment.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAE,MAAM,2BAA2B,CAAC;AAGzD,wBAAgB,aAAa,CAAC,GAAG,EAAE,YAAY,EAAE,IAAI,EAAE,SAAS,CAAC,MAAM,GAAG,MAAM,CAAC,EAAE,GAAG,MAAM,CAK3F;AAED,wBAAgB,aAAa,CAAC,IAAI,EAAE,MAAM,GAAG;IAAE,IAAI,EAAE,MAAM,CAAA;CAAE,GAAG,IAAI,CAenE"}

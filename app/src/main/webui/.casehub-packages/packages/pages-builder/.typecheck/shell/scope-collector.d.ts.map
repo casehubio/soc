@@ -1,0 +1,1 @@
+{"version":3,"file":"scope-collector.d.ts","sourceRoot":"","sources":["../../src/shell/scope-collector.ts"],"names":[],"mappings":"AAAA,OAAO,EAAE,YAAY,EAAiB,KAAK,aAAa,EAAE,MAAM,2BAA2B,CAAC;AAC5F,OAAO,KAAK,EAAE,YAAY,EAAE,MAAM,yBAAyB,CAAC;AAE5D,wBAAgB,wBAAwB,CACtC,GAAG,EAAE,YAAY,EACjB,IAAI,EAAE,SAAS,CAAC,MAAM,GAAG,MAAM,CAAC,EAAE,EAClC,QAAQ,EAAE,YAAY,GACrB,aAAa,EAAE,CA6FjB"}

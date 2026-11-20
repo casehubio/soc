@@ -1,0 +1,37 @@
+{
+  "name": "@casehubio/mosaic-agent-avatar-2d",
+  "version": "0.2.0",
+  "description": "Archetype-driven 2D avatar system with composable SVG parts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./*": "./dist/*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "lit": "^3.2.1"
+  },
+  "devDependencies": {
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "Apache-2.0"
+}

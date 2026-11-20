@@ -1,0 +1,1 @@
+{"version":3,"file":"format-timestamp.d.ts","sourceRoot":"","sources":["format-timestamp.ts"],"names":[],"mappings":"AAAA,MAAM,MAAM,cAAc,GAAG,gBAAgB,GAAG,SAAS,CAAC;AAE1D,MAAM,WAAW,sBAAsB;IACrC,KAAK,CAAC,EAAE,cAAc,CAAC;CACxB;AAED,wBAAgB,eAAe,CAAC,GAAG,EAAE,MAAM,EAAE,OAAO,CAAC,EAAE,sBAAsB,GAAG,MAAM,CAoBrF"}

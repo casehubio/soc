@@ -1,0 +1,85 @@
+import type { DataSetLookup } from "@casehubio/pages-data";
+import type { Component, DockZone, DockSide, DockWorkbenchConfig, FrameConfig } from "./types.js";
+export interface GridProps {
+    readonly columns: number;
+}
+export interface ColumnsProps {
+    readonly distribution: readonly number[];
+}
+export type RowsProps = Record<string, never>;
+export type StackProps = Record<string, never>;
+export type TabsProps = Record<string, never>;
+export type PillsProps = Record<string, never>;
+export type SidebarProps = Record<string, never>;
+export type TreeProps = Record<string, never>;
+export type MenuProps = Record<string, never>;
+export type AccordionProps = Record<string, never>;
+export type CarouselProps = Record<string, never>;
+export interface SplitProps {
+    readonly direction: "horizontal" | "vertical";
+    readonly ratio?: readonly number[];
+    readonly minSizes?: readonly number[];
+}
+export interface DockItem {
+    readonly icon: string;
+    readonly label: string;
+    readonly panelId: string;
+    readonly defaultOpen?: boolean;
+    readonly zone?: string;
+    readonly allowedZones?: readonly DockZone[];
+    readonly fixed?: boolean;
+}
+export interface DockBarProps {
+    readonly orientation: "vertical" | "horizontal";
+    readonly items: readonly DockItem[];
+    readonly exclusive?: boolean;
+    readonly side?: DockSide;
+}
+export interface HostPanelProps {
+    readonly typeName: string;
+    readonly panelProps?: Readonly<Record<string, unknown>>;
+    readonly lookup?: DataSetLookup;
+    readonly selectionSource?: string;
+}
+export interface PanelProps {
+    readonly title: string;
+}
+export interface HtmlProps {
+    readonly content: string;
+}
+export interface MarkdownProps {
+    readonly content: string;
+}
+export interface TitleProps {
+    readonly text: string;
+    readonly size?: string;
+}
+export interface LazyPageProps {
+    readonly name: string;
+    readonly href: string;
+}
+export interface FilterSettings {
+    readonly enabled?: boolean;
+    readonly notification?: boolean;
+    readonly listening?: boolean;
+    readonly selfApply?: boolean;
+    readonly group?: string;
+    readonly drillDown?: DrillDown;
+}
+export interface DrillDown {
+    readonly target: string;
+    readonly parameters?: Readonly<Record<string, string>>;
+}
+export interface RefreshSettings {
+    readonly interval?: number;
+    readonly showStaleIndicator?: boolean;
+}
+export interface FloatingWorkspaceProps {
+    readonly centre: Component | Component[];
+    readonly frames?: readonly FrameConfig[];
+    readonly organisers?: boolean;
+}
+export interface DockWorkbenchComponentProps {
+    readonly __dockConfig: DockWorkbenchConfig;
+}
+//# sourceMappingURL=component-props.d.ts.map

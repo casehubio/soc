@@ -1,0 +1,185 @@
+import { describe, it, expect, vi } from "vitest";
+import { createDataProviderFactory } from "./provider-factory.js";
+import { InlineProvider } from "./providers/inline.js";
+import { BrowserFetchProvider } from "./providers/browser-fetch.js";
+import { CorsProxyProvider } from "./providers/cors-proxy.js";
+import { ServerRelayProvider } from "./providers/server-relay.js";
+import type { DataProviderConfig, ExternalDataSetDef} from "./types.js";
+import { HttpMethod } from "./types.js";
+import { dataSetId } from "../types.js";
+function def(overrides: Partial<ExternalDataSetDef> = {}): ExternalDataSetDef {
+  return { uuid: dataSetId("test-ds"), ...overrides };
+}
+
+function config(overrides: Partial<DataProviderConfig> = {}): DataProviderConfig {
+  return { ...overrides };
+}
+
+describe("createDataProviderFactory", () => {
+  const factory = createDataProviderFactory();
+
+  it("returns InlineProvider when def has content", () => {
+    const provider = factory.create(def({ content: '{"key": "value"}' }), config());
+
+    expect(provider).toBeInstanceOf(InlineProvider);
+  });
+
+  it("returns undefined when def has join (no provider needed)", () => {
+    const provider = factory.create(
+      def({ join: [dataSetId("ds-a"), dataSetId("ds-b")] }),
+      config(),
+    );
+
+    expect(provider).toBeUndefined();
+  });
+
+  it("returns BrowserFetchProvider for url def by default", () => {
+    const provider = factory.create(def({ url: "https://api.example.com/data" }), config());
+
+    expect(provider).toBeInstanceOf(BrowserFetchProvider);
+  });
+
+  it("wraps with CorsProxyProvider when corsProxy is enabled", () => {
+    const provider = factory.create(
+      def({ url: "https://api.example.com/data" }),
+      config({ corsProxy: { enabled: true, url: "https://proxy.example.com/" } }),
+    );
+
+    expect(provider).toBeInstanceOf(CorsProxyProvider);
+  });
+
+  it("returns ServerRelayProvider when defaultProvider is server-relay", () => {
+    const provider = factory.create(
+      def({ url: "https://api.example.com/data" }),
+      config({
+        defaultProvider: "server-relay",
+        serverRelay: { endpoint: "https://relay.example.com/fetch" },
+      }),
+    );
+
+    expect(provider).toBeInstanceOf(ServerRelayProvider);
+  });
+
+  it("wraps ServerRelayProvider with CorsProxyProvider when both are configured", () => {
+    const provider = factory.create(
+      def({ url: "https://api.example.com/data" }),
+      config({
+        defaultProvider: "server-relay",
+        serverRelay: { endpoint: "https://relay.example.com/fetch" },
+        corsProxy: { enabled: true, url: "https://proxy.example.com/" },
+      }),
+    );
+
+    expect(provider).toBeInstanceOf(CorsProxyProvider);
+  });
+
+  it("does not wrap with CorsProxyProvider when corsProxy is disabled", () => {
+    const provider = factory.create(
+      def({ url: "https://api.example.com/data" }),
+      config({ corsProxy: { enabled: false, url: "https://proxy.example.com/" } }),
+    );
+
+    expect(provider).toBeInstanceOf(BrowserFetchProvider);
+    expect(provider).not.toBeInstanceOf(CorsProxyProvider);
+  });
+
+  it("falls back to BrowserFetchProvider when server-relay has no endpoint", () => {
+    const provider = factory.create(
+      def({ url: "https://api.example.com/data" }),
+      config({ defaultProvider: "server-relay" }),
+    );
+
+    expect(provider).toBeInstanceOf(BrowserFetchProvider);
+  });
+
+  it("passes custom fetch to BrowserFetchProvider when provided", async () => {
+    const customFetch = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify([1, 2, 3]), {
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    const factoryWithFetch = createDataProviderFactory(customFetch);
+    const provider = factoryWithFetch.create(
+      def({ url: "https://example.com/data.json" }),
+      config(),
+    );
+
+    expect(provider).toBeInstanceOf(BrowserFetchProvider);
+
+    // Verify the custom fetch is actually used
+    const result = await provider!.fetch({
+      url: "https://example.com/data.json",
+      method: HttpMethod.GET,
+      query: {},
+      headers: {},
+    });
+
+    expect(customFetch).toHaveBeenCalledWith(
+      "https://example.com/data.json",
+      expect.objectContaining({ method: "GET" }),
+    );
+    expect(result.data).toEqual([1, 2, 3]);
+  });
+
+  it("passes fetchFn and tokenFn to ServerRelayProvider", async () => {
+    const tokenFn = () => "test-jwt-token";
+    const customFetch = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ value: 1 }), {
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    const factoryWithAuth = createDataProviderFactory(customFetch);
+    const provider = factoryWithAuth.create(
+      def({ url: "https://api.example.com/data" }),
+      config({
+        defaultProvider: "server-relay",
+        serverRelay: { endpoint: "https://relay.example.com/fetch", tokenFn },
+      }),
+    );
+
+    expect(provider).toBeInstanceOf(ServerRelayProvider);
+
+    await provider!.fetch({
+      url: "https://api.example.com/data",
+      method: HttpMethod.GET,
+      query: {},
+      headers: {},
+    });
+
+    expect(customFetch).toHaveBeenCalledWith(
+      "https://relay.example.com/fetch",
+      expect.objectContaining({
+        headers: expect.objectContaining({
+          Authorization: "Bearer test-jwt-token",
+        }),
+      }),
+    );
+  });
+
+  it("omits Authorization header when tokenFn returns null", async () => {
+    const tokenFn = () => null;
+    const customFetch = vi.fn().mockResolvedValue(
+      new Response(JSON.stringify({ value: 1 }), {
+        headers: { "content-type": "application/json" },
+      }),
+    );
+    const factoryWithAuth = createDataProviderFactory(customFetch);
+    const provider = factoryWithAuth.create(
+      def({ url: "https://api.example.com/data" }),
+      config({
+        defaultProvider: "server-relay",
+        serverRelay: { endpoint: "https://relay.example.com/fetch", tokenFn },
+      }),
+    );
+
+    await provider!.fetch({
+      url: "https://api.example.com/data",
+      method: HttpMethod.GET,
+      query: {},
+      headers: {},
+    });
+
+    const calledHeaders = (customFetch.mock.calls[0]![1] as { headers: Record<string, string> }).headers;
+    expect(calledHeaders).not.toHaveProperty("Authorization");
+  });
+});

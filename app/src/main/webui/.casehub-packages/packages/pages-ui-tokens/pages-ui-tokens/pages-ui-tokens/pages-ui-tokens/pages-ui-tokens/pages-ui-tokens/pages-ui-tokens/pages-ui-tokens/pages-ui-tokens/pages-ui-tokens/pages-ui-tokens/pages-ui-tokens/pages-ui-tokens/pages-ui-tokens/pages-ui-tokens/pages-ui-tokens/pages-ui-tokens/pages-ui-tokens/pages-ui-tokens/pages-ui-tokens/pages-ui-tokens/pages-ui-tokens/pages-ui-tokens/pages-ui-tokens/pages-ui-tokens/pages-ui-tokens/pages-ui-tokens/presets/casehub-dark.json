@@ -1,0 +1,32 @@
+{
+  "$name": "casehub-dark",
+  "$description": "CaseHub brand dark theme — Claudony / casehub.org look",
+  "$extends": "default-dark",
+  "pipeline": [
+    {
+      "transform": "oklch-scale",
+      "params": {
+        "hues": { "violet": 270, "green": 160, "magenta": 320 }
+      }
+    },
+    {
+      "transform": "lightness-shift",
+      "params": { "offset": 10 }
+    },
+    {
+      "transform": "chroma-curve",
+      "params": { "curve": "gaussian", "neutral": 0.02 }
+    },
+    {
+      "transform": "semantic-hues",
+      "params": { "success": 175, "warning": 100 }
+    },
+    {
+      "transform": "semantic-map",
+      "params": {}
+    },
+    {
+      "transform": "gamut-clamp"
+    }
+  ]
+}

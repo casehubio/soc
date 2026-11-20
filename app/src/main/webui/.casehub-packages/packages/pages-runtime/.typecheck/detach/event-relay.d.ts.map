@@ -1,0 +1,1 @@
+{"version":3,"file":"event-relay.d.ts","sourceRoot":"","sources":["../../src/detach/event-relay.ts"],"names":[],"mappings":"AAQA,qBAAa,UAAU;IACrB,OAAO,CAAC,QAAQ,CAAC,SAAS,CAAW;IACrC,OAAO,CAAC,QAAQ,CAAC,QAAQ,CAAc;IACvC,OAAO,CAAC,QAAQ,CAAC,SAAS,CAAuD;gBAErE,SAAS,EAAE,QAAQ,EAAE,QAAQ,EAAE,WAAW;IAKtD,KAAK,IAAI,IAAI;IAcb,IAAI,IAAI,IAAI;CAMb"}

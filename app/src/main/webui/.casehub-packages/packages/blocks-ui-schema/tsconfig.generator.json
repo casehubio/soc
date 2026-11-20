@@ -1,0 +1,15 @@
+{
+  "extends": "../../tsconfig.base.json",
+  "compilerOptions": {
+    "outDir": "dist",
+    "rootDir": "src",
+    "experimentalDecorators": true,
+    "useDefineForClassFields": false,
+    "paths": {
+      "@casehubio/blocks-ui-*": ["../../components/*/src/index.ts"],
+      "@casehubio/blocks-ui-core": ["../blocks-ui-core/src/index.ts"],
+      "@casehubio/blocks-ui-core/*": ["../blocks-ui-core/src/*"]
+    }
+  },
+  "include": ["src"]
+}

@@ -1,0 +1,52 @@
+# Simple Structure (Mintzberg)
+# Flat, centralized, one leader directs all. Minimal hierarchy.
+# Real-world: startup CEO with 4 direct reports, no middle management.
+
+organization:
+  units:
+    - unitId: startup
+      name: Startup Team
+      kind: simple-structure
+      tenancyId: archetype-simple
+      members:
+        - agentId: ceo
+          role: founder
+        - agentId: dev-1
+          role: engineer
+        - agentId: dev-2
+          role: engineer
+        - agentId: designer
+          role: designer
+        - agentId: ops
+          role: operations
+      goals:
+        - name: ship-mvp
+          description: Deliver minimum viable product
+          priority: PRIMARY
+          visibility: PUBLIC
+      constraints:
+        - name: budget-cap
+          description: No spend over $10k without founder approval
+          severity: HARD
+          visibility: PUBLIC
+
+  relationships:
+    - sourceAgentId: ceo
+      targetAgentId: dev-1
+      kind: SUPERVISES
+      tenancyId: archetype-simple
+
+    - sourceAgentId: ceo
+      targetAgentId: dev-2
+      kind: SUPERVISES
+      tenancyId: archetype-simple
+
+    - sourceAgentId: ceo
+      targetAgentId: designer
+      kind: SUPERVISES
+      tenancyId: archetype-simple
+
+    - sourceAgentId: ceo
+      targetAgentId: ops
+      kind: SUPERVISES
+      tenancyId: archetype-simple

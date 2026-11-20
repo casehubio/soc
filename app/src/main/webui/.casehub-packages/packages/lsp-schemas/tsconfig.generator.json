@@ -1,0 +1,25 @@
+{
+  "compilerOptions": {
+    "target": "ES2022",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "resolveJsonModule": true,
+    "paths": {
+      "@casehubio/graph-stencil-case": ["../graph-stencil-case/src/index.ts"],
+      "@casehubio/graph-stencil-case/*": ["../graph-stencil-case/src/*"],
+      "@casehubio/graph-stencil-htn": ["../graph-stencil-htn/src/index.ts"],
+      "@casehubio/graph-stencil-htn/*": ["../graph-stencil-htn/src/*"],
+      "@casehubio/graph-stencil-org": ["../graph-stencil-org/src/index.ts"],
+      "@casehubio/graph-stencil-org/*": ["../graph-stencil-org/src/*"]
+    }
+  },
+  "include": [
+    "../graph-stencil-case/src/**/*.ts",
+    "../graph-stencil-htn/src/**/*.ts",
+    "../graph-stencil-org/src/**/*.ts",
+    "../graph-stencil-swf/src/**/*.ts"
+  ]
+}

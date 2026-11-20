@@ -1,0 +1,88 @@
+# Machine Bureaucracy with Escalation (Mintzberg) / Hierarchy (Horling & Lesser)
+# 3-tier support with domain-scoped escalation.
+# Real-world: customer support — L1 generalists, L2 specialists, L3 engineering.
+
+organization:
+  units:
+    - unitId: support-org
+      name: Customer Support
+      kind: tiered-escalation
+      tenancyId: archetype-escalation
+      members:
+        - agentId: l1-agent-1
+          role: l1-generalist
+        - agentId: l1-agent-2
+          role: l1-generalist
+        - agentId: l2-billing
+          role: l2-specialist
+        - agentId: l2-technical
+          role: l2-specialist
+        - agentId: l3-engineer
+          role: l3-engineer
+      capabilities:
+        - name: ticket-resolution
+        - name: billing-support
+        - name: technical-support
+      goals:
+        - name: first-contact-resolution
+          description: Resolve 80% of tickets at L1
+          priority: PRIMARY
+          visibility: PUBLIC
+
+  relationships:
+    # L1 → L2 escalation (domain-scoped)
+    - sourceAgentId: l1-agent-1
+      targetAgentId: l2-billing
+      kind: ESCALATES_TO
+      tenancyId: archetype-escalation
+      scope:
+        capabilityName: billing-support
+
+    - sourceAgentId: l1-agent-1
+      targetAgentId: l2-technical
+      kind: ESCALATES_TO
+      tenancyId: archetype-escalation
+      scope:
+        capabilityName: technical-support
+
+    - sourceAgentId: l1-agent-2
+      targetAgentId: l2-billing
+      kind: ESCALATES_TO
+      tenancyId: archetype-escalation
+      scope:
+        capabilityName: billing-support
+
+    - sourceAgentId: l1-agent-2
+      targetAgentId: l2-technical
+      kind: ESCALATES_TO
+      tenancyId: archetype-escalation
+      scope:
+        capabilityName: technical-support
+
+    # L2 → L3 escalation
+    - sourceAgentId: l2-billing
+      targetAgentId: l3-engineer
+      kind: ESCALATES_TO
+      tenancyId: archetype-escalation
+
+    - sourceAgentId: l2-technical
+      targetAgentId: l3-engineer
+      kind: ESCALATES_TO
+      tenancyId: archetype-escalation
+
+    # L1 mutual backup
+    - sourceAgentId: l1-agent-1
+      targetAgentId: l1-agent-2
+      kind: BACKS_UP
+      tenancyId: archetype-escalation
+
+    # L2 supervision over L1
+    - sourceAgentId: l2-technical
+      targetAgentId: l1-agent-1
+      kind: SUPERVISES
+      tenancyId: archetype-escalation
+
+    - sourceAgentId: l2-technical
+      targetAgentId: l1-agent-2
+      kind: SUPERVISES
+      tenancyId: archetype-escalation

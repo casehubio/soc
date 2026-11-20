@@ -1,0 +1,43 @@
+{
+  "name": "@casehubio/mosaic-graph-stencil-case",
+  "version": "0.1.0",
+  "description": "Case domain adapter and structural stencils for graph editor",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist",
+    "generate:types": "tsx scripts/generate-types.ts"
+  },
+  "devDependencies": {
+    "@open-wc/testing": "^4.0.0",
+    "@types/react": "^19.2.18",
+    "@types/react-dom": "^19.2.4",
+    "jsdom": "^29.1.1",
+    "json-schema-to-typescript": "^15.0.4",
+    "rimraf": "^6.1.0",
+    "tsx": "^4.23.5",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "lit": "^3.3.3",
+    "yaml": "^2.7.0"
+  },
+  "peerDependencies": {
+    "@xyflow/react": "^12.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0"
+  }
+}

@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <title>Builder Shell — Dock Workbench Test (#436)</title>
+  <style>
+    * { box-sizing: border-box; }
+    body { margin: 0; font-family: system-ui, sans-serif; height: 100vh; }
+    pages-builder-shell { display: block; height: 100%; }
+  </style>
+</head>
+<body>
+  <script type="module">
+    import '@casehubio/pages-code-editor';
+    import '@casehubio/pages-property-palette';
+    import '@casehubio/pages-viz';
+    import { loadSite } from '@casehubio/pages-runtime';
+    import './src/shell/builder-shell.js';
+
+    const YAML = `pages:
+  - name: Dashboard
+    rows:
+      - columns:
+          - span: 6
+            components:
+              - type: title
+                properties:
+                  text: Revenue Overview
+              - type: bar-chart
+                properties:
+                  subtype: column
+                  lookup:
+                    uuid: sales
+          - span: 6
+            components:
+              - type: title
+                properties:
+                  text: Customer Metrics
+              - type: metric
+                properties:
+                  label: Total Customers
+                  value: "1,247"
+      - columns:
+          - span: 12
+            components:
+              - type: line-chart
+                properties:
+                  title: Weekly Active Users
+                  lookup:
+                    uuid: trends
+
+  - name: Settings
+    components:
+      - type: title
+        properties:
+          text: Application Settings
+      - type: html
+        properties:
+          content: "<p>Configure your dashboard preferences here.</p>"
+
+datasets:
+  - uuid: sales
+    content: >-
+      [[1,"Jan",4200],[2,"Feb",5100],[3,"Mar",4800],[4,"Apr",6300]]
+    columns:
+      - id: id
+        type: NUMBER
+      - id: month
+        type: TEXT
+      - id: revenue
+        type: NUMBER
+
+  - uuid: trends
+    content: >-
+      [[1,"Jan",420],[2,"Feb",510],[3,"Mar",480],[4,"Apr",630],[5,"May",590],[6,"Jun",720],[7,"Jul",685],[8,"Aug",810],[9,"Sep",775],[10,"Oct",890],[11,"Nov",940],[12,"Dec",1050]]
+    columns:
+      - id: id
+        type: NUMBER
+      - id: month
+        type: TEXT
+      - id: users
+        type: NUMBER
+`;
+
+    const el = document.createElement('pages-builder-shell');
+    let currentSite = null;
+    el.renderPreview = (container, yaml) => {
+      if (currentSite) { currentSite.dispose(); currentSite = null; }
+      container.innerHTML = '';
+      loadSite(container, yaml).then(site => { currentSite = site; }).catch(() => {});
+    };
+    document.body.appendChild(el);
+    requestAnimationFrame(() => {
+      el.yaml = YAML;
+    });
+  </script>
+</body>
+</html>

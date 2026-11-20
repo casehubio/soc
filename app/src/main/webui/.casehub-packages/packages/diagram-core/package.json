@@ -1,0 +1,8 @@
+{
+  "name": "@casehubio/diagram-core",
+  "version": "0.1.0",
+  "description": "DEPRECATED — migrated to @casehubio/pages-diagram-core",
+  "deprecated": "Use @casehubio/pages-diagram-core instead",
+  "type": "module",
+  "license": "Apache-2.0"
+}

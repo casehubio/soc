@@ -1,0 +1,96 @@
+# Adhocracy (Mintzberg) / Federation (Horling & Lesser)
+# Coordinator decomposes goals, dispatches to specialists, aggregates results.
+# Real-world: AI coding assistant dispatching to search, code-gen, and test agents.
+
+organization:
+  units:
+    - unitId: coding-assistant
+      name: Coding Assistant Federation
+      kind: federation
+      tenancyId: archetype-federation
+      members:
+        - agentId: orchestrator
+          role: coordinator
+        - agentId: searcher
+          role: specialist
+        - agentId: coder
+          role: specialist
+        - agentId: tester
+          role: specialist
+        - agentId: reviewer
+          role: specialist
+      capabilities:
+        - name: code-task-completion
+          description: End-to-end code task from request to tested PR
+      goals:
+        - name: task-completion
+          description: Decompose and complete coding tasks end-to-end
+          priority: PRIMARY
+          visibility: PUBLIC
+      constraints:
+        - name: test-before-merge
+          description: No code delivered without passing tests
+          severity: HARD
+          visibility: PUBLIC
+
+  relationships:
+    # Coordinator delegates to each specialist (capability-scoped)
+    - sourceAgentId: orchestrator
+      targetAgentId: searcher
+      kind: DELEGATES_TO
+      tenancyId: archetype-federation
+      scope:
+        capabilityName: code-search
+        domain: codebase
+
+    - sourceAgentId: orchestrator
+      targetAgentId: coder
+      kind: DELEGATES_TO
+      tenancyId: archetype-federation
+      scope:
+        capabilityName: code-generation
+
+    - sourceAgentId: orchestrator
+      targetAgentId: tester
+      kind: DELEGATES_TO
+      tenancyId: archetype-federation
+      scope:
+        capabilityName: test-generation
+
+    - sourceAgentId: orchestrator
+      targetAgentId: reviewer
+      kind: DELEGATES_TO
+      tenancyId: archetype-federation
+      scope:
+        capabilityName: code-review
+
+    # Specialists report results back to coordinator
+    - sourceAgentId: searcher
+      targetAgentId: orchestrator
+      kind: REPORTS_TO
+      tenancyId: archetype-federation
+
+    - sourceAgentId: coder
+      targetAgentId: orchestrator
+      kind: REPORTS_TO
+      tenancyId: archetype-federation
+
+    - sourceAgentId: tester
+      targetAgentId: orchestrator
+      kind: REPORTS_TO
+      tenancyId: archetype-federation
+
+    - sourceAgentId: reviewer
+      targetAgentId: orchestrator
+      kind: REPORTS_TO
+      tenancyId: archetype-federation
+
+    # Attestation: reviewer can attest about coder's quality
+    - sourceAgentId: reviewer
+      targetAgentId: coder
+      kind: EXTENDED
+      extendedKind: attests-quality
+      tenancyId: archetype-federation
+      attestation:
+        dimensions: [quality, correctness]
+        signalTypes: [COMPLIANT, VIOLATED]

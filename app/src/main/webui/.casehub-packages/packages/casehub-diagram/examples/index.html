@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>CaseHub Diagram — document-processing example</title>
+  <style>
+    body { margin: 0; font-family: sans-serif; }
+    casehub-diagram { display: block; width: 100vw; height: 100vh; }
+  </style>
+</head>
+<body>
+  <casehub-diagram id="diagram"></casehub-diagram>
+  <script type="module">
+    import '../src/casehub-diagram.js';
+
+    const yaml = await fetch('../../../../engine/schema/src/main/resources/examples/document-processing.yaml')
+      .then(r => r.text())
+      .catch(() => null);
+
+    if (yaml) {
+      document.getElementById('diagram').yaml = yaml;
+    } else {
+      document.getElementById('diagram').innerHTML =
+        '<p style="padding:16px">Could not load document-processing.yaml. Run from the repo root.</p>';
+    }
+  </script>
+</body>
+</html>

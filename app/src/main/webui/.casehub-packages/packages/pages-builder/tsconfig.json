@@ -1,0 +1,11 @@
+{
+  "extends": "@casehubio/pages-tsconfig/tsconfig.json",
+  "compilerOptions": {
+    "experimentalDecorators": true,
+    "rootDir": "src",
+    "outDir": ".typecheck",
+    "emitDeclarationOnly": true
+  },
+  "include": ["src"],
+  "references": []
+}

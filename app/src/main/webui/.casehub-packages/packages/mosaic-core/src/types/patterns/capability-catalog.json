@@ -1,0 +1,171 @@
+{
+  "version": 1,
+  "categories": [
+    {
+      "name": "orchestration"
+    },
+    {
+      "name": "deliberation"
+    },
+    {
+      "name": "perception"
+    },
+    {
+      "name": "communication"
+    },
+    {
+      "name": "governance"
+    },
+    {
+      "name": "optimisation"
+    },
+    {
+      "name": "social"
+    },
+    {
+      "name": "playbook"
+    }
+  ],
+  "capabilities": [
+    {
+      "name": "supervisor",
+      "category": "orchestration",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "choreography",
+      "category": "orchestration",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "saga",
+      "category": "orchestration",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "decomposition",
+      "category": "orchestration",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "voting",
+      "category": "deliberation",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "debate",
+      "category": "deliberation",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "negotiation",
+      "category": "deliberation",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "coalition",
+      "category": "deliberation",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "normative",
+      "category": "deliberation",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "summarisation",
+      "category": "perception",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "narrative",
+      "category": "perception",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "observation",
+      "category": "perception",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "channel-execution",
+      "category": "communication",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "channel-summary",
+      "category": "communication",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "judgment",
+      "category": "governance",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "oversight",
+      "category": "governance",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "attestation",
+      "category": "governance",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "trust",
+      "category": "governance",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "prompt-optimisation",
+      "category": "optimisation",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "memory-hygiene",
+      "category": "social",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "cognition",
+      "category": "social",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "reflection",
+      "category": "social",
+      "hasYamlRoot": false
+    },
+    {
+      "name": "sequence",
+      "category": "playbook",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "parallel",
+      "category": "playbook",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "loop",
+      "category": "playbook",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "conditional",
+      "category": "playbook",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "match",
+      "category": "playbook",
+      "hasYamlRoot": true
+    },
+    {
+      "name": "try-catch",
+      "category": "playbook",
+      "hasYamlRoot": true
+    }
+  ]
+}

@@ -1,0 +1,91 @@
+import { z } from "zod";
+import { ColumnType } from "../types.js";
+import { HttpMethod } from "./types.js";
+
+const externalColumnDefSchema = z.object({
+  id: z.string().min(1),
+  name: z.string().optional(),
+  type: z.enum(ColumnType),
+});
+
+const serverPaginationConfigSchema = z.object({
+  offsetParam: z.string().min(1),
+  limitParam: z.string().min(1),
+  sortParam: z.string().optional(),
+  orderParam: z.string().optional(),
+  filterParam: z.string().optional(),
+  defaultPageSize: z.number().int().positive(),
+  maxCachedPages: z.number().int().positive().optional(),
+  totalPath: z.string().optional(),
+});
+
+export const externalDataSetDefSchema = z.object({
+  uuid: z.string().min(1),
+  name: z.string().optional(),
+
+  url: z.string().optional(),
+  content: z.string().optional(),
+  join: z.array(z.string().min(1)).min(1).optional(),
+  serverQuery: z.boolean().optional(),
+  serverPagination: serverPaginationConfigSchema.optional(),
+
+  method: z.enum(HttpMethod).optional(),
+  headers: z.record(z.string(), z.string()).optional(),
+  query: z.record(z.string(), z.string()).optional(),
+  form: z.record(z.string(), z.string()).optional(),
+  body: z.string().optional(),
+
+  dataPath: z.string().optional(),
+  expression: z.string().optional(),
+  type: z.string().optional(),
+
+  columns: z.array(externalColumnDefSchema).optional(),
+
+  cacheEnabled: z.boolean().optional(),
+  cacheMaxRows: z.number().int().positive().optional(),
+  refreshTime: z.string().regex(
+    /^\d+(millisecond|second|minute|hour|day|week|month|quarter|year)$/,
+    "Must be a number followed by a time unit (e.g. '10minute', '30second')",
+  ).optional(),
+  accumulate: z.boolean().optional(),
+  keyColumn: z.string().optional(),
+}).refine(
+  d => [d.url, d.content, d.join, d.serverQuery].filter(Boolean).length === 1,
+  { message: "Exactly one of url, content, join, or serverQuery is required" },
+).refine(
+  d => !(d.form && d.body),
+  { message: "form and body are mutually exclusive" },
+).refine(
+  d => d.url !== undefined || [d.method, d.headers, d.query, d.form, d.body]
+    .every(v => v === undefined),
+  { message: "method, headers, query, form, body are only valid when url is set" },
+).refine(
+  d => !d.join || [d.dataPath, d.type, d.expression]
+    .every(v => v === undefined),
+  { message: "dataPath, type, expression are not valid with join (nothing to extract)" },
+).refine(
+  d => !d.serverQuery || [d.dataPath, d.type, d.expression, d.accumulate]
+    .every(v => v === undefined),
+  { message: "dataPath, type, expression, accumulate are not valid with serverQuery" },
+).refine(
+  d => !d.refreshTime || (
+    (d.url !== undefined
+      && !d.url.startsWith("ws://") && !d.url.startsWith("wss://")
+      && !d.url.startsWith("sse://") && !d.url.startsWith("sses://"))
+    || (d.content !== undefined && d.expression !== undefined && d.accumulate === true)
+    || d.serverQuery === true
+  ),
+  { message: "refreshTime requires a non-push-source url, content + expression + accumulate, or serverQuery" },
+).refine(
+  d => !d.serverPagination || d.url !== undefined,
+  { message: "serverPagination requires url" },
+).refine(
+  d => !d.serverPagination || !d.serverQuery,
+  { message: "serverPagination and serverQuery are mutually exclusive" },
+);
+
+export type ParsedExternalDataSetDef = z.output<typeof externalDataSetDefSchema>;
+
+export function parseExternalDataSetDef(input: unknown): ParsedExternalDataSetDef {
+  return externalDataSetDefSchema.parse(input);
+}

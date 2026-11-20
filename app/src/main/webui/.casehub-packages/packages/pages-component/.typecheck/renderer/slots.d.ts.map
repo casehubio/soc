@@ -1,0 +1,1 @@
+{"version":3,"file":"slots.d.ts","sourceRoot":"","sources":["../../src/renderer/slots.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,SAAS,EAAE,MAAM,mBAAmB,CAAC;AAEnD,wBAAgB,eAAe,CAC7B,SAAS,EAAE,SAAS,EACpB,QAAQ,EAAE,MAAM,GACf,SAAS,SAAS,EAAE,CAEtB;AAED,wBAAgB,YAAY,CAAC,SAAS,EAAE,SAAS,GAAG,SAAS,MAAM,EAAE,CAGpE"}

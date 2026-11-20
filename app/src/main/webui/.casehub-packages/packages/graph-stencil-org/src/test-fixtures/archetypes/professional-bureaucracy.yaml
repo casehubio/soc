@@ -1,0 +1,50 @@
+# Professional Bureaucracy (Mintzberg) / Team (Horling & Lesser)
+# Flat authority, high specialization. Skilled professionals control own work.
+# Real-world: code review team — peers with different expertise, no hierarchy.
+
+organization:
+  units:
+    - unitId: review-team
+      name: Code Review Team
+      kind: professional-bureaucracy
+      tenancyId: archetype-proburc
+      members:
+        - agentId: reviewer-backend
+          role: backend-specialist
+        - agentId: reviewer-frontend
+          role: frontend-specialist
+        - agentId: reviewer-security
+          role: security-specialist
+        - agentId: reviewer-perf
+          role: performance-specialist
+      capabilities:
+        - name: code-review
+          description: Review code changes for quality and correctness
+        - name: architecture-review
+          description: Review architectural decisions
+      goals:
+        - name: quality-gate
+          description: No code merges without peer review
+          priority: PRIMARY
+          visibility: PUBLIC
+      constraints:
+        - name: no-self-review
+          description: Authors cannot review their own code
+          severity: HARD
+          visibility: PUBLIC
+
+  relationships:
+    # Mutual backup — any specialist can cover for another
+    - sourceAgentId: reviewer-backend
+      targetAgentId: reviewer-frontend
+      kind: BACKS_UP
+      tenancyId: archetype-proburc
+      scope:
+        capabilityName: code-review
+
+    - sourceAgentId: reviewer-frontend
+      targetAgentId: reviewer-backend
+      kind: BACKS_UP
+      tenancyId: archetype-proburc
+      scope:
+        capabilityName: code-review

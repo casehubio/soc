@@ -1,0 +1,77 @@
+# Market (Horling & Lesser)
+# Competitive coordination via bidding. No fixed authority.
+# Real-world: task marketplace — agents bid on work, best bid wins.
+
+organization:
+  units:
+    - unitId: task-market
+      name: Task Marketplace
+      kind: market
+      tenancyId: archetype-market
+      members:
+        - agentId: auctioneer
+          role: market-maker
+        - agentId: bidder-fast
+          role: bidder
+        - agentId: bidder-quality
+          role: bidder
+        - agentId: bidder-cheap
+          role: bidder
+      capabilities:
+        - name: task-allocation
+          description: Allocate tasks via competitive bidding
+      goals:
+        - name: optimal-allocation
+          description: Allocate tasks to the best-value bidder
+          priority: PRIMARY
+          visibility: PUBLIC
+      constraints:
+        - name: fair-bidding
+          description: All bidders see the same task specification
+          severity: HARD
+          visibility: PUBLIC
+
+  relationships:
+    # Bidders offer to the auctioneer
+    - sourceAgentId: bidder-fast
+      targetAgentId: auctioneer
+      kind: EXTENDED
+      extendedKind: bids-to
+      tenancyId: archetype-market
+
+    - sourceAgentId: bidder-quality
+      targetAgentId: auctioneer
+      kind: EXTENDED
+      extendedKind: bids-to
+      tenancyId: archetype-market
+
+    - sourceAgentId: bidder-cheap
+      targetAgentId: auctioneer
+      kind: EXTENDED
+      extendedKind: bids-to
+      tenancyId: archetype-market
+
+    # Auctioneer delegates to the winner
+    - sourceAgentId: auctioneer
+      targetAgentId: bidder-fast
+      kind: DELEGATES_TO
+      tenancyId: archetype-market
+      scope:
+        capabilityName: task-execution
+        custom: awarded-by-auction
+
+    - sourceAgentId: auctioneer
+      targetAgentId: bidder-quality
+      kind: DELEGATES_TO
+      tenancyId: archetype-market
+      scope:
+        capabilityName: task-execution
+        custom: awarded-by-auction
+
+    - sourceAgentId: auctioneer
+      targetAgentId: bidder-cheap
+      kind: DELEGATES_TO
+      tenancyId: archetype-market
+      scope:
+        capabilityName: task-execution
+        custom: awarded-by-auction

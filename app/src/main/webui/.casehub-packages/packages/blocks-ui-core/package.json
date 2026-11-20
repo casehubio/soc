@@ -1,0 +1,39 @@
+{
+  "name": "@casehubio/blocks-ui-core",
+  "version": "0.2.2",
+  "description": "Core utilities for CaseHub UI blocks \u2014 theme, dataset helpers, event contracts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/blocks-ui.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./*": "./dist/*"
+  },
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "@open-wc/testing": "^4.0.0",
+    "jsdom": "^29.1.1",
+    "rimraf": "^6.1.0",
+    "typescript": "^5.6.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "Apache-2.0",
+  "dependencies": {
+    "lit": "^3.3.3"
+  }
+}

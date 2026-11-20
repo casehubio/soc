@@ -1,0 +1,2 @@
+export type { GridProps, ColumnsProps, RowsProps, StackProps, TabsProps, PillsProps, SidebarProps, TreeProps, MenuProps, AccordionProps, CarouselProps, PanelProps, HtmlProps, MarkdownProps, TitleProps, LazyPageProps, FilterSettings, DrillDown, RefreshSettings, SplitProps, DockBarProps, DockItem, HostPanelProps, } from "@casehubio/pages-component";
+//# sourceMappingURL=component-props.d.ts.map

@@ -1,0 +1,1 @@
+{"version":3,"file":"form-scope-types.d.ts","sourceRoot":"","sources":["../../src/model/form-scope-types.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAE,MAAM,uBAAuB,CAAC;AAEzD,MAAM,WAAW,cAAc;IAC7B,QAAQ,CAAC,MAAM,CAAC,EAAE,WAAW,CAAC;IAC9B,QAAQ,CAAC,cAAc,CAAC,EAAE,OAAO,CAAC;IAClC,QAAQ,CAAC,IAAI,CAAC,EAAE,SAAS,GAAG,MAAM,CAAC;IACnC,QAAQ,CAAC,WAAW,CAAC,EAAE,OAAO,CAAC;CAChC"}

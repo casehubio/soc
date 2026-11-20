@@ -1,0 +1,26 @@
+{
+  "name": "@casehubio/mosaic-agent-manifest-editor",
+  "version": "0.0.1",
+  "type": "module",
+  "main": "src/index.ts",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "dependencies": {
+    "lit": "^3.0.0"
+  },
+  "devDependencies": {
+    "vitest": "^3.0.0"
+  },
+  "scripts": {
+    "test": "vitest run"
+  },
+  "files": [
+    "src",
+    "package.json"
+  ]
+}

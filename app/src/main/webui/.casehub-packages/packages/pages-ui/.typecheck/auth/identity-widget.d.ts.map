@@ -1,0 +1,1 @@
+{"version":3,"file":"identity-widget.d.ts","sourceRoot":"","sources":["../../src/auth/identity-widget.ts"],"names":[],"mappings":"AAEA,qBAAa,aAAc,SAAQ,WAAW;IAC5C,OAAO,CAAC,aAAa,CAAS;IAE9B,MAAM,KAAK,kBAAkB,IAAI,MAAM,EAAE,CAExC;IAED,iBAAiB,IAAI,IAAI;IAKzB,OAAO,CAAC,cAAc;IAkBtB,OAAO,CAAC,MAAM;IAwEd,OAAO,CAAC,YAAY;IAoCpB,OAAO,CAAC,qBAAqB;YA0Bf,cAAc;CAwB7B"}

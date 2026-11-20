@@ -1,0 +1,122 @@
+import { LitElement, html, css, nothing, type TemplateResult } from 'lit';
+import { customElement, property } from 'lit/decorators.js';
+import type { BlockStep } from '@casehubio/yaml-core/step';
+import { renderStepContent } from './step-dispatch.js';
+import { renderDiffContent } from './diff-dispatch.js';
+import './decorator-badge.js';
+import type { DiffState, DiffNode, FieldChange } from '@casehubio/yaml-core/step/diff';
+import { diffTokenStyles, diffMarkerStyles, renderDiffMarker, renderFieldChanges } from './diff-shared.js';
+
+@customElement('step-block-view')
+export class StepBlockView extends LitElement {
+  @property({ attribute: false }) step!: BlockStep;
+  @property({ reflect: true, attribute: 'diff-state' }) diffState?: DiffState;
+  @property({ attribute: false }) fieldChanges: FieldChange[] = [];
+  @property({ attribute: false }) diffNode?: DiffNode;
+
+  static override styles = [diffTokenStyles, diffMarkerStyles, css`
+    :host {
+      display: block;
+      border: 1px solid rgba(255, 255, 255, 0.06);
+      border-radius: 8px;
+      overflow: hidden;
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    }
+
+    .block-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 12px;
+      background: rgba(255, 255, 255, 0.02);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+      font-size: 11px;
+      font-weight: 600;
+      color: #7f849c;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .block-icon {
+      color: #89b4fa;
+      font-size: 13px;
+    }
+    .decorators {
+      display: flex;
+      gap: 4px;
+      margin-left: auto;
+    }
+
+    .block-body {
+      padding: 8px;
+    }
+
+    step-card { margin-bottom: 4px; }
+    swim-lane-view { margin: 8px 0; }
+    step-block-view { margin: 8px 0; }
+  `];
+
+  override render() {
+    if (!this.step) return nothing;
+
+    const hasDecorators = Object.keys(this.step.decorators).length > 0;
+    const hasName = this.step.name != null;
+
+    return html`
+      ${hasDecorators || hasName ? this.renderHeader() : nothing}
+      <div class="block-body">
+        ${this.diffNode?.children
+          ? this.diffNode.children.map(child => renderDiffContent(child))
+          : this.step.steps.map(s => renderStepContent(s))}
+      </div>
+      ${renderDiffMarker(this.diffState)}
+      ${renderFieldChanges(this.fieldChanges)}
+    `;
+  }
+
+  private identifyBlock(): { icon: string; label: string; secondaryBadges: TemplateResult[] } {
+    const decs = this.step.decorators;
+    const badges: TemplateResult[] = [];
+
+    if (decs.retry != null) {
+      badges.push(html`<decorator-badge kind="retry" label="retry: ${decs.retry}"></decorator-badge>`);
+    }
+    if (decs.timeout != null) {
+      badges.push(html`<decorator-badge kind="timeout" label="${decs.timeout}ms"></decorator-badge>`);
+    }
+    if (decs.when != null || decs.if != null) {
+      badges.push(html`<decorator-badge kind="when" label="${decs.when ?? decs.if}"></decorator-badge>`);
+    }
+    if (decs.mutex != null) {
+      badges.push(html`<decorator-badge kind="mutex" label="${decs.mutex}"></decorator-badge>`);
+    }
+    if (decs.loop != null) {
+      badges.push(html`<decorator-badge kind="loop" label="${decs.loop}"></decorator-badge>`);
+    }
+
+    if (decs.forEach != null) {
+      const fe = decs.forEach;
+      const iterExpr = typeof fe === 'string'
+        ? fe
+        : `${(fe as Record<string, unknown>).item ?? ''} in ${(fe as Record<string, unknown>).collection ?? ''}`;
+      return { icon: '∀', label: `FOR EACH ${iterExpr}`, secondaryBadges: badges };
+    }
+
+    if (this.step.name) {
+      return { icon: '▧', label: this.step.name, secondaryBadges: badges };
+    }
+
+    return { icon: '▧', label: 'BLOCK', secondaryBadges: badges };
+  }
+
+  private renderHeader(): TemplateResult {
+    const { icon, label, secondaryBadges } = this.identifyBlock();
+
+    return html`
+      <div class="block-header">
+        <span class="block-icon">${icon}</span>
+        ${label}
+        ${secondaryBadges.length > 0 ? html`<div class="decorators">${secondaryBadges}</div>` : nothing}
+      </div>
+    `;
+  }
+}

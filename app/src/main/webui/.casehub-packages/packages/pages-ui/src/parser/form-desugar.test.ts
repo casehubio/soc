@@ -1,0 +1,184 @@
+import { describe, it, expect } from "vitest";
+import { parsePage } from "./page-parser.js";
+import { getProps } from "@casehubio/pages-component";
+import type { DataScopeRef } from "@casehubio/pages-component";
+
+describe("form input desugaring", () => {
+  it("desugars input shorthand", () => {
+    const root = parsePage({
+      pages: [{ components: [{ "input": { field: "name", label: "Name" } }] }],
+    });
+    const content = root.slots!.content!;
+    const grid = content[0]!;
+    const item = grid.items![0]!;
+    expect(item.component.type).toBe("input");
+    expect(item.component.props).toEqual({ field: "name", label: "Name" });
+  });
+
+  it("desugars number-input shorthand", () => {
+    const root = parsePage({
+      pages: [{ components: [{ "number-input": { field: "age", min: 0 } }] }],
+    });
+    const item = root.slots!.content![0]!.items![0]!;
+    expect(item.component.type).toBe("number-input");
+    expect(item.component.props).toEqual({ field: "age", min: 0 });
+  });
+
+  it("desugars select with fixed options", () => {
+    const root = parsePage({
+      pages: [{ components: [{ select: { field: "dept", options: { values: ["A", "B"] } } }] }],
+    });
+    const item = root.slots!.content![0]!.items![0]!;
+    expect(item.component.type).toBe("select");
+  });
+
+  it("desugars checkbox shorthand", () => {
+    const root = parsePage({
+      pages: [{ components: [{ checkbox: { field: "active" } }] }],
+    });
+    const item = root.slots!.content![0]!.items![0]!;
+    expect(item.component.type).toBe("checkbox");
+  });
+
+  it("desugars date-picker shorthand", () => {
+    const root = parsePage({
+      pages: [{ components: [{ "date-picker": { field: "start" } }] }],
+    });
+    const item = root.slots!.content![0]!.items![0]!;
+    expect(item.component.type).toBe("date-picker");
+  });
+
+  it("desugars textarea shorthand", () => {
+    const root = parsePage({
+      pages: [{ components: [{ textarea: { field: "notes", rows: 5 } }] }],
+    });
+    const item = root.slots!.content![0]!.items![0]!;
+    expect(item.component.type).toBe("textarea");
+  });
+
+  it("desugars schema-form shorthand", () => {
+    const root = parsePage({
+      pages: [{
+        components: [{
+          "schema-form": {
+            schema: { properties: { name: { type: "string" } } },
+            excludeFields: ["id"],
+          },
+        }],
+      }],
+    });
+    const item = root.slots!.content![0]!.items![0]!;
+    expect(item.component.type).toBe("schema-form");
+    expect(item.component.props).toEqual({
+      schema: { properties: { name: { type: "string" } } },
+      excludeFields: ["id"],
+    });
+  });
+
+  it("desugars type: schema-form with properties", () => {
+    const root = parsePage({
+      pages: [{
+        components: [{
+          type: "schema-form",
+          properties: {
+            schema: { properties: { age: { type: "number" } } },
+            lookup: { uuid: "devs" },
+          },
+        }],
+      }],
+    });
+    const item = root.slots!.content![0]!.items![0]!;
+    expect(item.component.type).toBe("schema-form");
+  });
+});
+
+describe("page src desugaring", () => {
+  it("desugars page with src to lazy-page", () => {
+    const root = parsePage({
+      pages: [{
+        components: [
+          { page: "Employee Form", src: "./form.yaml" },
+        ],
+      }],
+    });
+    const item = root.slots!.content![0]!.items![0]!;
+    expect(item.component.type).toBe("lazy-page");
+    expect(item.component.props).toEqual({ name: "Employee Form", href: "./form.yaml" });
+  });
+
+  it("desugars page without src to page-ref", () => {
+    const root = parsePage({
+      pages: [
+        { name: "Contact Form", components: [{ html: "Form content" }] },
+        { components: [{ page: "Contact Form" }] },
+      ],
+    });
+    // After resolution, only the first page should exist
+    expect(root.slots!.content!.length).toBe(1);
+    expect(root.slots!.content![0]!.type).toBe("page");
+  });
+
+  it("page key without src keeps existing screen handling", () => {
+    // This test ensures that the screen shorthand still works (not affected by page+src handling)
+    // We just check that screen is still recognized; full navigation resolution is tested elsewhere
+    const root = parsePage({
+      pages: [
+        { name: "LayoutPage", components: [{ html: "Layout content" }] },
+        { name: "MainPage", components: [{ screen: "LayoutPage" }] },
+      ],
+    });
+    // The root should have only the first page (LayoutPage gets embedded via the screen ref)
+    expect(root.slots!.content!.length).toBe(1);
+    expect(root.slots!.content![0]!.type).toBe("page");
+  });
+});
+
+describe("dataScope and save parsing", () => {
+  it("parses dataScope on page", () => {
+    const root = parsePage({
+      pages: [{
+        name: "Form",
+        dataScope: { dataset: "emps", idColumn: "id" },
+        save: { trigger: "auto", delay: 2000, adapter: "local" },
+        components: [{ "input": { field: "name" } }],
+      }],
+    });
+    const page = root.slots!.content![0]!;
+    const pageProps = getProps(page, "page");
+    expect(pageProps.dataScope).toEqual({ dataset: "emps", idColumn: "id" });
+    expect(pageProps.save).toEqual({ trigger: "auto", delay: 2000, adapter: "local" });
+  });
+
+  it("parses save with adapterConfig from adapter-named key", () => {
+    const root = parsePage({
+      pages: [{
+        name: "Form",
+        dataScope: { dataset: "emps", idColumn: "id" },
+        save: { trigger: "auto", adapter: "rest", rest: { method: "PATCH" } },
+        components: [{ "input": { field: "name" } }],
+      }],
+    });
+    const page = root.slots!.content![0]!;
+    const pageProps = getProps(page, "page");
+    expect(pageProps.save!.adapterConfig).toEqual({ method: "PATCH" });
+  });
+
+  it("parses dataScope with $ref filter", () => {
+    const root = parsePage({
+      pages: [{
+        name: "Projects",
+        dataScope: {
+          dataset: "projects",
+          idColumn: "id",
+          filter: { employee_id: { $ref: "employees.id" } },
+        },
+        components: [{ "input": { field: "name" } }],
+      }],
+    });
+    const page = root.slots!.content![0]!;
+    const pageProps = getProps(page, "page");
+    const ds = pageProps.dataScope!;
+    const ref = ds.filter!.employee_id as DataScopeRef;
+    expect(ref.$ref).toBe("employees.id");
+  });
+});

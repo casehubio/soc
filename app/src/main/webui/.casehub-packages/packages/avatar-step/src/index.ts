@@ -1,0 +1,13 @@
+export { AvatarStep } from './avatar-step.js';
+export type { PersonalityProfile } from '@casehubio/mosaic-core';
+export { getCompatibleArchetypes, getValidFrameworkValues, getValidBigFivePoles } from './filter.js';
+export type { MatchTier } from './filter.js';
+export type { PersonalityFramework, BigFiveDimension, BigFivePole } from './data/compatibility-matrix.js';
+export { ALL_FRAMEWORK_VALUES, getFrameworkProfile, getRolesForArchetype, getRoleFrameworkValues } from './data/compatibility-matrix.js';
+export { PROFESSION_PRESETS, PROFESSION_LIST } from './data/profession-presets.js';
+export type { ProfessionRole, RoleVariant } from './data/profession-presets.js';
+export { initProfile } from './data/profile-derivation.js';
+export { buildSummaryText, BIG_FIVE_DIMS, BIG_FIVE_LABELS, FRAMEWORK_LABELS } from './data/framework-descriptors.js';
+export { deriveDispositions, deriveTendencies, DISPOSITION_TIPS } from './data/disposition-mapping.js';
+export type { AxisScore, BehavioralTendency } from './data/disposition-mapping.js';
+export { FRAMEWORK_TOOLTIPS } from './data/framework-tooltips.js';

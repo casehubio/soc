@@ -1,0 +1,40 @@
+{
+  "name": "@casehubio/mosaic-channel-activity",
+  "version": "0.3.1",
+  "description": "Qhorus channel activity \u2014 message feed, channel nav, member panel, speech-act badges",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "dompurify": "^3.4.11",
+    "emoji-picker-element": "^1.29.1",
+    "lit": "^3.3.3",
+    "marked": "^15.0.12"
+  },
+  "devDependencies": {
+    "@types/dompurify": "^3.0.5",
+    "@types/node": "^22.0.0",
+    "jsdom": "^29.1.1",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^4.1.9"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

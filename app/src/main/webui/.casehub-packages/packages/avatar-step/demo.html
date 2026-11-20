@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Avatar Step Demo</title>
+  <style>
+    body {
+      font-family: system-ui;
+      background: #1a1a2e;
+      color: #e0e0e0;
+      padding: 20px;
+      --pages-font-family: system-ui;
+      --pages-neutral-1: #1e1e2e;
+      --pages-neutral-2: #252538;
+      --pages-neutral-3: #2d2d44;
+      --pages-neutral-4: #3a3a52;
+      --pages-neutral-5: #4a4a62;
+      --pages-neutral-9: #999;
+      --pages-neutral-10: #aaa;
+      --pages-neutral-11: #ccc;
+      --pages-neutral-12: #eee;
+      --pages-accent-2: #1a2744;
+      --pages-accent-3: #1e3a5f;
+      --pages-accent-7: #3b82f6;
+      --pages-accent-9: #2563eb;
+      --pages-accent-11: #93c5fd;
+      --pages-radius-3: 8px;
+      --pages-space-4: 1rem;
+    }
+    h1 { color: #93c5fd; margin-bottom: 20px; }
+    avatar-step { max-width: 900px; display: block; }
+    #event-log { margin-top: 16px; padding: 12px; background: #252538; border-radius: 8px; font-size: 13px; min-height: 40px; }
+  </style>
+</head>
+<body>
+  <h1>Avatar Step — Demo</h1>
+  <avatar-step></avatar-step>
+  <div id="event-log">Events will appear here...</div>
+
+  <script type="module">
+    // Register all collections before the component renders
+    import { registerCollection, mythicCollection, chibiCollection, simpsonsCollection, neonCollection } from '../../packages/agent-avatar-2d/src/index.ts';
+
+    registerCollection(mythicCollection);
+    registerCollection(chibiCollection);
+    registerCollection(simpsonsCollection);
+    registerCollection(neonCollection);
+
+    // Import the component (triggers customElement registration)
+    import './src/avatar-step.ts';
+
+    // Log events
+    const log = document.getElementById('event-log');
+    const el = document.querySelector('avatar-step');
+    el.addEventListener('avatar:archetype:selected', (e) => {
+      const d = e.detail;
+      const p = d.personality || {};
+      log.textContent = `Selected: ${d.archetype.family}/${d.archetype.subArchetype} | MBTI: ${p.mbti || '—'} Enn: ${p.enneagram || '—'} DISC: ${p.disc || '—'} Belbin: ${p.belbin?.primary || '—'}${p.belbin?.secondaries?.length ? ' +' + p.belbin.secondaries.join(',') : ''} SDI: ${p.sdi || '—'}`;
+    });
+    el.addEventListener('avatar:personality:changed', (e) => {
+      const p = e.detail.personality;
+      log.textContent = `Profile: MBTI: ${p.mbti || '—'} Enn: ${p.enneagram || '—'} DISC: ${p.disc || '—'} Belbin: ${p.belbin?.primary || '—'}${p.belbin?.secondaries?.length ? ' +' + p.belbin.secondaries.join(',') : ''} SDI: ${p.sdi || '—'}`;
+    });
+  </script>
+</body>
+</html>

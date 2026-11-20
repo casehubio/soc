@@ -1,0 +1,45 @@
+{
+  "name": "@casehubio/pages-component-terminal",
+  "version": "0.2.1",
+  "description": "CaseHub Pages terminal component \u2014 xterm.js Web Component",
+  "license": "Apache-2.0",
+  "homepage": "https://github.com/casehubio/casehub-pages",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-pages.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "bugs": {
+    "url": "https://github.com/casehubio/casehub-pages/issues"
+  },
+  "type": "module",
+  "types": "./dist/index.d.ts",
+  "main": "dist/index.js",
+  "exports": {
+    ".": "./dist/index.js",
+    "./xterm.css": "./xterm.css"
+  },
+  "files": [
+    "dist",
+    "xterm.css"
+  ],
+  "scripts": {
+    "build": "vitest run && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist .typecheck"
+  },
+  "dependencies": {
+    "@xterm/addon-fit": "^0.11.0",
+    "@xterm/xterm": "^6.0.0"
+  },
+  "devDependencies": {
+    "jsdom": "^26.0.0",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  }
+}

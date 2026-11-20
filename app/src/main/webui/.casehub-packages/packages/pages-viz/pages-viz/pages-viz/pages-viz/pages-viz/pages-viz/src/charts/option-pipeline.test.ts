@@ -1,0 +1,432 @@
+import { describe, it, expect } from "vitest";
+import { datasetToSource, applyChartSettings } from "./option-pipeline.js";
+import type { ChartSettings } from "@casehubio/pages-component";
+import type { TypedDataSet, Column, ColumnSettings } from "@casehubio/pages-data";
+import { ColumnType, columnId } from "@casehubio/pages-data";
+import { createTypedRow } from "@casehubio/pages-data";
+
+function mockColumn(id: string, name: string, type: ColumnType): Column {
+  return { id: columnId(id), name, type };
+}
+
+function mockColumnSettings(id: string, name?: string): ColumnSettings {
+  const base: ColumnSettings = { id: columnId(id) };
+  return name !== undefined ? { ...base, name } : base;
+}
+
+describe("datasetToSource", () => {
+  it("converts basic 2-column, 2-row dataset to array-of-arrays", async () => {
+    const columns = [
+      mockColumn("category", "Category", ColumnType.LABEL),
+      mockColumn("value", "Value", ColumnType.NUMBER),
+    ];
+    const rows = [
+      createTypedRow(
+        [
+          { type: ColumnType.LABEL, value: "A" },
+          { type: ColumnType.NUMBER, value: 10 },
+        ],
+        columns,
+      ),
+      createTypedRow(
+        [
+          { type: ColumnType.LABEL, value: "B" },
+          { type: ColumnType.NUMBER, value: 20 },
+        ],
+        columns,
+      ),
+    ];
+    const dataset: TypedDataSet = { columns, rows };
+
+    const result = await datasetToSource(dataset);
+
+    expect(result).toEqual([
+      ["Category", "Value"],
+      ["A", 10],
+      ["B", 20],
+    ]);
+  });
+
+  it("resolves display names from propsColumns", async () => {
+    const columns = [
+      mockColumn("category", "Category", ColumnType.LABEL),
+      mockColumn("value", "Value", ColumnType.NUMBER),
+    ];
+    const rows = [
+      createTypedRow(
+        [
+          { type: ColumnType.LABEL, value: "A" },
+          { type: ColumnType.NUMBER, value: 10 },
+        ],
+        columns,
+      ),
+    ];
+    const dataset: TypedDataSet = { columns, rows };
+    const propsColumns = [mockColumnSettings("value", "Custom Value")];
+
+    const result = await datasetToSource(dataset, propsColumns);
+
+    expect(result[0]).toEqual(["Category", "Custom Value"]);
+  });
+
+  it("converts null cell to null in output", async () => {
+    const columns = [
+      mockColumn("category", "Category", ColumnType.LABEL),
+      mockColumn("value", "Value", ColumnType.NUMBER),
+    ];
+    const rows = [
+      createTypedRow(
+        [
+          { type: ColumnType.LABEL, value: "A" },
+          { type: "NULL" },
+        ],
+        columns,
+      ),
+    ];
+    const dataset: TypedDataSet = { columns, rows };
+
+    const result = await datasetToSource(dataset);
+
+    expect(result[1]).toEqual(["A", null]);
+  });
+
+  it("preserves number values as numbers", async () => {
+    const columns = [mockColumn("value", "Value", ColumnType.NUMBER)];
+    const rows = [
+      createTypedRow([{ type: ColumnType.NUMBER, value: 42.5 }], columns),
+    ];
+    const dataset: TypedDataSet = { columns, rows };
+
+    const result = await datasetToSource(dataset);
+
+    expect(result[1]![0]).toBe(42.5);
+    expect(typeof result[1]![0]).toBe("number");
+  });
+
+  it("preserves Date values as Date objects", async () => {
+    const date = new Date("2024-01-15");
+    const columns = [mockColumn("date", "Date", ColumnType.DATE)];
+    const rows = [createTypedRow([{ type: ColumnType.DATE, value: date }], columns)];
+    const dataset: TypedDataSet = { columns, rows };
+
+    const result = await datasetToSource(dataset);
+
+    expect(result[1]![0]).toBe(date);
+    expect(result[1]![0]).toBeInstanceOf(Date);
+  });
+});
+
+describe("applyChartSettings", () => {
+  it("applies title", () => {
+    const option = {};
+    const props = { title: "Sales Chart" };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.title).toEqual({ text: "Sales Chart" });
+  });
+
+  it("applies legend show", () => {
+    const option = {};
+    const props = { legend: { show: false } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.legend).toEqual({ show: false });
+  });
+
+  it("applies legend position top", () => {
+    const option = {};
+    const props = { legend: { position: "top" as const } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.legend).toEqual({ top: 0 });
+  });
+
+  it("applies legend position bottom", () => {
+    const option = {};
+    const props = { legend: { position: "bottom" as const } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.legend).toEqual({ bottom: 0 });
+  });
+
+  it("applies legend position left with vertical orient", () => {
+    const option = {};
+    const props = { legend: { position: "left" as const } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.legend).toEqual({ left: 0, orient: "vertical" });
+  });
+
+  it("applies legend position right with vertical orient", () => {
+    const option = {};
+    const props = { legend: { position: "right" as const } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.legend).toEqual({ right: 0, orient: "vertical" });
+  });
+
+  it("applies xAxis title", () => {
+    const option = {};
+    const props = { xAxis: { title: "Month" } } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.xAxis).toEqual({ name: "Month" });
+  });
+
+  it("applies xAxis showLabels", () => {
+    const option = {};
+    const props = { xAxis: { showLabels: false } } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.xAxis).toEqual({ axisLabel: { show: false } });
+  });
+
+  it("applies yAxis title", () => {
+    const option = {};
+    const props = { yAxis: { title: "Revenue" } } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.yAxis).toEqual({ name: "Revenue" });
+  });
+
+  it("applies yAxis showLabels", () => {
+    const option = {};
+    const props = { yAxis: { showLabels: false } } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.yAxis).toEqual({ axisLabel: { show: false } });
+  });
+
+  it("applies margin top", () => {
+    const option = {};
+    const props = { margin: { top: 20 } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.grid).toEqual({ top: 20 });
+  });
+
+  it("applies margin right", () => {
+    const option = {};
+    const props = { margin: { right: 30 } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.grid).toEqual({ right: 30, top: 10 });
+  });
+
+  it("applies margin bottom", () => {
+    const option = {};
+    const props = { margin: { bottom: 40 } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.grid).toEqual({ bottom: 40, top: 10 });
+  });
+
+  it("applies margin left", () => {
+    const option = {};
+    const props = { margin: { left: 50 } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.grid).toEqual({ left: 50, top: 10 });
+  });
+
+  it("applies all margins", () => {
+    const option = {};
+    const props = { margin: { top: 10, right: 20, bottom: 30, left: 40 } };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.grid).toEqual({ top: 10, right: 20, bottom: 30, left: 40 });
+  });
+
+  it("applies zoom enabled", () => {
+    const option = {};
+    const props = { zoom: true } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.dataZoom).toEqual([{ type: "inside" }, { type: "slider" }]);
+  });
+
+  it("sets compact grid.top when no title or explicit margin.top", () => {
+    const option = {};
+    const props = {};
+
+    const result = applyChartSettings(option, props);
+
+    expect(result).toEqual({ grid: { top: 10 } });
+  });
+
+  it("does not override grid.top when title is set", () => {
+    const option = {};
+    const props = { title: "My Chart" };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.grid).toBeUndefined();
+    expect(result.title).toEqual({ text: "My Chart" });
+  });
+
+  it("applies multiple settings combined", () => {
+    const option = {};
+    const props = {
+      title: "Combined Chart",
+      legend: { show: true, position: "top" as const },
+      xAxis: { title: "X", showLabels: true },
+      yAxis: { title: "Y" },
+      margin: { top: 10, left: 20 },
+      zoom: true,
+    } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result).toEqual({
+      title: { text: "Combined Chart" },
+      legend: { show: true, top: 0 },
+      xAxis: { name: "X", axisLabel: { show: true } },
+      yAxis: { name: "Y" },
+      grid: { top: 10, left: 20 },
+      dataZoom: [{ type: "inside" }, { type: "slider" }],
+    });
+  });
+
+  it("preserves existing option properties while merging", () => {
+    const option = {
+      xAxis: { type: "category" },
+      yAxis: { type: "value" },
+      grid: { containLabel: true },
+    };
+    const props = {
+      xAxis: { title: "Category" },
+      margin: { top: 20 },
+    } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.xAxis).toEqual({ type: "category", name: "Category" });
+    expect(result.grid).toEqual({ containLabel: true, top: 20 });
+  });
+
+  it("skips xAxis and yAxis when props lack those fields (non-Cartesian)", () => {
+    const option = {};
+    const props = {
+      title: "Pie Chart",
+      legend: { show: true },
+    };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.xAxis).toBeUndefined();
+    expect(result.yAxis).toBeUndefined();
+    expect(result.title).toEqual({ text: "Pie Chart" });
+    expect(result.legend).toEqual({ show: true });
+  });
+
+  it("applies margin even when props lack Cartesian fields", () => {
+    const option = {};
+    const props = {
+      margin: { top: 10, left: 20 },
+    };
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.grid).toEqual({ top: 10, left: 20 });
+  });
+
+  it("applies xAxis and yAxis when props carry those fields", () => {
+    const option = {};
+    const props = {
+      xAxis: { title: "X" },
+      yAxis: { title: "Y" },
+    } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.xAxis).toEqual({ name: "X" });
+    expect(result.yAxis).toEqual({ name: "Y" });
+  });
+
+  it("applies xAxis and yAxis via structural access", () => {
+    const option = {};
+    const props = {
+      xAxis: { title: "X" },
+      yAxis: { title: "Y" },
+    } as ChartSettings;
+
+    const result = applyChartSettings(option, props);
+
+    expect(result.xAxis).toEqual({ name: "X" });
+    expect(result.yAxis).toEqual({ name: "Y" });
+  });
+
+  it("applies xAxis labelAngle as axisLabel.rotate", () => {
+    const option = {};
+    const props = { xAxis: { labelAngle: 30 } } as ChartSettings;
+    const result = applyChartSettings(option, props);
+    expect(result.xAxis).toEqual({ axisLabel: { rotate: 30 } });
+  });
+
+  it("applies yAxis labelAngle as axisLabel.rotate", () => {
+    const option = {};
+    const props = { yAxis: { labelAngle: -10 } } as ChartSettings;
+    const result = applyChartSettings(option, props);
+    expect(result.yAxis).toEqual({ axisLabel: { rotate: -10 } });
+  });
+
+  it("merges labelAngle with existing axisLabel settings", () => {
+    const option = {};
+    const props = { xAxis: { showLabels: true, labelAngle: 30 } } as ChartSettings;
+    const result = applyChartSettings(option, props);
+    expect(result.xAxis).toEqual({ axisLabel: { show: true, rotate: 30 } });
+  });
+
+  it("applies grid.x false as xAxis.splitLine.show false", () => {
+    const option = {};
+    const props = { grid: { x: false } } as ChartSettings;
+    const result = applyChartSettings(option, props);
+    expect(result.xAxis).toEqual({ splitLine: { show: false } });
+  });
+
+  it("applies grid.y false as yAxis.splitLine.show false", () => {
+    const option = {};
+    const props = { grid: { y: false } } as ChartSettings;
+    const result = applyChartSettings(option, props);
+    expect(result.yAxis).toEqual({ splitLine: { show: false } });
+  });
+
+  it("applies grid visibility with existing axis settings", () => {
+    const option = {};
+    const props = {
+      xAxis: { title: "Month", labelAngle: 30 },
+      grid: { x: false, y: false },
+    } as ChartSettings;
+    const result = applyChartSettings(option, props);
+    expect(result.xAxis).toEqual({
+      name: "Month",
+      axisLabel: { rotate: 30 },
+      splitLine: { show: false },
+    });
+    expect(result.yAxis).toEqual({ splitLine: { show: false } });
+  });
+
+  it("skips grid settings when props lack grid field", () => {
+    const option = {};
+    const props = { legend: { show: true } };
+    const result = applyChartSettings(option, props);
+    expect(result.xAxis).toBeUndefined();
+    expect(result.yAxis).toBeUndefined();
+  });
+});

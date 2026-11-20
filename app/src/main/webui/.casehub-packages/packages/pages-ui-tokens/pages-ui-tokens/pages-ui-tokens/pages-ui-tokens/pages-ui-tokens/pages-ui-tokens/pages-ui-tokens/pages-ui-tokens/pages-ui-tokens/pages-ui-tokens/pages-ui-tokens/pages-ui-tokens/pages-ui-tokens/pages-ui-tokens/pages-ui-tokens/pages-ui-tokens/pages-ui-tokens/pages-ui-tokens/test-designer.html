@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Theme Designer Test</title>
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--pages-neutral-1, #111);
+      color: var(--pages-neutral-12, #eee);
+    }
+  </style>
+  <script type="importmap">
+  {
+    "imports": {
+      "lit": "https://esm.run/lit@3",
+      "lit/": "https://esm.run/lit@3/",
+      "@lit/reactive-element": "https://esm.run/@lit/reactive-element@2",
+      "@lit/reactive-element/": "https://esm.run/@lit/reactive-element@2/",
+      "lit-element/": "https://esm.run/lit-element@4/",
+      "lit-html": "https://esm.run/lit-html@3",
+      "lit-html/": "https://esm.run/lit-html@3/"
+    }
+  }
+  </script>
+</head>
+<body class="pages-theme-default-dark">
+  <div style="padding: 24px;">
+    <h1 style="color: var(--pages-neutral-12, #eee);">Theme Designer Test Page</h1>
+    <p style="color: var(--pages-neutral-11, #ccc);">Click the button to open the theme designer.</p>
+    <div style="display: flex; gap: 16px; align-items: center; margin-bottom: 24px;">
+      <pages-theme-picker></pages-theme-picker>
+      <button id="open-btn" style="
+        background: var(--pages-accent-9, #4a9eff);
+        color: white; border: none; border-radius: 6px;
+        padding: 8px 20px; cursor: pointer; font-size: 14px;
+      ">Open Theme Designer</button>
+    </div>
+    <pages-theme-designer id="designer"></pages-theme-designer>
+  </div>
+  <script type="module">
+    import { applyTheme } from './dist/index.js';
+    applyTheme('default-dark');
+    document.getElementById('open-btn').addEventListener('click', () => {
+      document.getElementById('designer').open = true;
+    });
+  </script>
+</body>
+</html>

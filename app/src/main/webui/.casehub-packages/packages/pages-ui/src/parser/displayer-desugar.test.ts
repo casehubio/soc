@@ -1,0 +1,621 @@
+import { describe, it, expect } from "vitest";
+import { desugarDisplayer } from "./displayer-desugar.js";
+import { getProps } from "@casehubio/pages-component";
+
+describe("desugarDisplayer", () => {
+  it("maps BARCHART to bar-chart with typed props", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      general: { title: "Revenue" },
+      lookup: { uuid: "sales" },
+    });
+    expect(result.type).toBe("bar-chart");
+    expect(result.props?.["title"]).toBe("Revenue");
+  });
+
+  it("extracts rowCount from lookup into props", () => {
+    const result = desugarDisplayer({
+      type: "TABLE",
+      lookup: { uuid: "sales", rowCount: 10 },
+    });
+    expect(result.props?.["rowCount"]).toBe(10);
+  });
+
+  it("extracts chart settings", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      chart: { margin: { left: 80 }, resizable: true },
+      lookup: { uuid: "sales" },
+    });
+    expect(getProps(result, "bar-chart").margin).toEqual({ left: 80 });
+    expect(result.props?.["resizable"]).toBe(true);
+  });
+
+  it("maps html.html to html.template for metrics", () => {
+    const result = desugarDisplayer({
+      type: "METRIC",
+      html: { html: "<div>${value}</div>", javascript: "console.log(1)" },
+      lookup: { uuid: "sales" },
+    });
+    expect(getProps(result, "metric").html?.template).toBe("<div>${value}</div>");
+    expect(getProps(result, "metric").html?.javascript).toBe("console.log(1)");
+  });
+
+  it("maps extraConfiguration to extra", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      extraConfiguration: '{"color": ["#ff0000"]}',
+      lookup: { uuid: "sales" },
+    });
+    expect(getProps(result, "bar-chart").extra).toEqual({ color: ["#ff0000"] });
+  });
+
+  it("defaults to table type when no type specified", () => {
+    const result = desugarDisplayer({
+      lookup: { uuid: "sales" },
+      table: { pageSize: 10 },
+    });
+    expect(result.type).toBe("data-table");
+  });
+
+  it("maps component key to iframe-plugin", () => {
+    const result = desugarDisplayer({
+      component: "echarts",
+      echarts: { title: { text: "Chart" } },
+      lookup: { uuid: "data" },
+    });
+    expect(result.type).toBe("iframe-plugin");
+    expect(result.props?.["componentId"]).toBe("echarts");
+    expect(getProps(result, "iframe-plugin").settings).toBeDefined();
+  });
+
+  it("maps subtype", () => {
+    const result = desugarDisplayer({
+      type: "SELECTOR",
+      subtype: "SELECTOR_LABELS",
+      lookup: { uuid: "sales" },
+    });
+    expect(result.props?.["subtype"]).toBe("labels");
+  });
+
+  it("maps meter settings", () => {
+    const result = desugarDisplayer({
+      type: "METERCHART",
+      meter: { end: "4120", critical: "3000", warning: "2000" },
+      lookup: { uuid: "data" },
+    });
+    expect(result.type).toBe("meter");
+    expect(result.props?.["end"]).toBe(4120);
+  });
+
+  it("extracts filter settings", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      filter: { enabled: true, notification: true, listening: false },
+      lookup: { uuid: "sales" },
+    });
+    expect(getProps(result, "bar-chart").filter?.notification).toBe(true);
+  });
+
+  it("handles external width/height", () => {
+    const result = desugarDisplayer({
+      component: "echarts",
+      external: { width: "100%", height: "400px" },
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["width"]).toBe("100%");
+    expect(result.props?.["height"]).toBe("400px");
+  });
+
+  it("maps all DisplayerType values correctly", () => {
+    const typeTests = [
+      { input: "BARCHART", expected: "bar-chart" },
+      { input: "LINECHART", expected: "line-chart" },
+      { input: "AREACHART", expected: "area-chart" },
+      { input: "PIECHART", expected: "pie-chart" },
+      { input: "SCATTERCHART", expected: "scatter-chart" },
+      { input: "BUBBLECHART", expected: "bubble-chart" },
+      { input: "TIMESERIES", expected: "timeseries" },
+      { input: "TABLE", expected: "data-table" },
+      { input: "METRIC", expected: "metric" },
+      { input: "METERCHART", expected: "meter" },
+      { input: "SELECTOR", expected: "selector" },
+      { input: "MAP", expected: "map" },
+    ];
+
+    for (const { input, expected } of typeTests) {
+      const result = desugarDisplayer({ type: input, lookup: { uuid: "data" } });
+      expect(result.type).toBe(expected);
+    }
+  });
+
+  it("maps all subtype values correctly", () => {
+    const subtypeTests = [
+      { input: "SELECTOR_DROPDOWN", expected: "dropdown" },
+      { input: "SELECTOR_SLIDER", expected: "slider" },
+      { input: "SELECTOR_LABELS", expected: "labels" },
+      { input: "BAR", expected: "bar" },
+      { input: "BAR_STACKED", expected: "bar-stacked" },
+      { input: "COLUMN", expected: "column" },
+      { input: "COLUMN_STACKED", expected: "column-stacked" },
+      { input: "LINE", expected: "line" },
+      { input: "SMOOTH", expected: "smooth" },
+      { input: "AREA", expected: "area" },
+      { input: "AREA_STACKED", expected: "area-stacked" },
+      { input: "PIE", expected: "pie" },
+      { input: "PIE_3D", expected: "pie" }, // 3D dropped
+      { input: "DONUT", expected: "donut" },
+      { input: "MAP_REGIONS", expected: "regions" },
+      { input: "MAP_MARKERS", expected: "markers" },
+      { input: "METRIC_CARD", expected: "card" },
+      { input: "METRIC_CARD2", expected: "card2" },
+      { input: "METRIC_PLAIN_TEXT", expected: "plain-text" },
+      { input: "METRIC_QUOTA", expected: "quota" },
+    ];
+
+    for (const { input, expected } of subtypeTests) {
+      const result = desugarDisplayer({
+        type: "SELECTOR",
+        subtype: input,
+        lookup: { uuid: "data" },
+      });
+      expect(result.props?.["subtype"]).toBe(expected);
+    }
+  });
+
+  it("extracts all general settings", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      general: { title: "My Chart", visible: false },
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["title"]).toBe("My Chart");
+    expect(result.props?.["visible"]).toBe(false);
+  });
+
+  it("extracts all chart settings", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      chart: {
+        resizable: true,
+        zoom: true,
+        legend: { show: true },
+        margin: { left: 80, right: 20 },
+        height: 400,
+        width: 600,
+      },
+      lookup: { uuid: "data" },
+    });
+    const props = getProps(result, "bar-chart");
+    expect(result.props?.["resizable"]).toBe(true);
+    expect(result.props?.["zoom"]).toBe(true);
+    expect(props.legend).toEqual({ show: true });
+    expect(props.margin).toEqual({ left: 80, right: 20 });
+    expect(result.props?.["height"]).toBe(400);
+    expect(result.props?.["width"]).toBe(600);
+  });
+
+  it("extracts table pageSize", () => {
+    const result = desugarDisplayer({
+      type: "TABLE",
+      table: { pageSize: 25 },
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["pageSize"]).toBe(25);
+  });
+
+  it("table defaults pageSize to 10 when not specified", () => {
+    const result = desugarDisplayer({
+      type: "TABLE",
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["pageSize"]).toBe(10);
+  });
+
+  it("table defaults filter to enabled when not specified", () => {
+    const result = desugarDisplayer({
+      type: "TABLE",
+      lookup: { uuid: "data" },
+    });
+    expect(getProps(result, "data-table").filter).toEqual({ enabled: true });
+  });
+
+  it("table explicit pageSize overrides default", () => {
+    const result = desugarDisplayer({
+      type: "TABLE",
+      table: { pageSize: 25 },
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["pageSize"]).toBe(25);
+  });
+
+  it("table explicit filter overrides default", () => {
+    const result = desugarDisplayer({
+      type: "TABLE",
+      filter: { enabled: false },
+      lookup: { uuid: "data" },
+    });
+    expect(getProps(result, "data-table").filter).toEqual({ enabled: false });
+  });
+
+  it("non-table types do not get table defaults", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["pageSize"]).toBeUndefined();
+  });
+
+  it("extracts columns", () => {
+    const result = desugarDisplayer({
+      type: "TABLE",
+      columns: [
+        { id: "name", name: "Name" },
+        { id: "age", name: "Age" },
+      ],
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["columns"]).toEqual([
+      { id: "name", name: "Name" },
+      { id: "age", name: "Age" },
+    ]);
+  });
+
+  it("handles dataSetLookup as alternative to lookup", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      dataSetLookup: { uuid: "sales", rowCount: 100 },
+    });
+    const lookup = getProps(result, "bar-chart").lookup;
+    expect(lookup.dataSetId).toBe("sales");
+    expect(lookup.operations).toEqual([]);
+    expect(result.props?.["rowCount"]).toBe(100);
+  });
+
+  it("returns undefined props when no settings extracted", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+    });
+    expect(result.type).toBe("bar-chart");
+    expect(result.props).toBeUndefined();
+  });
+
+  it("handles invalid extraConfiguration gracefully", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      extraConfiguration: "not valid json {",
+      lookup: { uuid: "data" },
+    });
+    expect(getProps(result, "bar-chart").extra).toBe("not valid json {");
+  });
+
+  it("collects component settings for external components", () => {
+    const result = desugarDisplayer({
+      component: "echarts",
+      echarts: { option: { title: { text: "My Chart" } } },
+      "echarts.theme": "dark",
+      lookup: { uuid: "data" },
+    });
+    expect(result.type).toBe("iframe-plugin");
+    expect(result.props?.["componentId"]).toBe("echarts");
+    expect(getProps(result, "iframe-plugin").settings).toEqual({
+      echarts: { option: { title: { text: "My Chart" } } },
+      "echarts.theme": "dark",
+    });
+  });
+
+  it("converts meter string values to numbers", () => {
+    const result = desugarDisplayer({
+      type: "METERCHART",
+      meter: { end: "100", warning: "60", critical: "80" },
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["end"]).toBe(100);
+    expect(result.props?.["warning"]).toBe(60);
+    expect(result.props?.["critical"]).toBe(80);
+  });
+
+  it("passes through meter numeric values unchanged", () => {
+    const result = desugarDisplayer({
+      type: "METERCHART",
+      meter: { end: 100, warning: 60, critical: 80 },
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["end"]).toBe(100);
+    expect(result.props?.["warning"]).toBe(60);
+    expect(result.props?.["critical"]).toBe(80);
+  });
+
+  it("preserves non-mapped subtype as lowercase", () => {
+    const result = desugarDisplayer({
+      type: "SELECTOR",
+      subtype: "CUSTOM_TYPE",
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["subtype"]).toBe("custom_type");
+  });
+
+  it("extracts top-level axis.x settings", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      axis: { x: { labels_angle: 30, title: "Month" } },
+      lookup: { uuid: "data" },
+    });
+    expect(getProps(result, "bar-chart").xAxis).toEqual({
+      labelAngle: 30,
+      title: "Month",
+    });
+  });
+
+  it("extracts top-level axis.y settings", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      axis: { y: { title: "Revenue", labels_show: false } },
+      lookup: { uuid: "data" },
+    });
+    expect(getProps(result, "bar-chart").yAxis).toEqual({
+      title: "Revenue",
+      showLabels: false,
+    });
+  });
+
+  it("extracts axis from chart.axis (nested)", () => {
+    const result = desugarDisplayer({
+      type: "LINECHART",
+      chart: { resizable: true, axis: { x: { labels_angle: 10 } } },
+      lookup: { uuid: "data" },
+    });
+    expect(result.props?.["resizable"]).toBe(true);
+    expect(getProps(result, "line-chart").xAxis).toEqual({ labelAngle: 10 });
+  });
+
+  it("prefers top-level axis over chart.axis", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      axis: { x: { labels_angle: 30 } },
+      chart: { axis: { x: { labels_angle: 10 } } },
+      lookup: { uuid: "data" },
+    });
+    expect(getProps(result, "bar-chart").xAxis).toEqual({ labelAngle: 30 });
+  });
+
+  it("extracts both x and y axis simultaneously", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      axis: {
+        x: { labels_angle: 30, title: "X" },
+        y: { title: "Y", labels_show: false },
+      },
+      lookup: { uuid: "data" },
+    });
+    const props = getProps(result, "bar-chart");
+    expect(props.xAxis).toEqual({ labelAngle: 30, title: "X" });
+    expect(props.yAxis).toEqual({ title: "Y", showLabels: false });
+  });
+
+  it("extracts chart.grid visibility settings", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      chart: { grid: { x: false, y: false } },
+      lookup: { uuid: "data" },
+    });
+    expect(getProps(result, "bar-chart").grid).toEqual({ x: false, y: false });
+  });
+
+  it("extracts chart.grid with only x", () => {
+    const result = desugarDisplayer({
+      type: "LINECHART",
+      chart: { grid: { x: false } },
+      lookup: { uuid: "data" },
+    });
+    expect(getProps(result, "line-chart").grid).toEqual({ x: false });
+  });
+
+  it("parses lookup from YAML format to DataSetLookup", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      lookup: {
+        uuid: "sales",
+        group: [{
+          columnGroup: { source: "Category" },
+          functions: [{ source: "Category" }, { source: "Value", function: "SUM" }],
+        }],
+      },
+    });
+    const lookup = getProps(result, "bar-chart").lookup;
+    expect(lookup.dataSetId).toBe("sales");
+    expect(lookup.operations).toHaveLength(1);
+    expect(lookup.operations[0]!.type).toBe("group");
+  });
+
+  it("parses lookup with filter and sort", () => {
+    const result = desugarDisplayer({
+      type: "TABLE",
+      lookup: {
+        uuid: "data",
+        filter: [{ column: "status", function: "EQUALS_TO", args: ["active"] }],
+        sort: [{ column: "name", order: "ASCENDING" }],
+      },
+    });
+    const lookup = getProps(result, "data-table").lookup;
+    expect(lookup.dataSetId).toBe("data");
+    expect(lookup.operations).toHaveLength(2);
+    expect(lookup.operations[0]!.type).toBe("filter");
+    expect(lookup.operations[1]!.type).toBe("sort");
+  });
+
+  it("parses simple lookup with uuid only", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      lookup: { uuid: "hello" },
+    });
+    const lookup = getProps(result, "bar-chart").lookup;
+    expect(lookup.dataSetId).toBe("hello");
+    expect(lookup.operations).toEqual([]);
+  });
+
+  it("captures inline dataSet from displayer", () => {
+    const result = desugarDisplayer({
+      type: "BARCHART",
+      dataSet: '["Hello World", 42]',
+    });
+    expect(result.type).toBe("bar-chart");
+    expect(result.props?.["inlineDataSet"]).toBe('["Hello World", 42]');
+  });
+
+  describe("modern hyphenated type names", () => {
+    it("bar-chart maps to bar-chart", () => {
+      const result = desugarDisplayer({ type: "bar-chart", lookup: { uuid: "d" } });
+      expect(result.type).toBe("bar-chart");
+    });
+
+    it("line-chart maps to line-chart", () => {
+      const result = desugarDisplayer({ type: "line-chart", lookup: { uuid: "d" } });
+      expect(result.type).toBe("line-chart");
+    });
+
+    it("meter maps to meter (not table)", () => {
+      const result = desugarDisplayer({ type: "meter", lookup: { uuid: "d" } });
+      expect(result.type).toBe("meter");
+    });
+
+    it("iframe-plugin with componentId and settings", () => {
+      const result = desugarDisplayer({
+        type: "iframe-plugin",
+        componentId: "svg-heatmap",
+        settings: { svg: "<svg></svg>" },
+        lookup: { uuid: "data" },
+      });
+      expect(result.type).toBe("iframe-plugin");
+      expect(result.props?.["componentId"]).toBe("svg-heatmap");
+      expect(result.props?.["settings"]).toEqual({ svg: "<svg></svg>" });
+    });
+
+    it("grouped-view routes to grouped-view desugar", () => {
+      const result = desugarDisplayer({
+        type: "grouped-view",
+        groupBy: { column: "dept" },
+        lookup: { uuid: "team" },
+      });
+      expect(result.type).toBe("grouped-view");
+      const groupBy = (result.props as Record<string, unknown>).groupBy as Record<string, unknown>;
+      expect(groupBy.columnId).toBe("dept");
+    });
+
+    it("GROUPED_VIEW also routes to grouped-view desugar", () => {
+      const result = desugarDisplayer({
+        type: "GROUPED_VIEW",
+        groupBy: { column: "status", strategy: "distinct" },
+        lookup: { uuid: "data" },
+      });
+      expect(result.type).toBe("grouped-view");
+    });
+  });
+
+  describe("schema validation strips undeclared properties", () => {
+    it("strips undeclared properties from metric", () => {
+      const result = desugarDisplayer({
+        type: "metric",
+        undeclaredProp: "should be stripped",
+        lookup: { uuid: "ds-1" },
+      });
+      expect(result.props).toBeDefined();
+      expect((result.props as Record<string, unknown>).undeclaredProp).toBeUndefined();
+    });
+
+    it("strips undeclared properties from bar-chart", () => {
+      const result = desugarDisplayer({
+        type: "bar-chart",
+        bogus: 42,
+        lookup: { uuid: "ds-1" },
+      });
+      expect((result.props as Record<string, unknown>).bogus).toBeUndefined();
+    });
+
+    it("preserves declared properties after validation", () => {
+      const result = desugarDisplayer({
+        type: "timeline",
+        startColumn: "start",
+        endColumn: "end",
+        undeclared: "nope",
+        lookup: { uuid: "milestones" },
+      });
+      expect(result.props?.["startColumn"]).toBe("start");
+      expect(result.props?.["endColumn"]).toBe("end");
+      expect((result.props as Record<string, unknown>).undeclared).toBeUndefined();
+    });
+  });
+
+  describe("prop passthrough for component-specific fields", () => {
+    it("passes startColumn and endColumn through for timeline", () => {
+      const result = desugarDisplayer({
+        type: "timeline",
+        startColumn: "start",
+        endColumn: "end",
+        labelColumn: "task",
+        categoryColumn: "phase",
+        lookup: { uuid: "milestones" },
+      });
+      expect(result.type).toBe("timeline");
+      expect(result.props?.["startColumn"]).toBe("start");
+      expect(result.props?.["endColumn"]).toBe("end");
+      expect(result.props?.["labelColumn"]).toBe("task");
+      expect(result.props?.["categoryColumn"]).toBe("phase");
+    });
+
+    it("passes sourceColumn and targetColumn through for graph", () => {
+      const result = desugarDisplayer({
+        type: "graph",
+        sourceColumn: "from",
+        targetColumn: "to",
+        layout: "force",
+        directed: true,
+        lookup: { uuid: "deps" },
+      });
+      expect(result.props?.["sourceColumn"]).toBe("from");
+      expect(result.props?.["targetColumn"]).toBe("to");
+      expect(result.props?.["layout"]).toBe("force");
+      expect(result.props?.["directed"]).toBe(true);
+    });
+
+    it("user-specified pageSize wins over table default", () => {
+      const result = desugarDisplayer({
+        type: "TABLE",
+        pageSize: 25,
+        lookup: { uuid: "data" },
+      });
+      expect(result.props?.["pageSize"]).toBe(25);
+    });
+
+    it("user-specified filter wins over table default", () => {
+      const result = desugarDisplayer({
+        type: "TABLE",
+        filter: { enabled: false },
+        lookup: { uuid: "data" },
+      });
+      expect(result.props?.["filter"]).toEqual({ enabled: false });
+    });
+
+    it("table defaults still apply when user omits pageSize and filter", () => {
+      const result = desugarDisplayer({
+        type: "TABLE",
+        lookup: { uuid: "data" },
+      });
+      expect(result.props?.["pageSize"]).toBe(10);
+      expect((result.props?.["filter"] as Record<string, unknown>)?.["enabled"]).toBe(true);
+    });
+
+    it("does not pass through handled keys", () => {
+      const result = desugarDisplayer({
+        type: "BARCHART",
+        general: { title: "Test" },
+        chart: { resizable: true },
+        lookup: { uuid: "d" },
+      });
+      expect(result.props?.["general"]).toBeUndefined();
+      expect(result.props?.["chart"]).toBeUndefined();
+      expect(result.props?.["title"]).toBe("Test");
+      expect(result.props?.["resizable"]).toBe(true);
+    });
+  });
+});

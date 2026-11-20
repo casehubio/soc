@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>agent-manifest-editor demo</title>
+  <style>
+    body { font-family: system-ui; background: #1a1a2e; color: #e0e0e0; padding: 2rem; margin: 0; }
+    h1 { font-size: 1.4rem; margin-bottom: 1rem; }
+    agent-manifest-editor { display: block; max-width: 1000px; margin: 0 auto; }
+    .controls { margin-bottom: 1rem; display: flex; gap: 0.75rem; flex-wrap: wrap; }
+    button { padding: 0.4rem 0.8rem; cursor: pointer; background: #16213e; border: 1px solid #333; color: #e0e0e0; border-radius: 4px; font-size: 0.85rem; }
+    button:hover { background: #1a237e; }
+    h2 { font-size: 1rem; color: #888; margin-top: 1.5rem; }
+    pre { background: #0f0f23; padding: 1rem; border-radius: 6px; max-height: 400px; overflow: auto; font-size: 0.8rem; border: 1px solid #222; }
+  </style>
+</head>
+<body>
+  <h1>agent-manifest-editor demo</h1>
+  <div class="controls">
+    <button id="toggle-dev">Toggle Dev Mode</button>
+    <button id="set-prompt">Set System Prompt</button>
+    <button id="set-data">Load Sample Data</button>
+    <button id="reset">Reset</button>
+  </div>
+  <agent-manifest-editor id="editor"></agent-manifest-editor>
+  <h2>Emitted Manifest</h2>
+  <pre id="output">No manifest emitted yet</pre>
+
+  <script type="module">
+    import './src/index.ts';
+    const editor = document.getElementById('editor');
+    const output = document.getElementById('output');
+
+    editor.addEventListener('pages-event', (e) => {
+      if (e.detail?.topic === 'manifest:configured') {
+        output.textContent = JSON.stringify(e.detail.payload, null, 2);
+      }
+    });
+
+    document.getElementById('toggle-dev').addEventListener('click', () => {
+      editor.devMode = !editor.devMode;
+    });
+
+    document.getElementById('set-prompt').addEventListener('click', () => {
+      editor.systemPrompt = 'You are a detail-oriented analyst who values precision and structured reasoning. You prefer clear evidence chains and flag ambiguity rather than guessing. You communicate findings with confidence levels and supporting data.';
+    });
+
+    document.getElementById('set-data').addEventListener('click', () => {
+      editor.data = {
+        providers: [
+          { vendor: 'anthropic', credential: 'env:ANTHROPIC_API_KEY' },
+          { vendor: 'openai', credential: 'env:OPENAI_API_KEY' },
+        ],
+        models: [
+          { id: 'claude-opus-4-6', displayName: 'Claude Opus 4.6', vendor: 'anthropic', tier: 'FLAGSHIP', contextWindow: 1000000, capabilities: ['vision', 'tool_use'] },
+          { id: 'gpt-4o', displayName: 'GPT-4o', vendor: 'openai', tier: 'FLAGSHIP', contextWindow: 128000, capabilities: ['vision', 'tool_use'] },
+        ],
+        aliases: {
+          'reasoning-heavy': { tier: 'FLAGSHIP', capabilities: ['tool_use'], preferVendor: 'anthropic' },
+          'fast-response': { tier: 'FAST' },
+        },
+        sources: [{ uri: 'https://models.casehub.io/registry.yaml', priority: 1 }],
+        defaults: { backend: 'anthropic' },
+      };
+    });
+
+    document.getElementById('reset').addEventListener('click', () => {
+      editor.data = {};
+      output.textContent = 'No manifest emitted yet';
+    });
+  </script>
+</body>
+</html>

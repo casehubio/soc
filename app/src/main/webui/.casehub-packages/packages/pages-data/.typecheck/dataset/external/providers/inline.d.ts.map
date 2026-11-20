@@ -1,0 +1,1 @@
+{"version":3,"file":"inline.d.ts","sourceRoot":"","sources":["../../../../src/dataset/external/providers/inline.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,YAAY,EAAE,WAAW,EAAE,MAAM,aAAa,CAAC;AAE7D,qBAAa,cAAe,YAAW,YAAY;IACrC,OAAO,CAAC,QAAQ,CAAC,OAAO;gBAAP,OAAO,EAAE,MAAM;IAE5C,KAAK,CAAC,QAAQ,EAAE,OAAO,aAAa,EAAE,WAAW,GAAG,OAAO,CAAC,WAAW,CAAC;CAGzE"}

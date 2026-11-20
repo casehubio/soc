@@ -5,7 +5,7 @@
     "build": "node esbuild.config.mjs",
     "dev": "node esbuild.config.mjs --watch",
     "typecheck": "tsc --noEmit",
-    "postinstall": "node ../../../../scripts/link-casehub-packages.mjs"
+    "postinstall": "node .casehub-packages/scripts/link-casehub-packages.mjs"
   },
   "dependencies": {
     "@casehubio/pages-runtime": "file:.casehub-packages/packages/pages-runtime",

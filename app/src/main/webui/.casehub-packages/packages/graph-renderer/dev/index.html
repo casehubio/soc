@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>graph-renderer dev</title>
+  <style>
+    /* Simulate Pages shell globals — the CSS isolation must block these */
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    body {
+      font-family: 'Comic Sans MS', cursive;
+      color: magenta;
+      line-height: 2.5;
+      background: #f0f0f0;
+    }
+    button { appearance: none; border: none; background: hotpink; color: white; }
+    a { color: lime; text-decoration: underline wavy; }
+
+    /* Layout for the dev page */
+    .dev-layout {
+      display: grid;
+      grid-template-rows: auto 1fr auto;
+      height: 100vh;
+      padding: 16px;
+      gap: 16px;
+    }
+    .canvas-container { min-height: 500px; border: 2px dashed #ccc; }
+    #host-test { padding: 16px; }
+  </style>
+</head>
+<body>
+  <div class="dev-layout">
+    <h1>graph-renderer Phase 0 Spike</h1>
+
+    <h2>GraphCanvas core (direct model)</h2>
+    <div class="canvas-container">
+      <graph-canvas-core></graph-canvas-core>
+    </div>
+
+    <h2>PagesGraphCanvas YAML bridge (tabular data)</h2>
+    <div class="canvas-container">
+      <pages-graph-canvas></pages-graph-canvas>
+    </div>
+
+    <div id="host-test">
+      <!-- This element validates no CSS leakage FROM React Flow TO the host -->
+    </div>
+  </div>
+
+  <script type="module" src="./dev-app.ts"></script>
+</body>
+</html>

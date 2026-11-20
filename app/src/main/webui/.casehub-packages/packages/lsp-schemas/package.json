@@ -1,0 +1,43 @@
+{
+  "name": "@casehubio/mosaic-lsp-schemas",
+  "version": "0.1.0",
+  "description": "Domain YAML format schemas and wrapper LSP server for CaseHub",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": "./dist/index.js",
+    "./node": "./dist/server-node.js"
+  },
+  "scripts": {
+    "generate": "tsx scripts/generate-domain-schemas.ts",
+    "build": "yarn generate && tsc -p tsconfig.build.json",
+    "build:bundle": "node build-bundle.js",
+    "build:diagram": "node build-diagram-bundle.js",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist"
+  },
+  "dependencies": {
+    "vscode-languageserver": "^10.0.0",
+    "yaml": "^2.7.1",
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "esbuild": "^0.28.1",
+    "rimraf": "^6.0.1",
+    "ts-morph": "^25.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.2.1"
+  },
+  "license": "Apache-2.0"
+}

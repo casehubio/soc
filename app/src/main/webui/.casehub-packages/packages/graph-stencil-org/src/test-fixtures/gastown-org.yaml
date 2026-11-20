@@ -1,0 +1,60 @@
+organization:
+  units:
+    - unitId: oversight
+      name: Oversight Chain
+      kind: supervision-hierarchy
+      kindVocabulary: urn:gastown:vocab:org
+      tenancyId: gastown
+      members:
+        - agentId: boot
+          role: root-watchdog
+        - agentId: deacon
+          role: cross-rig-watchdog
+
+    - unitId: rig-alpha
+      name: Rig Alpha
+      kind: rig
+      kindVocabulary: urn:gastown:vocab:org
+      tenancyId: gastown
+      members:
+        - agentId: witness-alpha
+          role: witness
+        - agentId: polecat-1
+          role: worker
+        - agentId: polecat-2
+          role: worker
+      capabilities:
+        - name: full-stack-code-work
+
+  relationships:
+    - sourceAgentId: boot
+      targetAgentId: deacon
+      kind: SUPERVISES
+      tenancyId: gastown
+
+    - sourceAgentId: deacon
+      targetAgentId: witness-alpha
+      kind: SUPERVISES
+      tenancyId: gastown
+      scope:
+        capabilityName: rig-monitoring
+      attestation:
+        dimensions: [LATENCY, ATTESTATION_RATE]
+        signalTypes: [COMPLIANT, VIOLATED]
+
+    - sourceAgentId: witness-alpha
+      targetAgentId: polecat-1
+      kind: SUPERVISES
+      tenancyId: gastown
+
+    - sourceAgentId: witness-alpha
+      targetAgentId: polecat-2
+      kind: SUPERVISES
+      tenancyId: gastown
+
+    - sourceAgentId: polecat-1
+      targetAgentId: polecat-2
+      kind: BACKS_UP
+      tenancyId: gastown
+      scope:
+        capabilityName: code-analysis

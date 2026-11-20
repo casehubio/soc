@@ -1,0 +1,91 @@
+# Divisionalized Form (Mintzberg) / Holarchy (Horling & Lesser)
+# Semi-autonomous divisions under central HQ. Each unit is whole and part.
+# Real-world: hospital with ER and Radiology departments, cross-dept delegation.
+
+organization:
+  units:
+    - unitId: hospital
+      name: City Hospital
+      kind: holarchy
+      tenancyId: archetype-holarchy
+      goals:
+        - name: patient-care
+          description: Deliver safe, timely patient care
+          priority: PRIMARY
+          visibility: PUBLIC
+      constraints:
+        - name: hipaa-compliance
+          description: All patient data handling must be HIPAA compliant
+          severity: HARD
+          visibility: PUBLIC
+
+    - unitId: emergency
+      name: Emergency Department
+      kind: department
+      tenancyId: archetype-holarchy
+      parentUnitId: hospital
+      members:
+        - agentId: er-attending
+          role: attending-physician
+        - agentId: er-triage
+          role: triage-nurse
+        - agentId: er-resident
+          role: resident
+      capabilities:
+        - name: emergency-assessment
+        - name: stabilization
+
+    - unitId: radiology
+      name: Radiology Department
+      kind: department
+      tenancyId: archetype-holarchy
+      parentUnitId: hospital
+      members:
+        - agentId: radiologist
+          role: attending-radiologist
+        - agentId: rad-tech
+          role: technologist
+      capabilities:
+        - name: imaging
+        - name: diagnostic-interpretation
+
+  relationships:
+    # Intra-department supervision
+    - sourceAgentId: er-attending
+      targetAgentId: er-resident
+      kind: SUPERVISES
+      tenancyId: archetype-holarchy
+
+    - sourceAgentId: er-attending
+      targetAgentId: er-triage
+      kind: SUPERVISES
+      tenancyId: archetype-holarchy
+
+    - sourceAgentId: radiologist
+      targetAgentId: rad-tech
+      kind: SUPERVISES
+      tenancyId: archetype-holarchy
+
+    # Cross-department delegation (ER requests imaging)
+    - sourceAgentId: er-attending
+      targetAgentId: radiologist
+      kind: DELEGATES_TO
+      tenancyId: archetype-holarchy
+      scope:
+        capabilityName: imaging
+        domain: emergency
+
+    # Cross-department reporting
+    - sourceAgentId: radiologist
+      targetAgentId: er-attending
+      kind: REPORTS_TO
+      tenancyId: archetype-holarchy
+      scope:
+        capabilityName: diagnostic-interpretation
+
+    # Resident mentorship (extended relationship)
+    - sourceAgentId: er-attending
+      targetAgentId: er-resident
+      kind: EXTENDED
+      extendedKind: mentors
+      tenancyId: archetype-holarchy

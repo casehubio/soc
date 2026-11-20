@@ -1,0 +1,35 @@
+{
+  "name": "@casehubio/mosaic-agency-plan-item-tree",
+  "version": "0.1.0",
+  "description": "PlanItemDefinition tree with CompletionSemantics badges and DispatchMode pills",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-mosaic.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/agency-plan-item-tree.js",
+  "types": "dist/agency-plan-item-tree.d.ts",
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "clean": "rimraf dist"
+  },
+  "devDependencies": {
+    "jsdom": "^29.1.1",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

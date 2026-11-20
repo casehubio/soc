@@ -1,0 +1,38 @@
+{
+  "name": "@casehubio/pages-schema",
+  "version": "0.1.0",
+  "description": "CaseHub Pages YAML schema \u2014 Zod schemas for component types, document structure, and validation",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-pages.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "scripts": {
+    "generate": "tsx scripts/generate-schemas.ts",
+    "build": "yarn generate && tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist .typecheck"
+  },
+  "dependencies": {
+    "zod": "^4.0.0"
+  },
+  "devDependencies": {
+    "rimraf": "^6.1.0",
+    "ts-morph": "^24.0.0",
+    "tsx": "^4.19.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.2.1"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

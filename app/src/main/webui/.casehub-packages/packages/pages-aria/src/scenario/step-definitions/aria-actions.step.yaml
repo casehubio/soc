@@ -1,0 +1,206 @@
+actions:
+  click:
+    description: "Click an element identified by ARIA role and name"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: click
+
+  fill:
+    description: "Fill a text input identified by ARIA role and name"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      value: { type: string, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: fill
+
+  navigate:
+    description: "Navigate to a URL"
+    inputs:
+      value: { type: string, required: true }
+    outputs: {}
+    invoke:
+      aria: navigate
+
+  select:
+    description: "Select an option in a select element"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      value: { type: string, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: select
+
+  expand:
+    description: "Expand a collapsible element"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: expand
+
+  collapse:
+    description: "Collapse an expanded element"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: collapse
+
+  assert:
+    description: "Assert ARIA state of an element"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      state: { type: object, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: assert
+
+  wait:
+    description: "Wait for an element to reach a target ARIA state"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      state: { type: object, required: true }
+      timeout: { type: integer }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: wait
+
+  show-markdown:
+    description: "Display a markdown content overlay"
+    inputs:
+      content: { type: string }
+      file: { type: string }
+    outputs: {}
+    invoke:
+      aria: show-markdown
+
+  spotlight:
+    description: "Spotlight an element with an overlay"
+    inputs:
+      role: { type: string }
+      name: { type: string }
+      index: { type: string }
+      within: { type: object }
+      content: { type: string }
+    outputs: {}
+    invoke:
+      aria: spotlight
+
+  editor-insert:
+    description: "Insert text into a code editor"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      value: { type: string, required: true }
+      typing: { type: string }
+      line: { type: integer }
+      col: { type: integer }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: editor-insert
+
+  editor-set-content:
+    description: "Set the full content of a code editor"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      value: { type: string, required: true }
+      typing: { type: string }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: editor-set-content
+
+  editor-replace:
+    description: "Replace a range in a code editor"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      from: { type: object, required: true }
+      to: { type: object, required: true }
+      value: { type: string, required: true }
+      typing: { type: string }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: editor-replace
+
+  editor-delete:
+    description: "Delete a range in a code editor"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      from: { type: object, required: true }
+      to: { type: object, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: editor-delete
+
+  editor-cursor:
+    description: "Move the cursor in a code editor"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      line: { type: integer, required: true }
+      col: { type: integer, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: editor-cursor
+
+  editor-highlight:
+    description: "Highlight a range in a code editor"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      from: { type: object, required: true }
+      to: { type: object, required: true }
+      style: { type: string }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: editor-highlight
+
+  editor-completion:
+    description: "Trigger a completion in a code editor"
+    inputs:
+      role: { type: string, required: true }
+      name: { type: string, required: true }
+      label: { type: string, required: true }
+      index: { type: string }
+      within: { type: object }
+    outputs: {}
+    invoke:
+      aria: editor-completion

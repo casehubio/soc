@@ -1,0 +1,63 @@
+# Pipeline (Horling & Lesser)
+# Sequential handoff — each agent's output becomes the next agent's input.
+# Real-world: content pipeline — researcher → writer → editor → publisher.
+
+organization:
+  units:
+    - unitId: content-pipeline
+      name: Content Pipeline
+      kind: pipeline
+      tenancyId: archetype-pipeline
+      members:
+        - agentId: researcher
+          role: stage-1
+        - agentId: writer
+          role: stage-2
+        - agentId: editor
+          role: stage-3
+        - agentId: publisher
+          role: stage-4
+      capabilities:
+        - name: content-production
+          description: End-to-end content from research to publication
+      goals:
+        - name: publish-quality-content
+          description: Produce accurate, well-written, published content
+          priority: PRIMARY
+          visibility: PUBLIC
+
+  relationships:
+    # Sequential delegation chain (each stage hands off to the next)
+    - sourceAgentId: researcher
+      targetAgentId: writer
+      kind: DELEGATES_TO
+      tenancyId: archetype-pipeline
+      scope:
+        capabilityName: drafting
+        domain: content
+
+    - sourceAgentId: writer
+      targetAgentId: editor
+      kind: DELEGATES_TO
+      tenancyId: archetype-pipeline
+      scope:
+        capabilityName: editing
+        domain: content
+
+    - sourceAgentId: editor
+      targetAgentId: publisher
+      kind: DELEGATES_TO
+      tenancyId: archetype-pipeline
+      scope:
+        capabilityName: publishing
+        domain: content
+
+    # Rejection path — editor can send back to writer
+    - sourceAgentId: editor
+      targetAgentId: writer
+      kind: ESCALATES_TO
+      tenancyId: archetype-pipeline
+      scope:
+        capabilityName: revision
+        domain: content
+        custom: quality-below-threshold

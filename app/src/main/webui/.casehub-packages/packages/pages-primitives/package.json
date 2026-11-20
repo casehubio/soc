@@ -1,0 +1,75 @@
+{
+  "name": "@casehubio/pages-primitives",
+  "version": "0.2.3",
+  "description": "CaseHub Pages Lit-dependent primitives \u2014 a11y mixins, form controls",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/casehubio/casehub-pages.git"
+  },
+  "publishConfig": {
+    "registry": "https://npm.pkg.github.com"
+  },
+  "type": "module",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/index.js"
+    },
+    "./a11y": {
+      "types": "./dist/a11y/index.d.ts",
+      "default": "./dist/a11y/index.js"
+    },
+    "./modal": {
+      "types": "./dist/modal/index.d.ts",
+      "default": "./dist/modal/index.js"
+    },
+    "./context-menu": {
+      "types": "./dist/context-menu/index.d.ts",
+      "default": "./dist/context-menu/index.js"
+    },
+    "./dock": {
+      "types": "./dist/dock/index.d.ts",
+      "default": "./dist/dock/index.js"
+    },
+    "./playbook": {
+      "types": "./dist/playbook/index.d.ts",
+      "default": "./dist/playbook/index.js"
+    }
+  },
+  "sideEffects": [
+    "./dist/index.js",
+    "./dist/modal/index.js",
+    "./dist/modal/pages-modal.js",
+    "./dist/dock/index.js",
+    "./dist/dock/pages-dock-workbench.js",
+    "./src/index.ts",
+    "./src/modal/index.ts",
+    "./src/modal/pages-modal.ts",
+    "./src/dock/index.ts",
+    "./src/dock/pages-dock-workbench.ts"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "typecheck": "tsc --noEmit",
+    "test": "vitest run",
+    "test:watch": "vitest",
+    "clean": "rimraf dist .typecheck"
+  },
+  "dependencies": {
+    "lit": "^3.3.3"
+  },
+  "devDependencies": {
+    "@open-wc/testing": "^4.0.0",
+    "jsdom": "^26.0.0",
+    "rimraf": "^6.1.0",
+    "typescript": "~5.8.0",
+    "vitest": "^3.0.0"
+  },
+  "license": "Apache-2.0",
+  "files": [
+    "dist",
+    "package.json"
+  ]
+}

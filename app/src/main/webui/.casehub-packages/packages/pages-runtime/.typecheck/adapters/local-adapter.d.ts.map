@@ -1,0 +1,1 @@
+{"version":3,"file":"local-adapter.d.ts","sourceRoot":"","sources":["../../src/adapters/local-adapter.ts"],"names":[],"mappings":"AAAA,OAAO,KAAK,EAAE,WAAW,EAAc,MAAM,oBAAoB,CAAC;AAElE,OAAO,KAAK,EAAE,cAAc,EAAE,MAAM,uBAAuB,CAAC;AAY5D,wBAAgB,kBAAkB,CAAC,OAAO,EAAE,cAAc,GAAG,WAAW,CAsHvE"}

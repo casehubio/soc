@@ -1,0 +1,60 @@
+import type { PagesGridTable } from "./components/PagesGridTable.js";
+import type { PagesMetric } from "./components/PagesMetric.js";
+import type { PagesSelector } from "./components/PagesSelector.js";
+import type { PagesIframePlugin } from "./components/PagesIframePlugin.js";
+import type { PagesBarChart } from "./charts/PagesBarChart.js";
+import type { PagesAreaChart } from "./charts/PagesAreaChart.js";
+import type { PagesBubbleChart } from "./charts/PagesBubbleChart.js";
+import type { PagesLineChart } from "./charts/PagesLineChart.js";
+import type { PagesMap } from "./charts/PagesMap.js";
+import type { PagesMeter } from "./charts/PagesMeter.js";
+import type { PagesPieChart } from "./charts/PagesPieChart.js";
+import type { PagesScatterChart } from "./charts/PagesScatterChart.js";
+import type { PagesTimeseries } from "./charts/PagesTimeseries.js";
+import type { PagesTimeline } from "./charts/PagesTimeline.js";
+import type { PagesGraph } from "./charts/PagesGraph.js";
+import type { PagesHeatmapChart } from "./charts/PagesHeatmapChart.js";
+import type { PagesTreemapChart } from "./charts/PagesTreemapChart.js";
+import type { PagesDensityHeatmap } from "./charts/PagesDensityHeatmap.js";
+import type { PagesDateInput as PagesDatePicker } from "@casehubio/pages-ui-components/date-input";
+import type { PagesNumberInput } from "@casehubio/pages-ui-components/number-input";
+import type { PagesSchemaForm } from "./form-inputs/PagesSchemaForm.js";
+import type { PagesActionButton } from "./components/PagesActionButton.js";
+import type { PagesAlert } from "./components/PagesAlert.js";
+import type { PagesBadge } from "./components/PagesBadge.js";
+import type { PagesCountdown } from "./components/PagesCountdown.js";
+import type { PagesEventTimeline } from "./components/PagesEventTimeline.js";
+import "./components/PagesLegend.js";
+export {};
+declare global {
+    interface HTMLElementTagNameMap {
+        "pages-grid-table": PagesGridTable;
+        "pages-metric": PagesMetric;
+        "pages-selector": PagesSelector;
+        "pages-iframe-plugin": PagesIframePlugin;
+        "pages-bar-chart": PagesBarChart;
+        "pages-area-chart": PagesAreaChart;
+        "pages-bubble-chart": PagesBubbleChart;
+        "pages-line-chart": PagesLineChart;
+        "pages-map": PagesMap;
+        "pages-meter": PagesMeter;
+        "pages-pie-chart": PagesPieChart;
+        "pages-scatter-chart": PagesScatterChart;
+        "pages-timeseries": PagesTimeseries;
+        "pages-timeline": PagesTimeline;
+        "pages-graph": PagesGraph;
+        "pages-heatmap-chart": PagesHeatmapChart;
+        "pages-treemap-chart": PagesTreemapChart;
+        "pages-density-heatmap": PagesDensityHeatmap;
+        "pages-date-picker": PagesDatePicker;
+        "pages-number-input": PagesNumberInput;
+        "pages-schema-form": PagesSchemaForm;
+        "pages-action-button": PagesActionButton;
+        "pages-alert": PagesAlert;
+        "pages-badge": PagesBadge;
+        "pages-countdown": PagesCountdown;
+        "pages-event-timeline": PagesEventTimeline;
+        "pages-legend": import("./components/PagesLegend.js").PagesLegend;
+    }
+}
+//# sourceMappingURL=custom-elements.d.ts.map

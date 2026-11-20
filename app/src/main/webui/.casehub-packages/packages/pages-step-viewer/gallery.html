@@ -1,0 +1,1420 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Step Viewer — Component Gallery</title>
+<style>
+  :root {
+    --bg: #1e1e2e;
+    --surface: #282a3a;
+    --surface-hover: #313348;
+    --border: #3b3d52;
+    --text: #cdd6f4;
+    --text-dim: #7f849c;
+    --text-bright: #f0f4ff;
+
+    --blue: #89b4fa;
+    --green: #a6e3a1;
+    --red: #f38ba8;
+    --amber: #f9e2af;
+    --purple: #cba6f7;
+    --teal: #94e2d5;
+    --peach: #fab387;
+    --pink: #f5c2e7;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', system-ui, sans-serif;
+    background: var(--bg);
+    color: var(--text);
+    line-height: 1.5;
+    padding: 32px;
+    max-width: 1200px;
+    margin: 0 auto;
+  }
+
+  h1 {
+    font-size: 20px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin-bottom: 8px;
+  }
+  p.subtitle {
+    font-size: 13px;
+    color: var(--text-dim);
+    margin-bottom: 32px;
+  }
+  h2 {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text-bright);
+    margin: 48px 0 16px;
+    padding-bottom: 8px;
+    border-bottom: 1px solid var(--border);
+  }
+  h3 {
+    font-size: 13px;
+    font-weight: 500;
+    color: var(--text-dim);
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    margin-bottom: 12px;
+  }
+
+  /* ─── Tab Panel ─── */
+  .tab-panel {
+    margin: 16px 0;
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    overflow: hidden;
+  }
+  .tab-bar {
+    display: flex;
+    background: rgba(255,255,255,0.03);
+    border-bottom: 1px solid var(--border);
+  }
+  .tab-btn {
+    padding: 8px 20px;
+    font-size: 12px;
+    font-weight: 600;
+    color: var(--text-dim);
+    background: none;
+    border: none;
+    border-bottom: 2px solid transparent;
+    cursor: pointer;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    font-family: inherit;
+  }
+  .tab-btn:hover { color: var(--text); }
+  .tab-btn.active {
+    color: var(--blue);
+    border-bottom-color: var(--blue);
+  }
+  .tab-content {
+    display: none;
+    padding: 12px;
+    background: var(--surface);
+  }
+  .tab-content.active { display: block; }
+  .tab-content.yaml-tab {
+    padding: 0;
+  }
+  .tab-content.yaml-tab pre {
+    margin: 0;
+    padding: 16px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    font-size: 12px;
+    line-height: 1.6;
+    color: var(--text);
+    overflow-x: auto;
+    white-space: pre;
+  }
+  .yaml-key { color: var(--blue); }
+  .yaml-str { color: var(--green); }
+  .yaml-num { color: var(--peach); }
+  .yaml-comment { color: var(--text-dim); font-style: italic; }
+
+  step-card { margin-bottom: 4px; }
+  step-card:last-child { margin-bottom: 0; }
+
+  swim-lane-view { margin: 8px 0; }
+  step-block-view { margin: 8px 0; }
+
+  .badge-grid {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0;
+    padding: 16px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+  }
+
+  .error-banner {
+    padding: 12px 16px;
+    background: rgba(243, 139, 168, 0.12);
+    border: 1px solid rgba(243, 139, 168, 0.4);
+    border-radius: 6px;
+    color: var(--red);
+    font-size: 12px;
+    font-family: 'JetBrains Mono', 'Fira Code', monospace;
+    margin: 8px 0;
+  }
+</style>
+</head>
+<body>
+
+<h1>Step Viewer — Component Gallery</h1>
+<p class="subtitle">Each section renders from YAML through Walker.resolve(). Switch tabs to see the source YAML that produced the rendering.</p>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>1. Action Icons</h2>
+<h3>plugin actions resolved through the catalog — each icon maps to an action name</h3>
+<div id="section-1"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>2. Sequential Steps — Form Automation</h2>
+<h3>matching mockup section 3: navigate, fill, click, assert</h3>
+<div id="section-2"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>3. Decorator Badges</h2>
+<h3>decorators are sibling keys of the action — Walker extracts them automatically</h3>
+<div id="section-3"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>4. Swim Lanes — Named Branches</h2>
+<h3>parallel step with named branches rendered as CSS Grid columns</h3>
+<div id="section-4"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>5. Swim Lanes — Three Branches</h2>
+<h3>three-branch concurrent block with steps in each lane</h3>
+<div id="section-5"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>6. Compositions</h2>
+<h3>how sequential steps and parallel blocks compose in a real playbook flow</h3>
+<div id="section-6a"></div>
+
+<h3>forEach as structural key (#571) — no block wrapper needed</h3>
+<div id="section-6b"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>7. Control Flow — If/Else</h2>
+<h3>side-by-side then/else branches with condition in header</h3>
+<div id="section-7"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>8. Control Flow — Match/Cases</h2>
+<h3>pattern table: pattern → step card(s)</h3>
+<div id="section-8"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>9. Control Flow — Try/Catch/Finally</h2>
+<h3>stacked colored regions: green (try), red (catch), teal (finally)</h3>
+<div id="section-9"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>10. Invoke Cards</h2>
+<h3>body-layout: block (default) vs inline — toggle per card or globally</h3>
+<div style="display: flex; gap: 8px; margin-bottom: 12px;">
+  <button id="layout-toggle" style="padding: 4px 12px; border-radius: 4px; border: 1px solid #3b3d52; background: #282a3a; color: #cdd6f4; cursor: pointer; font-family: inherit; font-size: 12px;">Toggle layout: block → inline</button>
+</div>
+<div id="section-10"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>11. Expression Pills</h2>
+<h3>colored by scope: params (blue), each (green), from (peach), module (purple)</h3>
+<div id="section-11"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>12. Diff States</h2>
+<h3>added, removed, modified overlays applied to walker-resolved steps</h3>
+<div id="section-12"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>13. Degraded Mode</h2>
+<h3>Walker errors render inline — valid steps still appear, errors marked in red</h3>
+<div id="section-13"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>14. Edge Cases</h2>
+<h3>empty params, multi-expression paths, all decorators on one step</h3>
+<div id="section-14"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>15. Decorator Badges — Isolated</h2>
+<h3>standalone badge rendering outside step cards</h3>
+<div class="badge-grid" id="badge-grid"></div>
+
+
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>20. State Machine — Transition Diagram</h2>
+<h3>sm-create → states rendered as nodes, transitions as arrows</h3>
+<div id="section-20"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>21. Unified Diff Overlay</h2>
+<h3>adding a 4th branch to a concurrent block — YAML-driven diff via &lt;pages-step-viewer&gt;</h3>
+<div id="section-21" style="display: flex; flex-direction: column; gap: 12px;"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>22. Mutex Coordination</h2>
+<h3>steps tagged with same mutex never run simultaneously — lock badges visually link contending steps</h3>
+<div id="section-22"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>23. Channel Producer / Consumer</h2>
+<h3>bounded channel with publish/from lifecycle — producer, consumer, supervisor</h3>
+<div id="section-23"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>24. Barrier — Synchronization Point</h2>
+<h3>all branches must reach the barrier before execution continues</h3>
+<div id="section-24"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>25. Quorum — Partial Synchronization</h2>
+<h3>only N of M branches must complete before continuing</h3>
+<div id="section-25"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>26. Signal Arrows — Cross-Lane Communication</h2>
+<h3>signal/await pairs shown as dashed arrows between branches</h3>
+<div id="section-26"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>27. Inline CSV Data Table</h2>
+<h3>CSV data section rendered as a typed table with forEach binding</h3>
+<div id="section-27"></div>
+
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>28. Degraded Mode — Parse Error</h2>
+<h3>invalid YAML syntax shows error banner instead of blank screen</h3>
+<div id="section-28"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>29. Degraded Mode — Walker Error (Partial Rendering)</h2>
+<h3>valid steps render normally, broken step shows inline error</h3>
+<div id="section-29"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>30. Degraded Mode — Semantic Warning</h2>
+<h3>signal references unresolved target — red dashed arrow with warning</h3>
+<div id="section-30"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>31. Race — First Wins</h2>
+<h3>competing branches — first to complete wins, rest cancelled</h3>
+<div id="section-31"></div>
+
+<!-- ═══════════════════════════════════════════════════════ -->
+<h2>32. Select — Reactive Dispatch</h2>
+<h3>branches with subscribe (channel) or wait (signal) triggers</h3>
+<div id="section-32"></div>
+
+
+<script type="module">
+  import './src/step-dispatch.ts';
+  import './src/state-machine-view.ts';
+  import './src/diff-summary.ts';
+  import './src/pages-step-viewer.ts';
+  import './src/invoke-card.ts';
+  import './src/decorator-badge.ts';
+  import './src/barrier-bar.ts';
+  import './src/race-view.ts';
+  import './src/select-view.ts';
+  import './src/data-table-view.ts';
+  import './src/yaml-error-banner.ts';
+  import { Walker } from '@casehubio/yaml-core/step';
+  import { CsvParser } from '@casehubio/yaml-core';
+  import { parse } from 'yaml';
+
+  // ── Demo Catalog ──
+  // Resolves any non-reserved action name. The gallery is about rendering,
+  // not validation — so every action lookup succeeds.
+  const demoCatalog = {
+    resolve(name) {
+      return {
+        qualifiedName: name,
+        definition: { name, inputs: {}, outputs: {} },
+        action: { execute: async () => ({ kind: 'success', output: {}, executionMetadata: {} }) },
+      };
+    },
+    availableActions() { return new Set(); },
+  };
+
+  // ── YAML → ResolvedStep[] ──
+  function resolveYaml(yamlText) {
+    const doc = parse(yamlText);
+    const steps = Array.isArray(doc) ? doc : doc.steps ?? doc;
+    return Walker.resolve(steps, demoCatalog);
+  }
+
+  // ── Syntax highlighting for YAML source ──
+  function highlightYaml(text) {
+    return text
+      .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;')
+      .replace(/(#.*)$/gm, '<span class="yaml-comment">$1</span>')
+      .replace(/^(\s*)([\w-]+)(:)/gm, '$1<span class="yaml-key">$2</span>$3')
+      .replace(/:\s*(".*?")/g, ': <span class="yaml-str">$1</span>')
+      .replace(/:\s*(\d+)(\s|$)/g, ': <span class="yaml-num">$1</span>$2');
+  }
+
+  // ── Tab Panel Builder ──
+  let panelId = 0;
+  function renderSection(containerId, yamlText, opts = {}) {
+    const id = panelId++;
+    const container = document.getElementById(containerId);
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    panel.innerHTML = `
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="rendered-${id}">Rendered</button>
+        <button class="tab-btn" data-tab="yaml-${id}">YAML</button>
+      </div>
+      <div class="tab-content active" id="rendered-${id}"></div>
+      <div class="tab-content yaml-tab" id="yaml-${id}">
+        <pre>${highlightYaml(yamlText.trim())}</pre>
+      </div>
+    `;
+    container.appendChild(panel);
+
+    // Wire tab switching
+    panel.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        panel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        panel.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Resolve and render
+    try {
+      const steps = resolveYaml(yamlText);
+      const target = document.getElementById(`rendered-${id}`);
+      const diffStates = opts.diffStates ?? [];
+      steps.forEach((step, i) => {
+        let el;
+        if (step.kind === 'plugin' && step.entry.qualifiedName === 'sm-create') {
+          el = document.createElement('state-machine-view');
+          el.step = step;
+        } else if (step.kind === 'plugin') {
+          el = document.createElement('step-card');
+          el.step = step;
+          if (diffStates[i]) el.diffState = diffStates[i];
+        } else if (step.kind === 'parallel') {
+          el = document.createElement('swim-lane-view');
+          el.step = step;
+        } else if (step.kind === 'block') {
+          el = document.createElement('step-block-view');
+          el.step = step;
+        } else if (step.kind === 'invoke') {
+          el = document.createElement('invoke-card');
+          el.step = step;
+        } else if (step.kind === 'if-else') {
+          el = document.createElement('if-else-view');
+          el.step = step;
+        } else if (step.kind === 'match') {
+          el = document.createElement('match-view');
+          el.step = step;
+        } else if (step.kind === 'try-catch-finally') {
+          el = document.createElement('try-catch-view');
+          el.step = step;
+        } else if (step.kind === 'barrier' || step.kind === 'quorum') {
+          el = document.createElement('barrier-bar');
+          el.step = step;
+        } else if (step.kind === 'race') {
+          el = document.createElement('race-view');
+          el.step = step;
+        } else if (step.kind === 'select') {
+          el = document.createElement('select-view');
+          el.step = step;
+        } else if (step.kind === 'delay') {
+          el = document.createElement('div');
+          el.style.cssText = 'display:flex;align-items:center;gap:6px;padding:4px 12px;color:#7f849c;font-size:12px';
+          el.innerHTML = `<span style="color:#f9e2af">⏱</span><span style="background:rgba(249,226,175,0.15);color:#f9e2af;padding:2px 8px;border-radius:10px;font-size:11px;font-weight:600">${step.duration}ms</span>`;
+        } else {
+          el = document.createElement('error-step');
+          el.kind = step.kind;
+          el.message = 'unsupported step type';
+        }
+        target.appendChild(el);
+      });
+    } catch (e) {
+      const err = document.createElement('yaml-error-banner');
+      err.category = 'walker';
+      err.message = e.message;
+      document.getElementById(`rendered-${id}`).appendChild(err);
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // 1. Action Icons
+  // Only plugin actions (catalog-resolved). Reserved keys like signal,
+  // await, delay, select are Walker-level constructs — not plugin steps.
+  // ═══════════════════════════════════════════════
+  renderSection('section-1', `
+# Plugin actions resolved through the catalog
+- click:
+    target: button
+    value: "Login"
+- fill:
+    target: textbox
+    value: "Username"
+    content: "admin"
+- navigate:
+    value: /dashboard/settings
+- assert:
+    target: heading
+    value: "Dashboard"
+- log:
+    value: "checkpoint reached"
+- graphql:
+    value: "query { users { id name } }"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 2. Form Sequence
+  // Decorators (retry, timeout) are sibling keys of the action key.
+  // Walker separates them from action params automatically.
+  // ═══════════════════════════════════════════════
+  renderSection('section-2', `
+- navigate:
+    value: /helpdesk/intake
+- fill:
+    target: textbox
+    value: "Customer Name"
+    content: "Alice Chen"
+- fill:
+    target: textbox
+    value: "Description"
+    content: "Cannot access dashboard"
+- click:
+    target: button
+    value: "Submit"
+  retry: 3
+- assert:
+    target: alert
+    value: "Submission confirmation"
+  timeout: 5000
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 3. Decorator Badges
+  // Each decorator is a sibling key in the step YAML object.
+  // ═══════════════════════════════════════════════
+  renderSection('section-3', `
+# retry — peach badge
+- click:
+    target: button
+    value: "Retry me"
+  retry: 3
+
+# timeout — amber badge
+- assert:
+    target: alert
+    value: "Wait for me"
+  timeout: 5000
+
+# loop — teal badge (requires timeout or cancel)
+- log:
+    value: "Looping"
+  loop: continuous
+  timeout: 30000
+
+# when — purple badge
+- click:
+    target: button
+    value: "Conditional"
+  when: "\${each.member.admin}"
+
+# mutex — red badge
+- fill:
+    target: field
+    value: "Critical"
+  mutex: write-lock
+
+# forEach — blue badge
+- fill:
+    target: row
+    value: "Name"
+  forEach: "member in members"
+
+# Multiple decorators on one step
+- click:
+    target: button
+    value: "Submit order"
+  retry: 3
+  timeout: 10000
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 4. Swim Lanes — Named Branches
+  // parallel: { branchName: [...steps] } creates named swim lanes
+  // ═══════════════════════════════════════════════
+  renderSection('section-4', `
+# Named branches become labeled swim lane columns
+- parallel:
+    init:
+      - click:
+          target: button
+          value: "A"
+      - log:
+          value: "init complete"
+    worker:
+      - fill:
+          target: textbox
+          value: "Data"
+          content: "payload"
+      - click:
+          target: button
+          value: "B"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 5. Swim Lanes — Three Branches
+  // ═══════════════════════════════════════════════
+  renderSection('section-5', `
+# Three named branches — fast, medium, slow
+- parallel:
+    fast:
+      - click:
+          target: button
+          value: "A"
+    medium:
+      - click:
+          target: button
+          value: "B"
+      - log:
+          value: "medium done"
+    slow:
+      - click:
+          target: button
+          value: "C"
+      - fill:
+          target: textbox
+          value: "Result"
+          content: "complete"
+      - assert:
+          target: alert
+          value: "Finished"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 6a. Composition — Sequential + Parallel + Sequential
+  // The most common playbook shape: setup, concurrent work, teardown.
+  // ═══════════════════════════════════════════════
+  renderSection('section-6a', `
+# Sequential setup
+- navigate:
+    value: /app/login
+- fill:
+    target: textbox
+    value: "Username"
+    content: "alice@example.com"
+- click:
+    target: button
+    value: "Sign In"
+
+# Parallel verification — two things happen at once
+- parallel:
+    verify-ui:
+      - assert:
+          target: heading
+          value: "Welcome, Alice"
+      - assert:
+          target: nav
+          value: "Dashboard"
+    verify-data:
+      - graphql:
+          value: "query { me { role permissions } }"
+      - assert:
+          target: role
+          value: "admin"
+
+# Sequential teardown after parallel completes
+- log:
+    value: "login verified"
+- navigate:
+    value: /app/dashboard
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 6b. Composition — forEach wrapping a parallel
+  // "For each member, do these things concurrently."
+  // forEach as a structural key — no block wrapper needed (#571).
+  // ═══════════════════════════════════════════════
+  renderSection('section-6b', `
+# Setup
+- navigate:
+    value: "/org/\${params.orgId}/members"
+
+# For each member: fill their profile, then verify in parallel
+- forEach member in members:
+    - fill:
+        target: textbox
+        value: "Full Name"
+        content: "\${each.member.name}"
+    - parallel:
+        update-role:
+          - click:
+              target: combobox
+              value: "Role"
+          - click:
+              target: option
+              value: "\${each.member.role}"
+        update-perms:
+          - fill:
+              target: checkbox-group
+              value: "Permissions"
+              content: "\${each.member.perms}"
+    - click:
+        target: button
+        value: "Save Member"
+      retry: 2
+
+# After all members processed
+- assert:
+    target: alert
+    value: "All members updated"
+  timeout: 10000
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 7. If/Else
+  // Side-by-side then/else branches with condition header.
+  // ═══════════════════════════════════════════════
+  renderSection('section-7', `
+- if: "\${.score >= 0.8}"
+  then:
+    - log:
+        value: "Approved"
+    - click:
+        target: button
+        value: "Continue"
+  else:
+    - log:
+        value: "Rejected"
+    - navigate:
+        value: /review/manual
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 8. Match/Cases
+  // Pattern table with arrow notation.
+  // ═══════════════════════════════════════════════
+  renderSection('section-8', `
+- match: "\${.severity}"
+  cases:
+    - when: "error"
+      log:
+        value: "Matched: error"
+    - when: "warning"
+      log:
+        value: "Matched: warning"
+    - default:
+        - log:
+            value: "No match — default"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 9. Try/Catch/Finally
+  // Stacked colored regions.
+  // ═══════════════════════════════════════════════
+  renderSection('section-9', `
+- try:
+    - log:
+        value: "Attempting risky operation"
+    - click:
+        target: button
+        value: "Submit Payment"
+  catch:
+    - log:
+        value: "Caught error — recovering"
+    - navigate:
+        value: /error/recovery
+  finally:
+    - log:
+        value: "Cleanup — always runs"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 10. Invoke Cards
+  // REST, GraphQL, MCP call cards.
+  // ═══════════════════════════════════════════════
+  renderSection('section-10', `
+# REST call
+- step: create-case
+  invoke:
+    rest:
+      method: POST
+      url: /api/cases
+      customer: "Alice Chen"
+      channel: "web"
+      summary: "Dashboard access issue"
+
+# GraphQL call
+- step: inject-chat
+  invoke:
+    graphql:
+      query: "mutation injectChat"
+      platform: "slack"
+      sender: "Alice"
+      channel: "support"
+      text: "My laptop won't boot"
+
+# MCP tool call
+- step: greet-user
+  invoke:
+    mcp:
+      tool: greeter
+      name: "Alice"
+      locale: "en-GB"
+  `);
+
+  // Layout toggle for invoke cards — cycles block → inline → compact
+  const LAYOUTS = ['block', 'inline', 'compact'];
+  document.getElementById('layout-toggle').addEventListener('click', () => {
+    const cards = document.querySelectorAll('invoke-card');
+    const current = cards[0]?.getAttribute('body-layout') ?? 'block';
+    const next = LAYOUTS[(LAYOUTS.indexOf(current) + 1) % LAYOUTS.length];
+    cards.forEach(c => c.setAttribute('body-layout', next));
+    const after = LAYOUTS[(LAYOUTS.indexOf(next) + 1) % LAYOUTS.length];
+    document.getElementById('layout-toggle').textContent = `Toggle layout: ${next} → ${after}`;
+  });
+
+  // ═══════════════════════════════════════════════
+  // 13. Degraded Mode
+  // Shows how the viewer handles errors — valid steps render,
+  // errors appear inline as red error-step cards.
+  // ═══════════════════════════════════════════════
+  {
+    const container = document.getElementById('section-13');
+    const yamlText = `
+# Valid step renders normally
+- click:
+    target: button
+    value: "Submit"
+
+# Unknown action — catalog rejects it
+- nonexistent-action:
+    value: "this will fail"
+
+# Valid step renders despite earlier error
+- navigate:
+    value: /dashboard
+
+# Another unknown
+- bogus-step:
+    target: field
+    value: "also fails"
+
+# Valid step at the end
+- assert:
+    target: heading
+    value: "Dashboard"
+  timeout: 5000`;
+
+    const id = panelId++;
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    panel.innerHTML = `
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="rendered-${id}">Rendered</button>
+        <button class="tab-btn" data-tab="yaml-${id}">YAML</button>
+      </div>
+      <div class="tab-content active" id="rendered-${id}"></div>
+      <div class="tab-content yaml-tab" id="yaml-${id}">
+        <pre>${highlightYaml(yamlText.trim())}</pre>
+      </div>
+    `;
+    container.appendChild(panel);
+    panel.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        panel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        panel.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    // Restricted catalog — only knows real actions, rejects unknowns
+    const knownActions = new Set(['click', 'fill', 'navigate', 'assert', 'log', 'graphql']);
+    const strictCatalog = {
+      resolve(name) {
+        if (!knownActions.has(name)) return undefined;
+        return demoCatalog.resolve(name);
+      },
+      availableActions() { return knownActions; },
+    };
+
+    // Parse YAML and resolve step-by-step, catching per-step errors
+    const target = document.getElementById(`rendered-${id}`);
+    try {
+      const doc = parse(yamlText);
+      const steps = Array.isArray(doc) ? doc : doc.steps ?? doc;
+      for (const rawStep of steps) {
+        try {
+          const resolved = Walker.resolve([rawStep], strictCatalog);
+          for (const step of resolved) {
+            let el;
+            if (step.kind === 'plugin') {
+              el = document.createElement('step-card');
+              el.step = step;
+            } else if (step.kind === 'invoke') {
+              el = document.createElement('invoke-card');
+              el.step = step;
+            } else {
+              el = document.createElement('error-step');
+              el.kind = step.kind;
+              el.message = 'unsupported step type';
+            }
+            target.appendChild(el);
+          }
+        } catch (e) {
+          const el = document.createElement('error-step');
+          const keys = Object.keys(rawStep).filter(k => k !== 'step');
+          el.kind = keys[0] ?? 'unknown';
+          el.message = e.message;
+          target.appendChild(el);
+        }
+      }
+    } catch (e) {
+      const err = document.createElement('div');
+      err.className = 'error-banner';
+      err.textContent = `Parse error: ${e.message}`;
+      target.appendChild(err);
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // 11. Expression Pills
+  // Expression syntax ${scope.path} in param values gets colored pills.
+  // ═══════════════════════════════════════════════
+  renderSection('section-11', `
+# params scope — blue pills
+- navigate:
+    value: "#teams/\${params.teamName}"
+
+# each scope — green pills
+- fill:
+    target: textbox
+    value: "Full Name"
+    content: "\${each.member.name}"
+
+# from scope — peach pills
+- log:
+    value: "Processing \${from.value}."
+
+# module scope — purple pills
+- fill:
+    target: dataset
+    value: "\${module.ops.panelId}"
+    content: "-feed"
+
+# Mixed scopes in one value
+- navigate:
+    value: "/org/\${params.orgId}/team/\${params.teamId}/member/\${each.memberId}"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 5. Diff States
+  // Diff overlays are applied post-resolution — not part of YAML.
+  // ═══════════════════════════════════════════════
+  renderSection('section-12', `
+# These steps get diff overlays applied after resolution
+- click:
+    target: button
+    value: "New Step"
+- fill:
+    target: textbox
+    value: "Old Field"
+    content: "deprecated"
+- navigate:
+    value: /updated/path
+- click:
+    target: button
+    value: "Unchanged"
+- assert:
+    target: alert
+    value: "New assertion"
+  timeout: 3000
+  `, { diffStates: ['added', 'removed', 'modified', undefined, 'added'] });
+
+  // ═══════════════════════════════════════════════
+  // 6. Edge Cases
+  // ═══════════════════════════════════════════════
+  renderSection('section-14', `
+# Unknown action — falls back to default icon
+- custom-plugin:
+    value: "falls back to default icon"
+
+# Empty params
+- click: {}
+
+# All four expression scopes in one value
+- navigate:
+    value: "/\${params.org}/\${each.team}/\${from.channel}/\${module.panel}"
+
+# All decorators on one step
+- fill:
+    target: field
+    value: "data"
+  retry: 3
+  timeout: 5000
+  forEach: "row in dataset"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 8. State Machine — Transition Diagram
+  // sm-create renders as a state diagram with nodes and arrows.
+  // ═══════════════════════════════════════════════
+  renderSection('section-20', `
+- sm-create:
+    name: order
+    states: [draft, submitted, approved, rejected]
+    initial: draft
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 9. Unified Diff Overlay (YAML-driven)
+  // Two YAML inputs parsed and diffed via pages-step-viewer.
+  // ═══════════════════════════════════════════════
+  {
+    const oldYaml = `
+- parallel:
+    fast:
+      - click:
+          target: button
+          value: "A"
+    medium:
+      - click:
+          target: button
+          value: "B"
+        delay: 1000
+    slow:
+      - click:
+          target: button
+          value: "C"
+        delay: 2000
+`;
+    const newYaml = `
+- parallel:
+    fast:
+      - click:
+          target: button
+          value: "A"
+    medium:
+      - click:
+          target: button
+          value: "B"
+        delay: 1000
+    slow:
+      - click:
+          target: button
+          value: "C"
+        delay: 2000
+    extra:
+      - click:
+          target: button
+          value: "G"
+        delay: 3000
+`;
+    const diffContainer = document.getElementById('section-21');
+
+    const yamlRow = document.createElement('div');
+    yamlRow.style.cssText = 'display:grid;grid-template-columns:1fr 1fr;gap:12px';
+    const makeEditor = (label, value) => {
+      const wrap = document.createElement('div');
+      wrap.innerHTML = `<div style="font-size:11px;font-weight:600;color:#7f849c;text-transform:uppercase;margin-bottom:4px">${label}</div>`;
+      const ta = document.createElement('textarea');
+      ta.style.cssText = 'width:100%;min-height:180px;background:#1e1e2e;color:#cdd6f4;border:1px solid #3b3d52;border-radius:6px;padding:8px;font-family:JetBrains Mono,Fira Code,monospace;font-size:12px;resize:vertical';
+      ta.value = value.trim();
+      wrap.appendChild(ta);
+      return { wrap, ta };
+    };
+    const oldEd = makeEditor('Old YAML', oldYaml);
+    const newEd = makeEditor('New YAML', newYaml);
+    yamlRow.appendChild(oldEd.wrap);
+    yamlRow.appendChild(newEd.wrap);
+    diffContainer.appendChild(yamlRow);
+
+    const viewer = document.createElement('pages-step-viewer');
+    diffContainer.appendChild(viewer);
+
+    const updateDiff = () => {
+      try {
+        viewer.oldSteps = resolveYaml(oldEd.ta.value);
+        viewer.newSteps = resolveYaml(newEd.ta.value);
+      } catch (e) { /* ignore parse errors during typing */ }
+    };
+    oldEd.ta.addEventListener('input', updateDiff);
+    newEd.ta.addEventListener('input', updateDiff);
+    updateDiff();
+  }
+
+  // ═══════════════════════════════════════════════
+  // 10. Mutex Coordination
+  // Steps sharing the same mutex visually linked via matching badges.
+  // ═══════════════════════════════════════════════
+  renderSection('section-22', `
+- parallel:
+    branch-a:
+      - click:
+          target: button
+          value: "A"
+        mutex: db-write
+      - click:
+          target: button
+          value: "B"
+        mutex: db-write
+    branch-b:
+      - click:
+          target: button
+          value: "C"
+        mutex: db-write
+      - click:
+          target: button
+          value: "D"
+        mutex: db-write
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 11. Channel Producer / Consumer
+  // publish → channel ← from lifecycle with cancel signal.
+  // ═══════════════════════════════════════════════
+  renderSection('section-23', `
+- parallel:
+    source:
+      - log:
+          value: "Emitting events"
+        publish: raw-events
+        loop: 10
+    enricher:
+      - log:
+          value: "Enriching event"
+        from: raw-events
+        loop: continuous
+        cancel: shutdown
+        timeout: 30000
+    supervisor:
+      - delay: "500ms"
+      - log:
+          value: "Enricher stopped"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 12. Barrier — Synchronization Point
+  // ═══════════════════════════════════════════════
+  renderSection('section-24', `
+# Named steps, then barrier synchronizes on them
+- click:
+    target: button
+    value: "Start Init"
+  step: init-done
+- click:
+    target: button
+    value: "Start Worker"
+  step: worker-done
+- barrier:
+    name: sync
+    await: [init-done, worker-done]
+- click:
+    target: button
+    value: "Post-barrier work"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 13. Quorum — Partial Synchronization
+  // ═══════════════════════════════════════════════
+  renderSection('section-25', `
+# Three named steps, quorum requires 2 of 3
+- click:
+    target: button
+    value: "Task A"
+  step: task-a
+- click:
+    target: button
+    value: "Task B"
+  step: task-b
+- click:
+    target: button
+    value: "Task C"
+  step: task-c
+- quorum:
+    name: majority
+    required: 2
+    of: [task-a, task-b, task-c]
+    timeout: "5000ms"
+- log:
+    value: "Quorum reached — continuing"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 14. Signal Arrows — Cross-Lane Communication
+  // ═══════════════════════════════════════════════
+  renderSection('section-26', `
+# init signals ready, worker awaits it — signal/await are decorators
+- parallel:
+    init:
+      - click:
+          target: button
+          value: "A"
+      - log:
+          value: "init complete"
+        signal: ready
+    worker:
+      - log:
+          value: "waiting"
+        await: ready
+      - click:
+          target: button
+          value: "B"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 15. Inline CSV Data Table
+  // ═══════════════════════════════════════════════
+  {
+    const csvData = CsvParser.parse('members',
+      'name:STRING,email:STRING,role:STRING,admin:BOOLEAN\n' +
+      'Alice Chen,alice@example.com,Developer,true\n' +
+      'Bob Martin,bob@example.com,Viewer,false\n' +
+      'Carol White,carol@example.com,Lead,true'
+    );
+    const container = document.getElementById('section-27');
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    const tId = panelId++;
+    const csvYaml = `data:
+  members:
+    inline: |
+      name:STRING,email:STRING,role:STRING,admin:BOOLEAN
+      Alice Chen,alice@example.com,Developer,true
+      Bob Martin,bob@example.com,Viewer,false
+      Carol White,carol@example.com,Lead,true`;
+    panel.innerHTML = `
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="rendered-${tId}">Rendered</button>
+        <button class="tab-btn" data-tab="yaml-${tId}">YAML</button>
+      </div>
+      <div class="tab-content active" id="rendered-${tId}"></div>
+      <div class="tab-content yaml-tab" id="yaml-${tId}">
+        <pre>${highlightYaml(csvYaml)}</pre>
+      </div>
+    `;
+    container.appendChild(panel);
+    panel.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        panel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        panel.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    const tableView = document.createElement('data-table-view');
+    tableView.data = csvData;
+    tableView.forEach = { as: 'member', in: 'members' };
+    document.getElementById(`rendered-${tId}`).appendChild(tableView);
+  }
+
+  // ═══════════════════════════════════════════════
+  // 16. Degraded Mode — Parse Error
+  // ═══════════════════════════════════════════════
+  {
+    const badYaml = `- click:
+    target: button
+    value: "A"
+- this is not valid: [yaml
+  missing: closing bracket`;
+    const container = document.getElementById('section-28');
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    const pId = panelId++;
+    panel.innerHTML = `
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="rendered-${pId}">Rendered</button>
+        <button class="tab-btn" data-tab="yaml-${pId}">YAML</button>
+      </div>
+      <div class="tab-content active" id="rendered-${pId}"></div>
+      <div class="tab-content yaml-tab" id="yaml-${pId}">
+        <pre>${highlightYaml(badYaml)}</pre>
+      </div>
+    `;
+    container.appendChild(panel);
+    panel.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        panel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        panel.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    const target = document.getElementById(`rendered-${pId}`);
+    try {
+      parse(badYaml);
+    } catch (e) {
+      const banner = document.createElement('yaml-error-banner');
+      banner.category = 'parse';
+      banner.message = e.message.split('\n')[0];
+      if (e.linePos) {
+        banner.line = e.linePos[0].line;
+        banner.column = e.linePos[0].col;
+      }
+      target.appendChild(banner);
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // 17. Degraded Mode — Walker Error (Partial Rendering)
+  // ═══════════════════════════════════════════════
+  renderSection('section-29', `
+# First step renders fine, second has a Walker error
+- click:
+    target: button
+    value: "This renders normally"
+- barrier:
+    await: [nonexistent-step-a, nonexistent-step-b]
+- log:
+    value: "This also renders"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 18. Degraded Mode — Semantic Warning
+  // ═══════════════════════════════════════════════
+  {
+    const semanticYaml = `# Signal name doesn't match any await — unresolved
+- parallel:
+    sender:
+      - click:
+          target: button
+          value: "Send"
+        signal: data-ready
+    receiver:
+      - click:
+          target: button
+          value: "Waiting"
+        await: wrong-signal-name`;
+    const container = document.getElementById('section-30');
+    const panel = document.createElement('div');
+    panel.className = 'tab-panel';
+    const sId = panelId++;
+    panel.innerHTML = `
+      <div class="tab-bar">
+        <button class="tab-btn active" data-tab="rendered-${sId}">Rendered</button>
+        <button class="tab-btn" data-tab="yaml-${sId}">YAML</button>
+      </div>
+      <div class="tab-content active" id="rendered-${sId}"></div>
+      <div class="tab-content yaml-tab" id="yaml-${sId}">
+        <pre>${highlightYaml(semanticYaml)}</pre>
+      </div>
+    `;
+    container.appendChild(panel);
+    panel.querySelectorAll('.tab-btn').forEach(btn => {
+      btn.addEventListener('click', () => {
+        panel.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+        panel.querySelectorAll('.tab-content').forEach(c => c.classList.remove('active'));
+        btn.classList.add('active');
+        document.getElementById(btn.dataset.tab).classList.add('active');
+      });
+    });
+
+    const target = document.getElementById(`rendered-${sId}`);
+    try {
+      const steps = resolveYaml(semanticYaml);
+      steps.forEach(step => {
+        let el;
+        if (step.kind === 'parallel') {
+          el = document.createElement('swim-lane-view');
+          el.step = step;
+        } else if (step.kind === 'plugin') {
+          el = document.createElement('step-card');
+          el.step = step;
+        } else {
+          el = document.createElement('error-step');
+          el.kind = step.kind;
+          el.message = 'unsupported';
+        }
+        target.appendChild(el);
+      });
+      const warn = document.createElement('yaml-error-banner');
+      warn.category = 'semantic';
+      warn.message = 'signal "data-ready" has no matching await — arrow has no target';
+      target.appendChild(warn);
+    } catch (e) {
+      const err = document.createElement('yaml-error-banner');
+      err.category = 'walker';
+      err.message = e.message;
+      target.appendChild(err);
+    }
+  }
+
+  // ═══════════════════════════════════════════════
+  // 31. Race — First Wins
+  // ═══════════════════════════════════════════════
+  renderSection('section-31', `
+- race:
+    - api.fetchData:
+        endpoint: "/users"
+        timeout: "3s"
+    - cache.lookup:
+        key: "users-cache"
+    - fallback.default:
+        value: "[]"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 32. Select — Reactive Dispatch
+  // ═══════════════════════════════════════════════
+  renderSection('section-32', `
+- select:
+    - subscribe: orders-channel
+      process.order:
+        mode: "batch"
+    - subscribe: returns-channel
+      process.return:
+        mode: "immediate"
+    - wait: shutdown-signal
+      log.info:
+        message: "shutting down gracefully"
+  `);
+
+  // ═══════════════════════════════════════════════
+  // 7. Isolated Badges
+  // ═══════════════════════════════════════════════
+  function addBadge(id, kind, label) {
+    const badge = document.createElement('decorator-badge');
+    badge.kind = kind;
+    badge.label = label;
+    document.getElementById(id).appendChild(badge);
+  }
+  addBadge('badge-grid', 'retry', 'retry: 3');
+  addBadge('badge-grid', 'timeout', '5000ms');
+  addBadge('badge-grid', 'loop', 'continuous');
+  addBadge('badge-grid', 'when', '${score >= 0.8}');
+  addBadge('badge-grid', 'mutex', 'write-lock');
+  addBadge('badge-grid', 'foreach', 'item in collection');
+  addBadge('badge-grid', 'publish', '→ raw-events');
+  addBadge('badge-grid', 'from', '← raw-events');
+  addBadge('badge-grid', 'cancel', 'cancel: shutdown');
+
+
+
+
+
+</script>
+
+</body>
+</html>
