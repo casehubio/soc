@@ -2,6 +2,7 @@ package io.casehub.soc.integration;
 
 import io.casehub.soc.engine.cbr.SocCbrRetrieveService;
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.RestAssured;
 import jakarta.inject.Inject;
 import org.junit.jupiter.api.Test;
@@ -12,6 +13,7 @@ import static org.assertj.core.api.Assertions.assertThat;
 import static org.hamcrest.Matchers.is;
 
 @QuarkusTest
+@TestSecurity(user = "test-user", roles = "soc-demo-admin")
 class CbrRetrievalIntegrationTest {
 
     @Inject

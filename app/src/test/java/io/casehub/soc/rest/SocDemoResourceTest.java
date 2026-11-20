@@ -1,6 +1,7 @@
 package io.casehub.soc.rest;
 
 import io.quarkus.test.junit.QuarkusTest;
+import io.quarkus.test.security.TestSecurity;
 import io.restassured.RestAssured;
 import org.junit.jupiter.api.Test;
 
@@ -8,6 +9,7 @@ import static org.hamcrest.Matchers.is;
 import static org.hamcrest.Matchers.notNullValue;
 
 @QuarkusTest
+@TestSecurity(user = "test-user", roles = "soc-demo-admin")
 class SocDemoResourceTest {
 
     @Test
