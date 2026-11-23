@@ -25,11 +25,6 @@
 
   <dependencyManagement>
     <dependencies>
-      <dependency>
-        <groupId>com.networknt</groupId>
-        <artifactId>json-schema-validator</artifactId>
-        <version>1.5.4</version>
-      </dependency>
       <!-- Convergence fix: engine-api pulls 1.6.0, quarkus-flow pulls 1.6.2 -->
       <dependency>
         <groupId>net.thisptr</groupId>
