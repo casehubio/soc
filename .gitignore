@@ -19,3 +19,5 @@ dist/
 .claude/
 app/src/main/resources/threatintel/enterprise-attack.json
 
+# IntelliJ IDE
+*.iml
